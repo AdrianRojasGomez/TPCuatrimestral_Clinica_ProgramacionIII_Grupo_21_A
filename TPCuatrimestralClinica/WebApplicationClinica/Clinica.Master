@@ -31,7 +31,11 @@
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="Turnos/CrearTurno.aspx">Crear Turno</a>
+                                <a class="nav-link active" aria-current="page" href="/Turno/CrearTurno.aspx">Crear Turno</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/Paciente/AltaPaciente.aspx">Alta Paciente</a>
                             </li>
 
                         </ul>

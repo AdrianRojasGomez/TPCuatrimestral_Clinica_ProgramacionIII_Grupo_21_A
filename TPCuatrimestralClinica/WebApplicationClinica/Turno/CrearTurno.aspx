@@ -13,12 +13,12 @@
                     <div class="card shadow-lg border-0 rounded-3 w-100">
                         <%--Cabecera opcional fija--%>
                         <div class="card-header bg-white sticky-top">
-                            <h4 class="mb-0 text-center">Ingrese los datos correspondientes</h4>
+                            <h4 class="mb-0 text-center">Ingrese el detalle del turno</h4>
                         </div>
 
                         <%--Cuerpo con scroll interno --%>
                         <div class="card-body p-4 p-md-5 overflow-auto">
-
+                            <label for="txtDocumento" class="form-label">Documento</label>
                             <div class="d-flex align-items-center gap-3 flex-wrap mb-4">
                                 <asp:TextBox runat="server" ID="txtDocumento" CssClass="form-control w-25"
                                     required="required" pattern="\d+" inputmode="numeric" />

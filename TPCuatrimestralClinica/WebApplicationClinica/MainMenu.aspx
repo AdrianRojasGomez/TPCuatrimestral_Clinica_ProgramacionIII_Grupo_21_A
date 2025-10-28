@@ -101,44 +101,116 @@
         <div class="accordion" id="accordionGestion">
 
             <%--Accordeon Turnos--%>
-            <div class="accordion-item">
+            <div class="accordion-item" id="accordionTurnos">
                 <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTurno" aria-expanded="false" aria-controls="collapseTurno">
                         Gestion Turnos
                     </button>
                 </h2>
+
                 <div id="collapseTurno" class="accordion-collapse collapse" data-bs-parent="#accordionTurnos">
                     <div class="accordion-body">
+
                         <%--Elementos dentro del acordeon--%>
+                        <div class="row row-cols-2 g-2">
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Crear.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Crear Turno
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Modificar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Modificar turno
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Cancelar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Cancelar Turno
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Buscar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Buscar Turno
+                                </a>
+                            </div>
+                        </div>
                     </div>
+                    <%--Elementos dentro del acordeon--%>
                 </div>
             </div>
 
             <%--Accordeon Pacientes--%>
-            <div class="accordion-item">
+            <div class="accordion-item" id="accordionPacientes">
                 <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePaciente" aria-expanded="false" aria-controls="collapsePaciente">
                         Gestion Pacientes
                     </button>
                 </h2>
                 <div id="collapsePaciente" class="accordion-collapse collapse" data-bs-parent="#accordionPacientes">
                     <div class="accordion-body">
                         <%--Elementos dentro del acordeon--%>
+                        <div class="row row-cols-2 g-2">
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Crear.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Crear Turno
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Modificar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Modificar turno
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Cancelar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Cancelar Turno
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Buscar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Buscar Turno
+                                </a>
+                            </div>
+                        </div>
                     </div>
+                    <%--Elementos dentro del acordeon--%>
                 </div>
             </div>
 
+
             <%--Accordeon Medicos--%>
-            <div class="accordion-item">
+            <div class="accordion-item" id="accordionMedicos">
                 <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMedicos" aria-expanded="false" aria-controls="collapseMedicos">
                         Gestion Medicos
                     </button>
                 </h2>
                 <div id="collapseMedicos" class="accordion-collapse collapse" data-bs-parent="#accordionMedicos">
                     <div class="accordion-body">
                         <%--Elementos dentro del acordeon--%>
+                        <div class="row row-cols-2 g-2">
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Crear.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Agregar nuevo Medico
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Modificar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Modificar datos de un Medico
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Cancelar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center"> Listar Medicos Disponibles
+                                </a>
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Buscar.aspx") %>"
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Baja a un Medico
+                                </a>
+                            </div>
+                        </div>
                     </div>
+                    <%--Elementos dentro del acordeon--%>
                 </div>
             </div>
 

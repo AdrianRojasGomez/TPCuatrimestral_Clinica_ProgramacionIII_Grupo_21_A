@@ -15,7 +15,10 @@
                             <div class="mb-3 row">
                                 <label for="inputUser" class="col-sm-3 col-form-label text-sm-end">Usuario</label>
                                 <div class="col-sm-6">
-                                    <input type="text" id="inputUser" class="form-control">
+                                
+
+                                    <asp:TextBox ID="TxtUsuario" CssClass="form-control"  runat="server"></asp:TextBox>
+
                                 </div>
                             </div>
 
@@ -23,9 +26,12 @@
                             <div class="mb-3 row">
                                 <label for="inputPassword" class="col-sm-3 col-form-label text-sm-end">Contraseña</label>
                                 <div class="col-sm-6">
-                                    <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelp">
+                                 
+                                    <asp:TextBox ID="TxtPassword" CssClass="form-control" runat="server"></asp:TextBox>
+
                                     <div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
                                 </div>
+                                
                             </div>
                             <!-- Botón Iniciar sesión -->
                             <div class="row">

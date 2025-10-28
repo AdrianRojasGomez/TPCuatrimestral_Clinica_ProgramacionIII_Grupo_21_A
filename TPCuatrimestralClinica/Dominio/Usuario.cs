@@ -6,6 +6,16 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
+
+
+    public enum TipoUsuario 
+    { 
+        Admin =1,
+        Medico =2,
+        Recepcion =3
+          
+    
+    }
     public class Usuario
     {
         public int IdUsuario { get; set; }
@@ -15,5 +25,10 @@ namespace Dominio
         public RolUsuario Rol { get; set; }
 
         public int IdMedicoAsociado { get; set; }
+
+        public TipoUsuario TipoUsuario { get; set; } = new TipoUsuario();
+
+
+
     }
 }

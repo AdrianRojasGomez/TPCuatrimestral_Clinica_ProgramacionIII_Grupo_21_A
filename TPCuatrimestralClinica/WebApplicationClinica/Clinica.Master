@@ -13,11 +13,21 @@
 </head>
 <body>
     <form id="form1" runat="server" class="needs-validation" novalidate>
+        <%--NavBar: hay que esconderla  del login con code-behind,Por ahora esta de apoyo
+            para navegar entre las paginas del frontEnd, al final cuando este todo bien
+            definido, ponemos el CTA principal= Crear Turno y accesos rapidos a otros sitios
+            usados--%>
         <div>
-            <nav class="navbar bg-body-tertiary">
+            <nav class="navbar bg-body-tertiary border-bottom shadow-sm sticky-top">
                 <div class="container-fluid">
                     <span class="navbar-brand mb-0 h1">Navbar</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="MainMenu.aspx">Menu</a>
+                    </li>
                 </div>
+
+
+
             </nav>
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
             </asp:ContentPlaceHolder>

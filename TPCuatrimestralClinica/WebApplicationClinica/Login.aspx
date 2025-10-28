@@ -29,7 +29,7 @@
                             </div>
                             <!-- Botón Iniciar sesión -->
                             <div class="row">
-                                <div class="offset-sm-3 col-sm-6">
+                                <div class="offset-sm-4 col-sm-4">
                                     <div class="d-grid">
                                         <button type="submit" class="btn btn-primary">Entrar</button>
                                     </div>

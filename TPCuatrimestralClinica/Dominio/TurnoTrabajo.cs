@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-    internal class TurnoTrabajo
+    public class TurnoTrabajo
     {
+        public int IdTurnoTrabajo { get; set; }
+        public string Nombre { get; set; }
+        public TimeSpan HoraInicio { get; set; }
+        public TimeSpan HoraFin { get; set; }
+
     }
 }

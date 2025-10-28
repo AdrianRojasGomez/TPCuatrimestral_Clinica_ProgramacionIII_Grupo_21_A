@@ -67,7 +67,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Turnos\CrearTurno.aspx" />
+    <Content Include="Paciente\AltaPaciente.aspx" />
+    <Content Include="Turno\CrearTurno.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="MainMenu.aspx" />
     <Content Include="Web.config" />
@@ -80,11 +81,18 @@
     <Compile Include="Clinica.Master.designer.cs">
       <DependentUpon>Clinica.Master</DependentUpon>
     </Compile>
-    <Compile Include="Turnos\CrearTurno.aspx.cs">
+    <Compile Include="Paciente\AltaPaciente.aspx.cs">
+      <DependentUpon>AltaPaciente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Paciente\AltaPaciente.aspx.designer.cs">
+      <DependentUpon>AltaPaciente.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Turno\CrearTurno.aspx.cs">
       <DependentUpon>CrearTurno.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Turnos\CrearTurno.aspx.designer.cs">
+    <Compile Include="Turno\CrearTurno.aspx.designer.cs">
       <DependentUpon>CrearTurno.aspx</DependentUpon>
     </Compile>
     <Compile Include="Login.aspx.cs">
@@ -113,6 +121,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

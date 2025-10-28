@@ -18,17 +18,27 @@
             definido, ponemos el CTA principal= Crear Turno y accesos rapidos a otros sitios
             usados--%>
         <div>
-            <nav class="navbar bg-body-tertiary border-bottom shadow-sm sticky-top">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
                 <div class="container-fluid">
-                    <span class="navbar-brand mb-0 h1">Navbar</span>
-                    <li class="nav-item">
-                        <a class="nav-link" href="MainMenu.aspx">Menu</a>
-                    </li>
+                    <a class="navbar-brand" href="#">Navbar</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="/MainMenu.aspx">Menu</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="Turnos/CrearTurno.aspx">Crear Turno</a>
+                            </li>
+
+                        </ul>
+                    </div>
                 </div>
-
-
-
             </nav>
+
             <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
             </asp:ContentPlaceHolder>
         </div>

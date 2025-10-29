@@ -24,7 +24,7 @@
 
                             <!-- Contraseña ayuda debajo del input -->
                             <div class="mb-3 row">
-                                <label for="inputPassword" class="col-sm-3 col-form-label text-sm-end">Contraseña</label>
+                                <label for="inputPassword" type="password" class="col-sm-3 col-form-label text-sm-end">Contraseña</label>
                                 <div class="col-sm-6">
                                  
                                     <asp:TextBox ID="TxtPassword" CssClass="form-control" runat="server"></asp:TextBox>

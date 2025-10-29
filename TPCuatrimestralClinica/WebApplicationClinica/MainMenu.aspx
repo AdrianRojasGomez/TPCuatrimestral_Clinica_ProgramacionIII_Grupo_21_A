@@ -11,9 +11,9 @@
             <!-- Tarjeta 1 -->
             <div class="col-12 col-md-4">
                 <div class="card h-100 shadow-sm border-0">
-                    <!-- Esteban: Si quieres agregar una imagen, si no borra esto
-          <img src="<%: ResolveUrl("~/content/img/turnos.jpg") %>" class="card-img-top" alt="Ilustración de turnos">
-          -->
+                    
+          <img src="<%: ResolveUrl("~/content/img/Turnos.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;"  alt="Ilustración de turnos">
+          
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title mb-2">Turnos</h3>
                         <p class="card-text text-soft mb-4">
@@ -21,7 +21,7 @@
                         </p>
 
                         <!-- Botón de acción rapida -->
-                        <a href="<%: ResolveUrl("~/Turnos/Crear.aspx") %>"
+                        <a href="<%: ResolveUrl("~/CrearTurno.aspx") %>"
                             class="btn btn-primary mt-auto"
                             aria-label="Crear nuevo turno">Crear turno
                         </a>
@@ -32,21 +32,18 @@
             <!-- Tarjeta 2 -->
             <div class="col-12 col-md-4">
                 <div class="card h-100 shadow-sm border-0">
-                    <!-- Esteban aca igual pana mio
-          <img src="<%: ResolveUrl("~/content/img/pacientes.jpg") %>" class="card-img-top" alt="Ilustración de pacientes">
-          -->
+                   
+          <img src="<%: ResolveUrl("~/content/img/Pacientes.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;"  alt="Ilustración de Pacientes">
+          
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title mb-2">Pacientes</h3>
                         <p class="card-text text-soft mb-4">
                             Registra y actualiza la información de tus pacientes de forma segura.
                         </p>
 
-
-                        <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido?--%>
-                        <a href="<%: ResolveUrl("~/Pacientes/Nuevo.aspx") %>"
-                            class="btn btn-primary mt-auto"
-                            aria-label="Alta de nuevo paciente">Alta paciente
-                        </a>
+                        <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido? Listo --%>
+                        <a href="<%: ResolveUrl("~/Pacientes.aspx") %>"class="btn btn-primary mt-auto shadow" aria-label="Alta de nuevo paciente">Alta paciente
+                            </a>
                     </div>
                 </div>
             </div>
@@ -54,18 +51,17 @@
             <!-- Tarjeta 3 -->
             <div class="col-12 col-md-4">
                 <div class="card h-100 shadow-sm border-0">
-                    <!-- Esteban aca igual pana mio
-          <img src="<%: ResolveUrl("~/content/img/pacientes.jpg") %>" class="card-img-top" alt="Ilustración de pacientes">
-          -->
+                    
+          <img src="<%: ResolveUrl("~/content/img/Medicos.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;"  alt="Ilustración de Medicos">
+          
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title mb-2">Medicos</h3>
                         <p class="card-text text-soft mb-4">
                             Gestiona la informacion de los Medicos disponibles, sus especialidades y turnos de trabajo.
                         </p>
-                        <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido?--%>
+                        <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido? Listo--%>
                         <a href="<%: ResolveUrl("~/Pacientes/Nuevo.aspx") %>"
-                            class="btn btn-primary mt-auto"
-                            aria-label="Buscar Medico">Buscar Medicos en el sistema
+                            class="btn btn-primary mt-auto shadow"aria-label="Buscar Medico">Buscar Medicos en el sistema
                         </a>
                     </div>
                 </div>
@@ -86,7 +82,7 @@
                 No hay turnos disponibles por ahora.
             </div>
             <div class="ms-md-auto">
-                <a href="<%: ResolveUrl("~/Turnos/Crear.aspx") %>" class="btn btn-primary">Crear turno
+                <a href="<%: ResolveUrl("~/CrearTurno.aspx") %>" class="btn btn-primary">Crear turno
                 </a>
             </div>
         </div>

@@ -37,7 +37,6 @@
                 <div class="card h-100 shadow-sm border-0">
 
                     <img src="<%: ResolveUrl("~/content/img/Pacientes.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;" alt="Ilustración de Pacientes">
-
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title mb-2">Pacientes</h3>
                         <p class="card-text text-soft mb-4">
@@ -45,8 +44,12 @@
                         </p>
 
                         <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido? Listo --%>
-                        <a href="<%: ResolveUrl("~/Pacientes.aspx") %>" class="btn btn-primary mt-auto shadow" aria-label="Alta de nuevo paciente">Alta paciente
-                        </a>
+              
+
+                        <asp:Button ID="BtnAltaPaciente" runat="server" Text="Alta Paciente" CssClass="btn btn-primary mt-auto shadow" OnClick="BtnAltaPaciente_Click" />
+
+
+
                     </div>
                 </div>
             </div>
@@ -109,6 +112,9 @@
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTurno" aria-expanded="false" aria-controls="collapseTurno">
                         Gestion Turnos
                     </button>
+
+                    
+
                 </h2>
 
                 <div id="collapseTurno" class="accordion-collapse collapse" data-bs-parent="#accordionTurnos">

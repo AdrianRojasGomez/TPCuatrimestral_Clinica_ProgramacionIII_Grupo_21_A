@@ -2,6 +2,7 @@
 using Negocio;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Web;
 using System.Web.SessionState;
@@ -26,20 +27,24 @@ namespace WebApplicationClinica
 
         }
 
-        public static bool PuedeVerTurnos(HttpSessionState session)
+        public static Dominio.TipoUsuario PuedeVerTurnos(HttpSessionState session)
         {
 
-            if (session["usuario"] != null && ((Dominio.Usuario)session["usuario"]).TipoUsuario == Dominio.TipoUsuario.Admin)
+            if (session["usuario"] != null )
             {
-                
-                return true;
-            }
-            else
-            {
-               
-                return false;
+
+                return ((Dominio.Usuario)session["usuario"]).TipoUsuario;
             }
 
+            else
+            {
+
+                  return Dominio.TipoUsuario.SinDefinir;
+
+            }
+        
+
+             
 
         }
 
@@ -49,11 +54,11 @@ namespace WebApplicationClinica
 
             UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
 
-            if (TxtPassword.Text == "" || TxtUsuario.Text == "")
+         
+            if (string.IsNullOrWhiteSpace(TxtUsuario.Text) || string.IsNullOrWhiteSpace(TxtPassword.Text))
             {
-
-
-                LblCargar.Text = "Cargue usuario y contraseña porfavor";
+                LblCargar.Text = "Cargue usuario y contraseña, por favor.";
+                return; 
             }
             try
             {

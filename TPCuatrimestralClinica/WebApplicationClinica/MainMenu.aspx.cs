@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Dominio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -17,20 +18,44 @@ namespace WebApplicationClinica
                 return;
             }
 
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.Cache.SetNoStore();
-            Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
 
-            if (!Login.PuedeVerTurnos(Session))
+            if (Login.PuedeVerTurnos(Session) == TipoUsuario.Recepcion)
             {
 
-                btnCrearTurno.Visible = false;
+                btnCrearTurno.Visible = true;
 
-               BtnCrear.Visible = false;
+                BtnCrear.Visible = false;
 
             }
 
+            else if (Login.PuedeVerTurnos(Session) == TipoUsuario.Medico)
+            {
+                btnCrearTurno.Visible = false;
 
+                BtnCrear.Visible = false;
+
+                BtnAltaPaciente.Visible = false;
+
+
+            }
+            else if (Login.PuedeVerTurnos(Session) == TipoUsuario.SinDefinir) {
+
+
+                Response.Redirect("Login.aspx");
+
+                return;
+            
+            }
+
+
+                Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
+        }
+
+        protected void BtnAltaPaciente_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("CrearTurno.aspx");
         }
     }
 }

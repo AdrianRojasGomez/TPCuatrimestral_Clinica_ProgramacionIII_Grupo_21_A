@@ -65,6 +65,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="content\img\error.jpg" />
     <Content Include="content\img\Medicos.png" />
     <Content Include="content\img\Pacientes.png" />
     <Content Include="content\img\Turnos.png" />
@@ -73,6 +74,7 @@
     <Content Include="MainMenu.aspx" />
     <Content Include="Pacientes.aspx" />
     <Content Include="Web.config" />
+    <Content Include="Error.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clinica.Master.cs">
@@ -111,6 +113,13 @@
       <DependentUpon>Pacientes.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Error.aspx.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Error.aspx.designer.cs">
+      <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Clinica.Master" />

@@ -11,6 +11,25 @@ namespace WebApplicationClinica
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["usuario"] == null)
+            {
+                Response.Redirect("~/Login.aspx");
+                return;
+            }
+
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetNoStore();
+            Response.Cache.SetExpires(DateTime.UtcNow.AddMinutes(-1));
+
+            if (!Login.PuedeVerTurnos(Session))
+            {
+
+                btnCrearTurno.Visible = false;
+
+               BtnCrear.Visible = false;
+
+            }
+
 
         }
     }

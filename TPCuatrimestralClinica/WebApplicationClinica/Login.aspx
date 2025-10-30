@@ -24,7 +24,7 @@
                                 <label for="inputPassword" class="col-sm-3 col-form-label text-sm-end">Contraseña</label>
                                 <div class="col-sm-6">
                                     <input type="password" id="inputPassword" class="form-control" aria-describedby="passwordHelp">
-                                    <div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
+                                    <div id="passwordHelp" class="form-text">Debe ser de 8-20 caracteres de largo.</div>
                                 </div>
                             </div>
                             <!-- Botón Iniciar sesión -->

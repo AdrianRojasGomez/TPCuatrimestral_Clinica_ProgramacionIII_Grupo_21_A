@@ -55,7 +55,7 @@ namespace WebApplicationClinica
 
         protected void BtnAltaPaciente_Click(object sender, EventArgs e)
         {
-            Response.Redirect("Pacientes.aspx");
+            Response.Redirect("Pacientes/Pacientes.aspx");
         }
     }
 }

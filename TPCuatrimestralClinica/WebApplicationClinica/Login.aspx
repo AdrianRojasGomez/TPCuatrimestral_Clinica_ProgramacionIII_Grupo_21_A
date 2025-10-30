@@ -26,12 +26,6 @@
                             <div class="mb-3 row">
                                 <label for="inputPassword" type="password" class="col-sm-3 col-form-label text-sm-end">Contraseña</label>
                                 <div class="col-sm-6">
-<<<<<<< HEAD
-                                 
-                                    <asp:TextBox ID="TxtPassword" CssClass="form-control" runat="server"></asp:TextBox>
-
-                                    <div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
-=======
 
                                     <div class="input-group">
         
@@ -41,7 +35,7 @@
 
                                     </div><div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
     
->>>>>>> d666565 (Ajustes en el formulario de Login.aspx~)
+
                                 </div>
                                 
                             </div>

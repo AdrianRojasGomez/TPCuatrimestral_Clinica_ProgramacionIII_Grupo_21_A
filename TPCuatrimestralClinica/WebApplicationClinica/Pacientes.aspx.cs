@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Configuration; // Necesario para leer el Web.config
+using System.Configuration; 
 using System.Data;
-using System.Data.SqlClient; // Necesario para SQL Server
+using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -9,14 +9,13 @@ namespace WebApplicationClinica
 {
     public partial class Pacientes : System.Web.UI.Page
     {
-        // Obtiene la cadena de conexión que definimos en Web.config
+        
         readonly string connectionString = ConfigurationManager.ConnectionStrings["ClinicaConnection"].ConnectionString;
 
-        // Se dispara CADA VEZ que se carga la página
+        
         protected void Page_Load(object sender, EventArgs e)
         {
-            // IsPostBack es 'false' solo la primera vez que entras a la página.
-            // Si es 'true', significa que apretaste un botón (ej: Guardar).
+            
             if (!IsPostBack)
             {
                 CargarPacientes();
@@ -26,9 +25,6 @@ namespace WebApplicationClinica
 
         #region MÉTODOS DE DATOS (BD)
 
-        /// <summary>
-        /// Lee todos los pacientes de la BD y los carga en el GridView
-        /// </summary>
         void CargarPacientes()
         {
             try
@@ -50,9 +46,7 @@ namespace WebApplicationClinica
             }
         }
 
-        /// <summary>
-        /// Carga los datos de un paciente específico en el formulario para editarlo.
-        /// </summary>
+        
         void CargarDatosPaciente(int id)
         {
             try
@@ -68,7 +62,7 @@ namespace WebApplicationClinica
 
                     if (reader.Read())
                     {
-                        // Llenamos el formulario
+                       
                         hfPacienteId.Value = reader["IdPaciente"].ToString();
                         txtNombre.Text = reader["Nombre"].ToString();
                         txtApellido.Text = reader["Apellido"].ToString();
@@ -77,7 +71,7 @@ namespace WebApplicationClinica
                         txtTelefono.Text = reader["Telefono"].ToString();
                         txtDireccion.Text = reader["Direccion"].ToString();
 
-                        // Manejamos la fecha, que puede ser nula (DBNull)
+                       
                         if (reader["FechaNacimiento"] != DBNull.Value)
                         {
                             txtFechaNacimiento.Text = Convert.ToDateTime(reader["FechaNacimiento"]).ToString("yyyy-MM-dd");
@@ -96,9 +90,7 @@ namespace WebApplicationClinica
             }
         }
 
-        /// <summary>
-        /// Elimina un paciente de la BD por su ID.
-        /// </summary>
+      
         void EliminarPaciente(int id)
         {
             try
@@ -125,9 +117,6 @@ namespace WebApplicationClinica
 
         #region EVENTOS DE BOTONES
 
-        /// <summary>
-        /// Prepara el formulario para crear un nuevo paciente.
-        /// </summary>
         protected void btnNuevoPaciente_Click(object sender, EventArgs e)
         {
             pnlFormulario.Visible = true;
@@ -136,9 +125,7 @@ namespace WebApplicationClinica
             divMensaje.Visible = false;
         }
 
-        /// <summary>
-        /// Oculta el formulario y limpia los campos.
-        /// </summary>
+     
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
             pnlFormulario.Visible = false;
@@ -146,26 +133,23 @@ namespace WebApplicationClinica
             divMensaje.Visible = false;
         }
 
-        /// <summary>
-        /// Guarda un paciente (ya sea Nuevo o Edición)
-        /// </summary>
+        
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             try
             {
-                // Leemos el ID del HiddenField. Si es 0, es NUEVO. Si no, es EDITAR.
+                
                 int pacienteId = Convert.ToInt32(hfPacienteId.Value);
 
                 string query;
                 if (pacienteId == 0)
                 {
-                    // Query de INSERT (Nuevo)
+                    
                     query = @"INSERT INTO Pacientes (Dni, Apellido, Nombre, FechaNacimiento, Email, Telefono, Direccion) 
                               VALUES (@Dni, @Apellido, @Nombre, @FechaNacimiento, @Email, @Telefono, @Direccion)";
                 }
                 else
                 {
-                    // Query de UPDATE (Editar)
                     query = @"UPDATE Pacientes 
                               SET Dni = @Dni, Apellido = @Apellido, Nombre = @Nombre, 
                                   FechaNacimiento = @FechaNacimiento, Email = @Email, 
@@ -177,13 +161,13 @@ namespace WebApplicationClinica
                 {
                     SqlCommand cmd = new SqlCommand(query, con);
 
-                    // Agregamos el ID solo si es un UPDATE
+                   
                     if (pacienteId != 0)
                     {
                         cmd.Parameters.AddWithValue("@IdPaciente", pacienteId);
                     }
 
-                    // Agregamos los parámetros comunes
+                   
                     cmd.Parameters.AddWithValue("@Dni", txtDni.Text.Trim());
                     cmd.Parameters.AddWithValue("@Apellido", txtApellido.Text.Trim());
                     cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text.Trim());
@@ -191,7 +175,7 @@ namespace WebApplicationClinica
                     cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text.Trim());
                     cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text.Trim());
 
-                    // Manejamos la fecha nula (si el campo está vacío, guardamos DBNull)
+                   
                     if (string.IsNullOrEmpty(txtFechaNacimiento.Text))
                     {
                         cmd.Parameters.AddWithValue("@FechaNacimiento", DBNull.Value);
@@ -204,18 +188,18 @@ namespace WebApplicationClinica
                     con.Open();
                     cmd.ExecuteNonQuery();
 
-                    // Mostramos mensaje de éxito
+                    
                     MostrarMensaje(pacienteId == 0 ? "Paciente creado exitosamente." : "Paciente actualizado exitosamente.", "success");
                 }
             }
             catch (Exception ex)
             {
-                // Manejamos errores, como un DNI duplicado
+               
                 MostrarMensaje($"Error al guardar paciente: {ex.Message}", "danger");
             }
             finally
             {
-                // Al final, ocultamos el formulario y recargamos la grilla
+                
                 pnlFormulario.Visible = false;
                 CargarPacientes();
             }

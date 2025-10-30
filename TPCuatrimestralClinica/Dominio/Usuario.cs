@@ -13,7 +13,7 @@ namespace Dominio
         Admin = 1,
         Medico = 2,
         Recepcion = 3,
-        SinDefinir
+        SinDefinir = 0
           
     
     }

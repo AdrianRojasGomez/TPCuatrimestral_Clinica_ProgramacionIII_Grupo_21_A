@@ -23,7 +23,7 @@
                         <!-- Botón de acción rapida -->
                         <asp:HyperLink ID="BtnCrear"
                             runat="server"
-                            NavigateUrl="~/CrearTurno.aspx"
+                            NavigateUrl="~/Turnos/CrearTurno.aspx"
                             CssClass="btn btn-primary mt-auto"
                             aria-label="Crear nuevo turno">
                             Crear turno

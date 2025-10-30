@@ -24,8 +24,7 @@ namespace Negocio
         {
             string cadena = ConfigurationManager.ConnectionStrings["ClinicaConnection"].ConnectionString;
             //conexion = new SqlConnection("server = .\\SQLEXPRESS02; database = CLINICA_DB_TEST; integrated security =true ;");
-            //conexion = new SqlConnection("Server=localhost,1433; Database=CLINICA_DB; Integrated Security=False; User ID=sa; Password=Esteban94*;");
-
+          
             conexion = new SqlConnection(cadena);
             comando = new SqlCommand();
 

@@ -15,9 +15,9 @@
                             <div class="mb-3 row">
                                 <label for="inputUser" class="col-sm-3 col-form-label text-sm-end">Usuario</label>
                                 <div class="col-sm-6">
-                                
 
-                                    <asp:TextBox ID="TxtUsuario" CssClass="form-control"  runat="server"></asp:TextBox>
+
+                                    <asp:TextBox ID="TxtUsuario" CssClass="form-control" runat="server"></asp:TextBox>
 
                                 </div>
                             </div>
@@ -26,6 +26,7 @@
                             <div class="mb-3 row">
                                 <label for="inputPassword" type="password" class="col-sm-3 col-form-label text-sm-end">Contraseña</label>
                                 <div class="col-sm-6">
+
 
                                     <div class="input-group">
         
@@ -36,14 +37,25 @@
                                     </div><div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
     
 
+
+                                    <asp:TextBox ID="TxtPassword" CssClass="form-control" runat="server"></asp:TextBox>
+
+                                    <div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
+                                    <button type="button" class="btn btn-outline-secondary" id="btnMostrarPass" onclick="mostrarOcultarPassword()">👁</button>
                                 </div>
-                                
+
                             </div>
+
                             <!-- Botón Iniciar sesión -->
                             <div class="row">
                                 <div class="offset-sm-4 col-sm-4">
                                     <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary">Entrar</button>
+
+
+                                        <asp:Button ID="BtnIngresar" cssclas="btn btn-primary" runat="server" Text="Ingresar" OnClick="BtnIngresar_Click" />
+
+                                        <asp:Label ID="LblCargar" runat="server" Text=""  CssClass="alert alert-danger mt-3 text-center fw-semibold shadow-sm"  ></asp:Label>
+
                                     </div>
                                 </div>
                             </div>
@@ -53,4 +65,18 @@
             </div>
         </div>
     </section>
+    <script>
+        function mostrarOcultarPassword() {
+            const txt = document.getElementById('<%= TxtPassword.ClientID %>');
+            const btn = document.getElementById('btnMostrarPass');
+
+            if (txt.type === 'password') {
+                txt.type = 'text';
+                btn.textContent = '🙈';  // ahora se ve
+            } else {
+                txt.type = 'password';
+                btn.textContent = '👁️';  // vuelve a ocultar
+            }
+        }
+    </script>
 </asp:Content>

@@ -11,9 +11,9 @@
             <!-- Tarjeta 1 -->
             <div class="col-12 col-md-4">
                 <div class="card h-100 shadow-sm border-0">
-                    
-          <img src="<%: ResolveUrl("~/content/img/Turnos.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;"  alt="Ilustración de turnos">
-          
+
+                    <img src="<%: ResolveUrl("~/content/img/Turnos.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;" alt="Ilustración de turnos">
+
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title mb-2">Turnos</h3>
                         <p class="card-text text-soft mb-4">
@@ -21,10 +21,13 @@
                         </p>
 
                         <!-- Botón de acción rapida -->
-                        <a href="<%: ResolveUrl("~/CrearTurno.aspx") %>"
-                            class="btn btn-primary mt-auto"
-                            aria-label="Crear nuevo turno">Crear turno
-                        </a>
+                        <asp:HyperLink ID="BtnCrear"
+                            runat="server"
+                            NavigateUrl="~/CrearTurno.aspx"
+                            CssClass="btn btn-primary mt-auto"
+                            aria-label="Crear nuevo turno">
+                            Crear turno
+                        </asp:HyperLink>
                     </div>
                 </div>
             </div>
@@ -32,9 +35,8 @@
             <!-- Tarjeta 2 -->
             <div class="col-12 col-md-4">
                 <div class="card h-100 shadow-sm border-0">
-                   
-          <img src="<%: ResolveUrl("~/content/img/Pacientes.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;"  alt="Ilustración de Pacientes">
-          
+
+                    <img src="<%: ResolveUrl("~/content/img/Pacientes.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;" alt="Ilustración de Pacientes">
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title mb-2">Pacientes</h3>
                         <p class="card-text text-soft mb-4">
@@ -42,8 +44,12 @@
                         </p>
 
                         <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido? Listo --%>
-                        <a href="<%: ResolveUrl("~/Pacientes.aspx") %>"class="btn btn-primary mt-auto shadow" aria-label="Alta de nuevo paciente">Alta paciente
-                            </a>
+              
+
+                        <asp:Button ID="BtnAltaPaciente" runat="server" Text="Alta Paciente" CssClass="btn btn-primary mt-auto shadow" OnClick="BtnAltaPaciente_Click" />
+
+
+
                     </div>
                 </div>
             </div>
@@ -51,9 +57,9 @@
             <!-- Tarjeta 3 -->
             <div class="col-12 col-md-4">
                 <div class="card h-100 shadow-sm border-0">
-                    
-          <img src="<%: ResolveUrl("~/content/img/Medicos.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;"  alt="Ilustración de Medicos">
-          
+
+                    <img src="<%: ResolveUrl("~/content/img/Medicos.png") %>" class="d-block mx-auto mt-4" style="width: 400px; height: auto;" alt="Ilustración de Medicos">
+
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title mb-2">Medicos</h3>
                         <p class="card-text text-soft mb-4">
@@ -61,7 +67,7 @@
                         </p>
                         <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido? Listo--%>
                         <a href="<%: ResolveUrl("~/Pacientes/Nuevo.aspx") %>"
-                            class="btn btn-primary mt-auto shadow"aria-label="Buscar Medico">Buscar Medicos en el sistema
+                            class="btn btn-primary mt-auto shadow" aria-label="Buscar Medico">Buscar Medicos en el sistema
                         </a>
                     </div>
                 </div>
@@ -82,8 +88,12 @@
                 No hay turnos disponibles por ahora.
             </div>
             <div class="ms-md-auto">
-                <a href="<%: ResolveUrl("~/CrearTurno.aspx") %>" class="btn btn-primary">Crear turno
-                </a>
+                <asp:HyperLink ID="btnCrearTurno"
+                    runat="server"
+                    NavigateUrl="~/CrearTurno.aspx"
+                    CssClass="btn btn-primary">
+        Crear turno
+                </asp:HyperLink>
             </div>
         </div>
 
@@ -102,6 +112,9 @@
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTurno" aria-expanded="false" aria-controls="collapseTurno">
                         Gestion Turnos
                     </button>
+
+                    
+
                 </h2>
 
                 <div id="collapseTurno" class="accordion-collapse collapse" data-bs-parent="#accordionTurnos">
@@ -196,7 +209,7 @@
                             </div>
                             <div class="col py-1">
                                 <a href="<%: ResolveUrl("~/Turnos/Cancelar.aspx") %>"
-                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center"> Listar Medicos Disponibles
+                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Listar Medicos Disponibles
                                 </a>
                             </div>
                             <div class="col py-1">

@@ -1,11 +1,13 @@
 ﻿using Dominio;
+using Negocio;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Web;
+using System.Web.SessionState;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Negocio;
 
 
 
@@ -18,21 +20,63 @@ namespace WebApplicationClinica
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            Usuario usuario = new Usuario();    
+
+
+            
+
+
+        }
+
+        public static Dominio.TipoUsuario PuedeVerTurnos(HttpSessionState session)
+        {
+
+            if (session["usuario"] != null )
+            {
+
+                return ((Dominio.Usuario)session["usuario"]).TipoUsuario;
+            }
+
+            else
+            {
+
+                  return Dominio.TipoUsuario.SinDefinir;
+
+            }
+        
+
+             
+
+        }
+
+        protected void BtnIngresar_Click(object sender, EventArgs e)
+        {
+            Usuario usuario = new Usuario();
 
             UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
 
-
+         
+            if (string.IsNullOrWhiteSpace(TxtUsuario.Text) || string.IsNullOrWhiteSpace(TxtPassword.Text))
+            {
+                LblCargar.Text = "Cargue usuario y contraseña, por favor.";
+                return; 
+            }
             try
             {
+
 
                 usuario.NombreUsuario = TxtUsuario.Text;
                 usuario.Password = TxtPassword.Text;
 
-               if(usuarioNegocio.Loguear(usuario)) 
+                if (usuarioNegocio.Loguear(usuario))
                 {
+                    Session.Add("usuario", usuario);
                     Response.Redirect("MainMenu.aspx");
-                
+
+                }
+                else
+                {
+
+                    Response.Redirect("Error.aspx");
                 }
 
 
@@ -44,11 +88,6 @@ namespace WebApplicationClinica
 
                 throw;
             }
-
-
-            
-
-
         }
     }
 }

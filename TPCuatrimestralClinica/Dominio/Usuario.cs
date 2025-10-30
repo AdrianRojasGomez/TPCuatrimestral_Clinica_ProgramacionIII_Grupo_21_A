@@ -10,9 +10,10 @@ namespace Dominio
 
     public enum TipoUsuario 
     { 
-        Admin =1,
-        Medico =2,
-        Recepcion =3
+        Admin = 1,
+        Medico = 2,
+        Recepcion = 3,
+        SinDefinir
           
     
     }

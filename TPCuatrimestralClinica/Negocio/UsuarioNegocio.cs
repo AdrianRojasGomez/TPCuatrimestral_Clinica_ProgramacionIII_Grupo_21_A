@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Dominio;
+
+
 
 namespace Negocio
 {
@@ -21,14 +24,14 @@ namespace Negocio
                 accesoDatos.SetearConsulta("select IdUsuario,TipoUusario from UsuariosApp where  NombreUsuario = @user and Clave = @pass");
 
                 accesoDatos.SetearParametros("@user", usuario.NombreUsuario);
-                accesoDatos.SetearParametros("@pass" ,usuario.Password);
+                accesoDatos.SetearParametros("@pass", usuario.Password);
                 accesoDatos.EjecutarLectura();
 
                 while (accesoDatos.Lector.Read())
                 {
 
                     usuario.IdUsuario = (int)accesoDatos.Lector["IdUsuario"];
-                    usuario.TipoUsuario = (int)(accesoDatos.Lector["TipoUusario"])== 1 ? TipoUsuario.Admin : (int)(accesoDatos.Lector["TipoUusario"]) == 2 ? TipoUsuario.Medico : TipoUsuario.Recepcion;
+                    usuario.TipoUsuario = (int)(accesoDatos.Lector["TipoUusario"]) == 1 ? TipoUsuario.Admin : (int)(accesoDatos.Lector["TipoUusario"]) == 2 ? TipoUsuario.Medico : TipoUsuario.Recepcion;
 
 
                     return true;
@@ -51,6 +54,14 @@ namespace Negocio
             }
 
         }
+
+
+     
+
+
+
+
+
 
     }
 }

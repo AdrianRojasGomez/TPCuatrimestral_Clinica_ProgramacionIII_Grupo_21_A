@@ -11,7 +11,7 @@
             <asp:Button ID="btnNuevoPaciente" runat="server" Text="Agregar Nuevo Paciente" CssClass="btn btn-primary" OnClick="btnNuevoPaciente_Click" />
         </div>
 
-        <div class="alert alert-info" role="alert" runat="server" id="divMensaje" visible="false">
+        <div class="alert" role="alert" runat="server" id="divMensaje" visible="false">
             <asp:Label ID="lblMensaje" runat="server"></asp:Label>
         </div>
 
@@ -50,14 +50,15 @@
             </div>
 
             <div class="mt-3">
-                <asp:Button ID="btnGuardar" runat="server" Text="Guardar" CssClass="btn btn-success me-2" />
-                <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" CausesValidation="false" />
+                <asp:Button ID="btnGuardar" runat="server" Text="Guardar" CssClass="btn btn-success me-2" OnClick="btnGuardar_Click" />
+                <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn btn-secondary" CausesValidation="false" OnClick="btnCancelar_Click" />
             </div>
         </asp:Panel>
 
         <div class="table-responsive mt-4">
             <asp:GridView ID="gvPacientes" runat="server" AutoGenerateColumns="False" DataKeyNames="IdPaciente"
-                CssClass="table table-striped table-bordered" EmptyDataText="No hay pacientes registrados.">
+                CssClass="table table-striped table-bordered" EmptyDataText="No hay pacientes registrados."
+                OnRowCommand="gvPacientes_RowCommand">
                 <Columns>
                     <asp:BoundField DataField="IdPaciente" HeaderText="ID" ReadOnly="True" SortExpression="IdPaciente" />
                     <asp:BoundField DataField="Dni" HeaderText="DNI" SortExpression="Dni" />

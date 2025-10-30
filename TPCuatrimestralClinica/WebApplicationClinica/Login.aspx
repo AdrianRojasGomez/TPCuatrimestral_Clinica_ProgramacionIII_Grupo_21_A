@@ -27,6 +27,17 @@
                                 <label for="inputPassword" type="password" class="col-sm-3 col-form-label text-sm-end">Contraseña</label>
                                 <div class="col-sm-6">
 
+
+                                    <div class="input-group">
+        
+                                        <asp:TextBox ID="TxtPassword" type="password" CssClass="form-control" runat="server"></asp:TextBox>
+        
+                                        <button type="button" class="btn btn-outline-secondary" id="btnMostrarPass" onclick="mostrarOcultarPassword()">👁</button>
+
+                                    </div><div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
+    
+
+
                                     <asp:TextBox ID="TxtPassword" CssClass="form-control" runat="server"></asp:TextBox>
 
                                     <div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>

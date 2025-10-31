@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Configuration; 
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
@@ -9,13 +9,10 @@ namespace WebApplicationClinica
 {
     public partial class Pacientes : System.Web.UI.Page
     {
-        
         readonly string connectionString = ConfigurationManager.ConnectionStrings["ClinicaConnection"].ConnectionString;
 
-        
         protected void Page_Load(object sender, EventArgs e)
         {
-            
             if (!IsPostBack)
             {
                 CargarPacientes();
@@ -25,14 +22,26 @@ namespace WebApplicationClinica
 
         #region MÉTODOS DE DATOS (BD)
 
-        void CargarPacientes()
+        void CargarPacientes(string filtro = "")
         {
             try
             {
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    string query = "SELECT IdPaciente, Dni, Apellido, Nombre, Email, Telefono FROM Pacientes ORDER BY Apellido, Nombre";
+                    string query = "SELECT IdPaciente, Dni, Apellido, Nombre, Email, Telefono FROM Pacientes ";
+                    // Añadir filtro si se proporciona
+                    if (!string.IsNullOrEmpty(filtro))
+                    {
+                        query += "WHERE Dni LIKE @Filtro OR Apellido LIKE @Filtro OR Nombre LIKE @Filtro ";
+                    }
+                    query += "ORDER BY Apellido, Nombre";
+
                     SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    if (!string.IsNullOrEmpty(filtro))
+                    {
+                        da.SelectCommand.Parameters.AddWithValue("@Filtro", "%" + filtro + "%");
+                    }
+
                     DataTable dt = new DataTable();
                     da.Fill(dt);
 
@@ -46,7 +55,6 @@ namespace WebApplicationClinica
             }
         }
 
-        
         void CargarDatosPaciente(int id)
         {
             try
@@ -62,7 +70,6 @@ namespace WebApplicationClinica
 
                     if (reader.Read())
                     {
-                       
                         hfPacienteId.Value = reader["IdPaciente"].ToString();
                         txtNombre.Text = reader["Nombre"].ToString();
                         txtApellido.Text = reader["Apellido"].ToString();
@@ -71,7 +78,6 @@ namespace WebApplicationClinica
                         txtTelefono.Text = reader["Telefono"].ToString();
                         txtDireccion.Text = reader["Direccion"].ToString();
 
-                       
                         if (reader["FechaNacimiento"] != DBNull.Value)
                         {
                             txtFechaNacimiento.Text = Convert.ToDateTime(reader["FechaNacimiento"]).ToString("yyyy-MM-dd");
@@ -90,7 +96,6 @@ namespace WebApplicationClinica
             }
         }
 
-      
         void EliminarPaciente(int id)
         {
             try
@@ -109,7 +114,15 @@ namespace WebApplicationClinica
             }
             catch (Exception ex)
             {
-                MostrarMensaje($"Error al eliminar paciente: {ex.Message}", "danger");
+                // Verifica si la excepción es por una restricción de clave externa
+                if (ex is SqlException sqlEx && sqlEx.Number == 547) // Número de error para FK constraint violation
+                {
+                    MostrarMensaje("No se puede eliminar el paciente porque tiene turnos asociados.", "danger");
+                }
+                else
+                {
+                    MostrarMensaje($"Error al eliminar paciente: {ex.Message}", "danger");
+                }
             }
         }
 
@@ -125,7 +138,6 @@ namespace WebApplicationClinica
             divMensaje.Visible = false;
         }
 
-     
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
             pnlFormulario.Visible = false;
@@ -133,26 +145,23 @@ namespace WebApplicationClinica
             divMensaje.Visible = false;
         }
 
-        
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
             try
             {
-                
                 int pacienteId = Convert.ToInt32(hfPacienteId.Value);
 
                 string query;
                 if (pacienteId == 0)
                 {
-                    
-                    query = @"INSERT INTO Pacientes (Dni, Apellido, Nombre, FechaNacimiento, Email, Telefono, Direccion) 
+                    query = @"INSERT INTO Pacientes (Dni, Apellido, Nombre, FechaNacimiento, Email, Telefono, Direccion)
                               VALUES (@Dni, @Apellido, @Nombre, @FechaNacimiento, @Email, @Telefono, @Direccion)";
                 }
                 else
                 {
-                    query = @"UPDATE Pacientes 
-                              SET Dni = @Dni, Apellido = @Apellido, Nombre = @Nombre, 
-                                  FechaNacimiento = @FechaNacimiento, Email = @Email, 
+                    query = @"UPDATE Pacientes
+                              SET Dni = @Dni, Apellido = @Apellido, Nombre = @Nombre,
+                                  FechaNacimiento = @FechaNacimiento, Email = @Email,
                                   Telefono = @Telefono, Direccion = @Direccion
                               WHERE IdPaciente = @IdPaciente";
                 }
@@ -161,13 +170,11 @@ namespace WebApplicationClinica
                 {
                     SqlCommand cmd = new SqlCommand(query, con);
 
-                   
                     if (pacienteId != 0)
                     {
                         cmd.Parameters.AddWithValue("@IdPaciente", pacienteId);
                     }
 
-                   
                     cmd.Parameters.AddWithValue("@Dni", txtDni.Text.Trim());
                     cmd.Parameters.AddWithValue("@Apellido", txtApellido.Text.Trim());
                     cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text.Trim());
@@ -175,62 +182,57 @@ namespace WebApplicationClinica
                     cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text.Trim());
                     cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text.Trim());
 
-                   
                     if (string.IsNullOrEmpty(txtFechaNacimiento.Text))
                     {
                         cmd.Parameters.AddWithValue("@FechaNacimiento", DBNull.Value);
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@FechaNacimiento", txtFechaNacimiento.Text);
+                        cmd.Parameters.AddWithValue("@FechaNacimiento", Convert.ToDateTime(txtFechaNacimiento.Text)); // Convertir a DateTime
                     }
 
                     con.Open();
                     cmd.ExecuteNonQuery();
 
-                    
                     MostrarMensaje(pacienteId == 0 ? "Paciente creado exitosamente." : "Paciente actualizado exitosamente.", "success");
                 }
             }
             catch (Exception ex)
             {
-               
                 MostrarMensaje($"Error al guardar paciente: {ex.Message}", "danger");
             }
             finally
             {
-                
                 pnlFormulario.Visible = false;
-                CargarPacientes();
+                CargarPacientes(); // Recargar la tabla con la posible búsqueda activa
             }
+        }
+
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
+            CargarPacientes(txtBuscarPaciente.Text.Trim());
+            divMensaje.Visible = false; // Ocultar mensajes anteriores al buscar
         }
 
         #endregion
 
         #region EVENTOS DEL GRIDVIEW
 
-        /// <summary>
-        /// Se dispara al presionar 'Editar' o 'Eliminar' en la grilla.
-        /// </summary>
         protected void gvPacientes_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            // Obtenemos el ID del paciente desde CommandArgument
             int pacienteId = Convert.ToInt32(e.CommandArgument);
 
             if (e.CommandName == "Edit")
             {
-                // Cargar datos para editar
                 CargarDatosPaciente(pacienteId);
                 pnlFormulario.Visible = true;
                 lblFormTitulo.Text = "Editar Paciente";
                 divMensaje.Visible = false;
             }
-            else if (e.CommandName == "Delete")
+            else if (e.CommandName == "CustomDelete") // ¡CAMBIO AQUÍ!
             {
-                // Eliminar paciente
                 EliminarPaciente(pacienteId);
-                // Refrescamos la grilla
-                CargarPacientes();
+                CargarPacientes(txtBuscarPaciente.Text.Trim()); // Recargar después de eliminar, manteniendo el filtro
             }
         }
 
@@ -238,9 +240,6 @@ namespace WebApplicationClinica
 
         #region MÉTODOS AUXILIARES
 
-        /// <summary>
-        /// Limpia todos los campos del formulario.
-        /// </summary>
         void LimpiarFormulario()
         {
             hfPacienteId.Value = "0";
@@ -253,17 +252,13 @@ namespace WebApplicationClinica
             txtDireccion.Text = "";
         }
 
-        /// <summary>
-        /// Muestra el panel de mensajes con un color y texto específicos.
-        /// </summary>
-        /// <param name="mensaje">Texto a mostrar.</param>
-        /// <param name="tipo">"success" (verde), "danger" (rojo) o "info" (azul)</param>
         void MostrarMensaje(string mensaje, string tipo)
         {
             lblMensaje.Text = mensaje;
-            // Cambiamos la clase CSS del div para que muestre el color correcto
-            divMensaje.Attributes["class"] = $"alert alert-{tipo}";
+            divMensaje.Attributes["class"] = $"alert alert-{tipo} alert-dismissible fade show"; // Añadido para mejor estilo de alerta
             divMensaje.Visible = true;
+            // Opcional: Añadir un botón de cierre para la alerta
+            // lblMensaje.Text += "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
         }
 
         #endregion

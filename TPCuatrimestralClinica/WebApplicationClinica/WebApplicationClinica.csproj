@@ -69,6 +69,9 @@
     <Content Include="content\img\Medicos.png" />
     <Content Include="content\img\Pacientes.png" />
     <Content Include="content\img\Turnos.png" />
+    <Content Include="Medicos\MenuMedico.aspx" />
+    <Content Include="Medicos\AgregarMedico.aspx" />
+    <Content Include="Medicos\ModificarMedico.aspx" />
     <Content Include="Turnos\CrearTurno.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="MainMenu.aspx" />
@@ -83,6 +86,27 @@
     </Compile>
     <Compile Include="Clinica.Master.designer.cs">
       <DependentUpon>Clinica.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\MenuMedico.aspx.cs">
+      <DependentUpon>MenuMedico.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\MenuMedico.aspx.designer.cs">
+      <DependentUpon>MenuMedico.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\AgregarMedico.aspx.cs">
+      <DependentUpon>AgregarMedico.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\AgregarMedico.aspx.designer.cs">
+      <DependentUpon>AgregarMedico.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Medicos\ModificarMedico.aspx.cs">
+      <DependentUpon>ModificarMedico.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Medicos\ModificarMedico.aspx.designer.cs">
+      <DependentUpon>ModificarMedico.aspx</DependentUpon>
     </Compile>
     <Compile Include="Turnos\CrearTurno.aspx.cs">
       <DependentUpon>CrearTurno.aspx</DependentUpon>

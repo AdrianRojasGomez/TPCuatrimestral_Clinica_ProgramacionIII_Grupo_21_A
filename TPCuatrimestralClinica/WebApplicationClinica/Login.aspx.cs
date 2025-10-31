@@ -69,6 +69,7 @@ namespace WebApplicationClinica
 
                 if (usuarioNegocio.Loguear(usuario))
                 {
+                    usuario.Password = null;
                     Session.Add("usuario", usuario);
                     Response.Redirect("MainMenu.aspx");
 

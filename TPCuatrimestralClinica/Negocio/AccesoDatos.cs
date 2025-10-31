@@ -22,8 +22,8 @@ namespace Negocio
         //constructor
         public AccesoDatos()
         {
-            string cadena = ConfigurationManager.ConnectionStrings["ClinicaConnection"].ConnectionString;
-            //conexion = new SqlConnection("server = .\\SQLEXPRESS02; database = CLINICA_DB_TEST; integrated security =true ;");
+           string cadena = ConfigurationManager.ConnectionStrings["ClinicaConnection_Local"].ConnectionString;
+           
           
             conexion = new SqlConnection(cadena);
             comando = new SqlCommand();

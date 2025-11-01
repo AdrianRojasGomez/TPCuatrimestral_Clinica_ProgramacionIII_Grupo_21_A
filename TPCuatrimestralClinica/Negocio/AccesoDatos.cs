@@ -22,7 +22,7 @@ namespace Negocio
         //constructor
         public AccesoDatos()
         {
-           string cadena = ConfigurationManager.ConnectionStrings["ClinicaConnection_Local"].ConnectionString;
+           string cadena = ConfigurationManager.ConnectionStrings["ClinicaConnection"].ConnectionString;
            
           
             conexion = new SqlConnection(cadena);

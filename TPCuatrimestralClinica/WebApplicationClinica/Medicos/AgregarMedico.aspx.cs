@@ -1,6 +1,7 @@
 ﻿using Dominio;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
@@ -12,7 +13,7 @@ namespace WebApplicationClinica.Medicos
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            panelGrillaMedico.Visible = false;
         }
 
         protected void Button1_Click(object sender, EventArgs e)
@@ -37,60 +38,133 @@ namespace WebApplicationClinica.Medicos
 
         protected void btnGuardarMedico_Click(object sender, EventArgs e)
         {
-            var listaMedicos = new List<Medico>
-    {
-        new Medico
-        {
-            IdMedico = 1,
-            Nombre = "Ana",
-            Apellido = "López",
-            Matricula = "M1234",
-            TurnoTrabajo = new TurnoTrabajo
-            {
-                IdTurnoTrabajo = 1,
-                Nombre = "Mañana",
-                HoraInicio = new TimeSpan(8, 0, 0),
-                HoraFin = new TimeSpan(12, 0, 0)
-            },
-            Especialidades = new List<Especialidad>
-            {
-                new Especialidad { IdEspecialidad = 1, Nombre = "Clínica" },
-                new Especialidad { IdEspecialidad = 2, Nombre = "Pediatría" }
-            }
-        },
-        new Medico
-        {
-            IdMedico = 2,
-            Nombre = "Matías",
-            Apellido = "Gómez",
-            Matricula = "M5678",
-            TurnoTrabajo = new TurnoTrabajo
-            {
-                IdTurnoTrabajo = 2,
-                Nombre = "Tarde",
-                HoraInicio = new TimeSpan(14, 0, 0),
-                HoraFin = new TimeSpan(18, 0, 0)
-            },
-            Especialidades = new List<Especialidad>
-            {
-                new Especialidad { IdEspecialidad = 3, Nombre = "Cardiología" }
-            }
-        }
-    };
 
-            // Asignar al GridView
-            dvMedicos.DataSource = listaMedicos;
-            dvMedicos.DataBind();
+            
+            string nombre = (txtNombreMedico.Text ?? "").Trim();
+            string apellido = (txtApellidoMedico.Text ?? "").Trim();
+            string matricula = (txtMatriculaMedico.Text ?? "").Trim();
+            string idTurno = ddllistTurnoTrabajo.SelectedValue ?? "0";
+            string idEsp = DdlistEspecilidad.SelectedValue ?? "0";
+
+          
+            if (string.IsNullOrWhiteSpace(nombre) ||
+                string.IsNullOrWhiteSpace(apellido) ||
+                string.IsNullOrWhiteSpace(matricula))
+            {
+                lblError.Text = "Completá Nombre, Apellido y Matrícula.";
+                lblError.Visible = true;
+                panelGrillaMedico.Visible = true;   
+                return;
+            }
+
+            
+            if (nombre.Length > 50 || apellido.Length > 50)
+            {
+                lblError.Text = "Nombre y Apellido no pueden superar 50 caracteres.";
+                lblError.Visible = true;
+                panelGrillaMedico.Visible = true;
+                return;
+            }
+
+            
+            if (!long.TryParse(matricula, out _))
+            {
+                lblError.Text = "La matrícula debe ser numérica.";
+                lblError.Visible = true;
+                panelGrillaMedico.Visible = true;
+                return;
+            }
+
+            
+            if (idTurno == "0")
+            {
+                lblError.Text = "Seleccioná un turno de trabajo.";
+                lblError.Visible = true;
+                panelGrillaMedico.Visible = true;
+                return;
+            }
+
+            if (idEsp == "0")
+            {
+                lblError.Text = "Seleccioná una especialidad.";
+                lblError.Visible = true;
+                panelGrillaMedico.Visible = true;
+                return;
+            }
 
 
         }
 
         protected void btnBotonLimpiarMedico_Click(object sender, EventArgs e)
         {
+            txtNombreMedico.Text = "";
+            txtApellidoMedico.Text = "";
+            txtMatriculaMedico.Text = "";
+            ddllistTurnoTrabajo.SelectedIndex = 0;
+            DdlistEspecilidad.SelectedIndex = 0;
+
 
         }
 
         protected void dvMedicos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+
+        }
+
+        protected void btnGuardarMedico_Click1(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnMostrar_Click(object sender, EventArgs e)
+        {
+            panelGrillaMedico.Visible = true;
+
+            
+        }
+
+        protected void btnCancelar_Click(object sender, EventArgs e)
+        {
+             panelGrillaMedico.Visible=false;
+           
+        }
+
+        protected void gvMedicos_RowDeleted(object sender, GridViewDeletedEventArgs e)
+        {
+
+        }
+
+        protected void gvMedicos_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+
+        }
+
+        protected void gvMedicos_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+
+        }
+
+        protected void gvMedicos_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+
+        }
+
+        protected void gvMedicos_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+
+        }
+
+        protected void gvMedicos_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+
+        }
+
+        protected void gvMedicos_RowDeleting1(object sender, GridViewDeleteEventArgs e)
+        {
+
+        }
+
+        protected void txtFiltrarMedico_TextChanged(object sender, EventArgs e)
         {
 
         }

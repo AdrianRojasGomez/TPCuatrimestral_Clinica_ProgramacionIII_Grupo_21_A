@@ -29,12 +29,11 @@ namespace WebApplicationClinica
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     string query = "SELECT IdPaciente, Dni, Apellido, Nombre, Email, Telefono FROM Pacientes ";
-                    // Añadir filtro si se proporciona
+                    
                     if (!string.IsNullOrEmpty(filtro))
                     {
                         query += "WHERE Dni LIKE @Filtro OR Apellido LIKE @Filtro OR Nombre LIKE @Filtro ";
-                    }
-                    query += "ORDER BY Apellido, Nombre";
+                    }                    
 
                     SqlDataAdapter da = new SqlDataAdapter(query, con);
                     if (!string.IsNullOrEmpty(filtro))
@@ -44,8 +43,28 @@ namespace WebApplicationClinica
 
                     DataTable dt = new DataTable();
                     da.Fill(dt);
+                    if (dt.Rows.Count > 0)
+                    {                        
+                        DataView dv = dt.DefaultView;
 
-                    gvPacientes.DataSource = dt;
+                        if (!string.IsNullOrEmpty(this.SortExpression))
+                        {
+                            
+                            dv.Sort = string.Format("{0} {1}", this.SortExpression, this.SortDirection);
+                        }
+                        else
+                        {
+                            
+                            dv.Sort = "Apellido ASC, Nombre ASC";
+                        }
+                                                
+                        gvPacientes.DataSource = dv;
+                    }
+                    else
+                    {
+                        gvPacientes.DataSource = dt;
+                    }
+                                       
                     gvPacientes.DataBind();
                 }
             }
@@ -147,6 +166,11 @@ namespace WebApplicationClinica
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
+
+            if (!Page.IsValid)
+            {
+                return;
+            }
             try
             {
                 int pacienteId = Convert.ToInt32(hfPacienteId.Value);
@@ -188,51 +212,118 @@ namespace WebApplicationClinica
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@FechaNacimiento", Convert.ToDateTime(txtFechaNacimiento.Text)); // Convertir a DateTime
+                        cmd.Parameters.AddWithValue("@FechaNacimiento", Convert.ToDateTime(txtFechaNacimiento.Text)); 
                     }
 
                     con.Open();
                     cmd.ExecuteNonQuery();
 
                     MostrarMensaje(pacienteId == 0 ? "Paciente creado exitosamente." : "Paciente actualizado exitosamente.", "success");
+                    pnlFormulario.Visible = false;
+                    CargarPacientes(); 
                 }
             }
             catch (Exception ex)
             {
                 MostrarMensaje($"Error al guardar paciente: {ex.Message}", "danger");
             }
-            finally
-            {
-                pnlFormulario.Visible = false;
-                CargarPacientes(); // Recargar la tabla con la posible búsqueda activa
-            }
+            
         }
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             CargarPacientes(txtBuscarPaciente.Text.Trim());
-            divMensaje.Visible = false; // Ocultar mensajes anteriores al buscar
+            divMensaje.Visible = false;
         }
 
         #endregion
 
         #region EVENTOS DEL GRIDVIEW
+        
+        public string SortExpression
+        {
+            get { return ViewState["SortExpression"] as string ?? string.Empty; }
+            set { ViewState["SortExpression"] = value; }
+        }
+
+        public string SortDirection
+        {
+            get { return ViewState["SortDirection"] as string ?? "ASC"; }
+            set { ViewState["SortDirection"] = value; }
+        }
+        protected void gvPacientes_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+           
+            gvPacientes.PageIndex = e.NewPageIndex;
+            CargarPacientes();
+        }
 
         protected void gvPacientes_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            int pacienteId = Convert.ToInt32(e.CommandArgument);
+            if (e.CommandName == "EditarPaciente" || e.CommandName == "CustomDelete")
+            {
+                int pacienteId = Convert.ToInt32(e.CommandArgument);
 
-            if (e.CommandName == "Edit")
-            {
-                CargarDatosPaciente(pacienteId);
-                pnlFormulario.Visible = true;
-                lblFormTitulo.Text = "Editar Paciente";
-                divMensaje.Visible = false;
+                if (e.CommandName == "EditarPaciente")
+                {
+                    CargarDatosPaciente(pacienteId);
+                    pnlFormulario.Visible = true;
+                    lblFormTitulo.Text = "Editar Paciente";
+                    divMensaje.Visible = false;
+                }
+                else if (e.CommandName == "CustomDelete")
+                {
+                    EliminarPaciente(pacienteId);
+                    CargarPacientes(txtBuscarPaciente.Text.Trim());
+                }
             }
-            else if (e.CommandName == "CustomDelete") // ¡CAMBIO AQUÍ!
+           
+        }
+        protected void gvPacientes_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            
+            string newSortExpression = e.SortExpression;
+
+           
+            if (this.SortExpression == newSortExpression)
             {
-                EliminarPaciente(pacienteId);
-                CargarPacientes(txtBuscarPaciente.Text.Trim()); // Recargar después de eliminar, manteniendo el filtro
+                this.SortDirection = (this.SortDirection == "ASC") ? "DESC" : "ASC";
+            }
+            else
+            {
+                this.SortDirection = "ASC";
+            }
+                       
+            this.SortExpression = newSortExpression;
+
+            CargarPacientes();
+        }
+        protected void gvPacientes_RowCreated(object sender, GridViewRowEventArgs e)
+        {
+           if (e.Row.RowType == DataControlRowType.Header)
+            {
+                foreach (TableCell cell in e.Row.Cells)
+                {
+                    if (cell.Controls.Count > 0 && cell.Controls[0] is LinkButton)
+                    {
+                        LinkButton sortButton = (LinkButton)cell.Controls[0];
+
+                        if (sortButton.CommandArgument == this.SortExpression)
+                        {
+                            string sortIcon = "";
+                            if (this.SortDirection == "ASC")
+                            {
+                                sortIcon = " <i class='bi bi-caret-up-fill'></i>";
+                            }
+                            else
+                            {
+                                sortIcon = " <i class='bi bi-caret-down-fill'></i>";
+                            }
+
+                            cell.Controls.Add(new LiteralControl(sortIcon));
+                        }
+                    }
+                }
             }
         }
 
@@ -255,10 +346,9 @@ namespace WebApplicationClinica
         void MostrarMensaje(string mensaje, string tipo)
         {
             lblMensaje.Text = mensaje;
-            divMensaje.Attributes["class"] = $"alert alert-{tipo} alert-dismissible fade show"; // Añadido para mejor estilo de alerta
+            divMensaje.Attributes["class"] = $"alert alert-{tipo} alert-dismissible fade show"; 
             divMensaje.Visible = true;
-            // Opcional: Añadir un botón de cierre para la alerta
-            // lblMensaje.Text += "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
+            lblMensaje.Text += "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
         }
 
         #endregion

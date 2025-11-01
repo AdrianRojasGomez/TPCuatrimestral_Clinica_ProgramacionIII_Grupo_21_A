@@ -1,9 +1,20 @@
 ﻿<%@ Page Title="Gestión de Pacientes" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="Pacientes.aspx.cs" Inherits="WebApplicationClinica.Pacientes" %>
-
+   
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    </asp:Content>
+    <style>
+        .table th > a {
+            color: #212529 !important; 
+            text-decoration: none;
+        }
+
+        .table th > a:hover {
+            color: #000 !important;
+        }
+    </style>
+</asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+         
     <div class="container mt-4">
         <h2 class="mb-3"><%: Title %></h2>
         <p class="lead">Administración de la información de los pacientes de la clínica.</p>
@@ -30,35 +41,95 @@
 
         <asp:Panel ID="pnlFormulario" runat="server" Visible="false" CssClass="card mb-4">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0"><asp:Label ID="lblFormTitulo" runat="server" Text="Nuevo Paciente"></asp:Label></h3>
+                <h3 class="mb-0">
+                    <asp:Label ID="lblFormTitulo" runat="server" Text="Nuevo Paciente"></asp:Label></h3>
             </div>
             <div class="card-body">
                 <asp:HiddenField ID="hfPacienteId" runat="server" Value="0" />
 
+                <asp:ValidationSummary ID="vsErrores" runat="server"
+                HeaderText="Por favor, corrige los siguientes errores:"
+                CssClass="alert alert-danger" 
+                DisplayMode="BulletList" />
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <asp:Label ID="Label1" runat="server" Text="Nombre:"></asp:Label>
-                        <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" required></asp:TextBox>
+
+                        <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control"></asp:TextBox>
+
+                        <asp:RequiredFieldValidator
+                            ID="rfvNombre" runat="server" ControlToValidate="txtNombre"
+                            ErrorMessage="El nombre es obligatorio." Display="Dynamic"
+                            CssClass="text-danger">                     
+                    </asp:RequiredFieldValidator>
                     </div>
+
                     <div class="col-md-6 mb-3">
                         <asp:Label ID="Label2" runat="server" Text="Apellido:"></asp:Label>
-                        <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" required></asp:TextBox>
+                        <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control"></asp:TextBox>
+                    
+                        <asp:RequiredFieldValidator ID="rfvApellido" runat="server"
+                            ControlToValidate="txtApellido"
+                            ErrorMessage="El apellido es obligatorio."
+                            Display="Dynamic" CssClass="text-danger">
+                        </asp:RequiredFieldValidator>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <asp:Label ID="Label3" runat="server" Text="DNI:"></asp:Label>
-                        <asp:TextBox ID="txtDni" runat="server" CssClass="form-control" required></asp:TextBox>
+                        <asp:TextBox ID="txtDni" runat="server" CssClass="form-control"></asp:TextBox>
+                             
+                        <asp:RequiredFieldValidator ID="rfvDni" runat="server"
+                            ControlToValidate="txtDni"
+                            ErrorMessage="El DNI es obligatorio."
+                            Display="Dynamic" CssClass="text-danger">
+                         </asp:RequiredFieldValidator>
+
+                        <%-- Validador para formato de DNI (solo números) --%>
+                        <asp:RegularExpressionValidator ID="revDni" runat="server"
+                            ControlToValidate="txtDni"
+                            ErrorMessage="El DNI debe contener solo números."
+                            ValidationExpression="^\d+$"
+                            Display="Dynamic" CssClass="text-danger">
+                        </asp:RegularExpressionValidator>
                     </div>
+
                     <div class="col-md-6 mb-3">
                         <asp:Label ID="Label4" runat="server" Text="Fecha de Nacimiento:"></asp:Label>
                         <asp:TextBox ID="txtFechaNacimiento" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>
+
+                        <asp:CompareValidator ID="cvFecha" runat="server"
+                            ControlToValidate="txtFechaNacimiento"
+                            Operator="DataTypeCheck"
+                            Type="Date"
+                            ErrorMessage="La fecha de nacimiento no es válida."
+                            Display="Dynamic" CssClass="text-danger">
+                        </asp:CompareValidator>
                     </div>
                 </div>
+
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <asp:Label ID="Label5" runat="server" Text="Email:"></asp:Label>
-                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="form-control" required></asp:TextBox>
+                        <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="form-control"></asp:TextBox>
+
+                        <%-- Validador para Email (Requerido) --%>
+                        <asp:RequiredFieldValidator ID="rfvEmail" runat="server"
+                            ControlToValidate="txtEmail"
+                            ErrorMessage="El email es obligatorio."
+                            Display="Dynamic" CssClass="text-danger">
+                        </asp:RequiredFieldValidator>
+
+                        <%-- Validador para formato de Email --%>
+                        <asp:RegularExpressionValidator ID="revEmail" runat="server"
+                            ControlToValidate="txtEmail"
+                            ErrorMessage="El formato del email no es válido."
+                            ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
+                            Display="Dynamic" CssClass="text-danger">
+                        </asp:RegularExpressionValidator>
                     </div>
                     <div class="col-md-6 mb-3">
                         <asp:Label ID="Label6" runat="server" Text="Teléfono:"></asp:Label>
@@ -82,7 +153,10 @@
             <div class="table-responsive">
                 <asp:GridView ID="gvPacientes" runat="server" AutoGenerateColumns="False" DataKeyNames="IdPaciente"
                     CssClass="table table-hover table-striped table-bordered" EmptyDataText="No hay pacientes registrados."
-                    OnRowCommand="gvPacientes_RowCommand">
+                    OnRowCommand="gvPacientes_RowCommand"
+
+                    AllowPaging="true" PageSize="10" OnPageIndexChanging="gvPacientes_PageIndexChanging"
+                    AllowSorting="true" OnSorting="gvPacientes_Sorting" OnRowCreated="gvPacientes_RowCreated">
                     <Columns>
                         <asp:BoundField DataField="IdPaciente" HeaderText="ID" ReadOnly="True" SortExpression="IdPaciente" />
                         <asp:BoundField DataField="Dni" HeaderText="DNI" SortExpression="Dni" />
@@ -92,9 +166,9 @@
                         <asp:BoundField DataField="Telefono" HeaderText="Teléfono" SortExpression="Telefono" />
                         <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>
-                                <asp:LinkButton ID="btnEditar" runat="server" CommandName="Edit" CommandArgument='<%# Eval("IdPaciente") %>' CssClass="btn btn-sm btn-info me-2" ToolTip="Editar Paciente"><i class="bi bi-pencil-square"></i> Editar</asp:LinkButton>
+                                <asp:LinkButton ID="btnEditar" runat="server" CommandName="EditarPaciente" CommandArgument='<%# Eval("IdPaciente") %>' CssClass="btn btn-sm btn-info me-2" ToolTip="Editar Paciente"><i class="bi bi-pencil-square"></i> Editar</asp:LinkButton>
                                 <asp:LinkButton ID="btnEliminar" runat="server" CommandName="CustomDelete" CommandArgument='<%# Eval("IdPaciente") %>' CssClass="btn btn-sm btn-danger"
-            OnClientClick="return confirm('¿Está seguro que desea eliminar este paciente?');" ToolTip="Eliminar Paciente"><i class="bi bi-trash"></i> Eliminar</asp:LinkButton>
+                                    OnClientClick="return confirm('¿Está seguro que desea eliminar este paciente?');" ToolTip="Eliminar Paciente"><i class="bi bi-trash"></i> Eliminar</asp:LinkButton>
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>

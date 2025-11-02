@@ -85,7 +85,7 @@
 
                         </div>
 
-                        <%--Pie opcional (botones) fijo--%>
+                        <%--Pie (botones) fijo--%>
                         <div class="card-footer bg-white sticky-bottom">
                             <div class="d-flex justify-content-end gap-2">
                                 <asp:Button runat="server" ID="btnGuardar"

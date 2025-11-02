@@ -5,7 +5,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
 
-    <div class="container-fluid bg-light py-5 shadow-sm ">
+    <div class="container-fluid bg-light py-3 shadow-sm ">
         <div class="row g-5 justify-content-center">
 
             <!-- Tarjeta 1 -->

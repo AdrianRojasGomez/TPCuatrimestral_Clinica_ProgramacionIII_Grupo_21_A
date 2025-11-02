@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-
-
     public enum TipoUsuario 
     { 
         Admin = 1,

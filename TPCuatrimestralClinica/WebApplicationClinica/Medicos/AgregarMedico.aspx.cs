@@ -7,14 +7,19 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Negocio;
+using System.Diagnostics.Eventing.Reader;
 
 namespace WebApplicationClinica.Medicos
 {
     public partial class WebForm2 : System.Web.UI.Page
     {
+
+        public bool confirmar = false;
         protected void Page_Load(object sender, EventArgs e)
         {
             panelGrillaMedico.Visible = false;
+
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
 
             try
             {
@@ -42,6 +47,16 @@ namespace WebApplicationClinica.Medicos
 
 
 
+                    CargarGrillaMedicos();
+
+                    txtFiltrarMedico.Attributes["oninput"] = $"liveFilter('{txtFiltrarMedico.UniqueID}')";
+                    panelEliminar.Visible = false;
+
+                    panelEliminar.Visible = false;
+                    lblEliminado.Visible = false;
+                    lblEminadoEror.Visible = false;
+
+
 
                 }
 
@@ -51,6 +66,8 @@ namespace WebApplicationClinica.Medicos
 
                 throw ex;
             }
+
+
 
 
 
@@ -148,6 +165,8 @@ namespace WebApplicationClinica.Medicos
 
                 medico.TurnoTrabajo = new TurnoTrabajo();
                 medico.TurnoTrabajo.IdTurnoTrabajo = int.Parse(idTurno);
+                medico.TurnoTrabajo.HoraInicio = TimeSpan.Parse(txtHoraFin.Text);
+                medico.TurnoTrabajo.HoraFin = TimeSpan.Parse(txtHoraFin.Text);
 
 
                 medico.Especialidades = new List<Especialidad>();
@@ -162,6 +181,8 @@ namespace WebApplicationClinica.Medicos
                 lblError.CssClass = "text-success";
                 lblError.Text = "✅ Médico agregado correctamente.";
                 lblError.Visible = true;
+
+                CargarGrillaMedicos();
             }
             catch (Exception ex)
             {
@@ -203,6 +224,8 @@ namespace WebApplicationClinica.Medicos
 
         protected void dvMedicos_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
+
+
 
         }
 
@@ -262,6 +285,118 @@ namespace WebApplicationClinica.Medicos
         protected void txtFiltrarMedico_TextChanged(object sender, EventArgs e)
         {
 
+            List<Medico> lista = (List<Medico>)Session["listamedicos"];
+            string filtro = txtFiltrarMedico.Text.ToUpper();
+
+            List<Medico> listafiltrada;
+
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+
+                listafiltrada = lista;
+            }
+            else
+            {
+
+                listafiltrada = lista.FindAll(x =>
+                    x.Nombre.ToUpper().Contains(filtro) ||
+                    x.Apellido.ToUpper().Contains(filtro) ||
+                    (x.TurnoTrabajo != null && x.TurnoTrabajo.Nombre.ToUpper().Contains(filtro)));
+            }
+
+            gvMedicos.DataSource = listafiltrada;
+            gvMedicos.DataBind();
+
+            txtFiltrarMedico.Focus();
+
+
+
+        }
+
+        public void CargarGrillaMedicos()
+        {
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+            List<Medico> lista = medicoNegocio.ListarMedicos();
+            Session.Add("listamedicos", lista);
+            gvMedicos.DataSource = lista;
+            gvMedicos.DataBind();
+        }
+
+        protected void txtEliminarFisicamemte_Click(object sender, EventArgs e)
+        {
+      
+
+
+        }
+
+        protected void gvMedicos_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+
+        }
+
+        protected void btnEditar_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+            int id = int.Parse(((Button)sender).CommandArgument);
+            ViewState["IdMedicoEliminar"] = id;
+
+
+            panelEliminar.Visible = true;
+
+            lblEminadoEror.Visible = false;
+
+           lblEliminado.Visible=false;
+        }
+
+        protected void txtNoeleiminarlogicamente_Click(object sender, EventArgs e)
+        {
+
+            panelEliminar.Visible=false;
+           
+        }
+
+        protected void txtEliminarLgocimante_Click(object sender, EventArgs e)
+        {
+
+            
+                try
+                {
+                    MedicoNegocio medicoNegocio = new MedicoNegocio();
+
+
+                    int id = (int)ViewState["IdMedicoEliminar"];
+
+
+                    medicoNegocio.EliminarMedico(id);
+
+                    lblEliminado.Visible = true;
+                    lblEminadoEror.Visible = false;
+
+
+                    
+
+
+                    CargarGrillaMedicos();
+
+
+                }
+                catch (Exception ex)
+                {
+
+                    lblEminadoEror.Visible = true;
+
+                    throw ex;
+
+                    
+                }
+
+
+            
+           
         }
     }
 }

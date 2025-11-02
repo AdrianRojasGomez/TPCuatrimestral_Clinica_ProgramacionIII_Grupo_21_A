@@ -20,22 +20,23 @@ namespace Negocio
             try
             {
                 accesoDatos.SetearConsulta(@"
-            SELECT 
-                m.IdMedico,
-                m.Nombre,
-                m.Apellido,
-                m.Matricula,
-                t.IdTurnoTrabajo,
-                t.Nombre AS TurnoNombre,
-                t.HoraInicio,
-                t.HoraFin,
-                e.IdEspecialidad,
-                e.Nombre AS EspecialidadNombre
-            FROM Medico m
-            LEFT JOIN TurnoTrabajo t ON t.IdTurnoTrabajo = m.IdTurnoTrabajo
-            LEFT JOIN MedicoEspecialidad me ON me.IdMedico = m.IdMedico
-            LEFT JOIN Especialidad e ON e.IdEspecialidad = me.IdEspecialidad
-            ORDER BY m.Apellido, m.Nombre, e.Nombre");
+                                   SELECT 
+                            m.IdMedico,
+                             m.Nombre,
+                            m.Apellido,
+                            m.Matricula,
+                                  t.IdTurnoTrabajo,
+                          t.Nombre AS TurnoNombre,
+                             t.HoraInicio,
+                              t.HoraFin,
+                          e.IdEspecialidad,
+                           e.Nombre AS EspecialidadNombre
+                             FROM Medico m
+                       LEFT JOIN MedicoTurno mt        ON mt.IdMedico = m.IdMedico
+                   LEFT JOIN TurnoTrabajo t        ON t.IdTurnoTrabajo = mt.IdTurnoTrabajo
+                   LEFT JOIN MedicoEspecialidad me ON me.IdMedico = m.IdMedico
+                   LEFT JOIN Especialidad e        ON e.IdEspecialidad = me.IdEspecialidad
+                          ORDER BY m.Apellido, m.Nombre, e.Nombre");
                 accesoDatos.EjecutarLectura();
 
                 while (accesoDatos.Lector.Read())
@@ -98,21 +99,24 @@ namespace Negocio
                 datos.SetearParametros("@Apellido", medico.Apellido);
                 datos.SetearParametros("@Matricula", medico.Matricula);
 
-               
+
                 int idMedicoNuevo = Convert.ToInt32(datos.EjecutarEscalar());
                 datos.CerrarConexion();
 
                 datos = new AccesoDatos();
                 datos.SetearConsulta(
-                    "INSERT INTO MedicoTurno (IdMedico, IdTurnoTrabajo) " +
-                    "VALUES (@IdMedico, @IdTurnoTrabajo)"
+                       "INSERT INTO MedicoTurno (IdMedico, IdTurnoTrabajo, HoraInicio, HoraFin) " +
+            "VALUES (@IdMedico, @IdTurnoTrabajo, @HoraInicio, @HoraFin)"
+
                 );
                 datos.SetearParametros("@IdMedico", idMedicoNuevo);
                 datos.SetearParametros("@IdTurnoTrabajo", medico.TurnoTrabajo.IdTurnoTrabajo);
+                datos.SetearParametros("@HoraInicio", medico.TurnoTrabajo.HoraInicio);
+                datos.SetearParametros("@HoraFin", medico.TurnoTrabajo.HoraFin);
                 datos.EjecutarAccion();
                 datos.CerrarConexion();
 
-                
+
                 datos = new AccesoDatos();
                 datos.SetearConsulta(
                     "INSERT INTO MedicoEspecialidad (IdMedico, IdEspecialidad) " +
@@ -163,14 +167,16 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("DELETE FROM MedicoEspecialidad WHERE IdMedico = @Id");
+             
+                datos.SetearConsulta(@"UPDATE MedicoEspecialidad SET Activo = 0 WHERE IdMedico = @Id;
+                               UPDATE MedicoTurno        SET Activo = 0 WHERE IdMedico = @Id;");
                 datos.SetearParametros("@Id", id);
                 datos.EjecutarAccion();
                 datos.CerrarConexion();
 
-
+                
                 datos = new AccesoDatos();
-                datos.SetearConsulta("DELETE FROM Medico WHERE IdMedico = @Id");
+                datos.SetearConsulta("UPDATE Medico SET Activo = 0 WHERE IdMedico = @Id");
                 datos.SetearParametros("@Id", id);
                 datos.EjecutarAccion();
             }

@@ -1,102 +1,117 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Archivo: Negocio/AccesoDatos.cs
+
+using System;
 using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace Negocio
 {
     public class AccesoDatos
     {
-
-        private SqlConnection conexion;
         private SqlCommand comando;
         private SqlDataReader lector;
-        //propiedad para el lector
+        private string connectionString;
+
+        // Propiedad para el lector
         public SqlDataReader Lector
         {
             get { return lector; }
         }
-        //constructor
+
+        // Constructor
         public AccesoDatos()
         {
-           string cadena = ConfigurationManager.ConnectionStrings["ClinicaConnection"].ConnectionString;
-           
-          
-            conexion = new SqlConnection(cadena);
+            connectionString = ConfigurationManager.ConnectionStrings["ClinicaConnection"].ConnectionString;
             comando = new SqlCommand();
-
         }
-        //metodo para setear consulta
+
+        // Método para setear consulta
         public void SetearConsulta(string consulta)
         {
-            comando.CommandType = System.Data.CommandType.Text;
+            comando.CommandType = CommandType.Text;
             comando.CommandText = consulta;
         }
 
+        // Método para setear Stored Procedure
         public void SetearSP(string sp)
         {
-            comando.CommandType = System.Data.CommandType.StoredProcedure;
+            comando.CommandType = CommandType.StoredProcedure;
             comando.CommandText = sp;
         }
-        //metodo para ejecutar lectura
+
+        
         public void EjecutarLectura()
         {
-
+            SqlConnection conexion = new SqlConnection(connectionString);
             comando.Connection = conexion;
             try
             {
                 conexion.Open();
 
-                lector = comando.ExecuteReader();
+                lector = comando.ExecuteReader(CommandBehavior.CloseConnection);
             }
             catch (Exception ex)
             {
-
+                
+                if (conexion.State == ConnectionState.Open)
+                    conexion.Close();
                 throw ex;
             }
         }
-        //metodo para ejecutar accion
+
+        
         public void EjecutarAccion()
         {
-            comando.Connection = conexion;
-            try
+   
+            using (SqlConnection conexion = new SqlConnection(connectionString))
             {
-                conexion.Open();
-                comando.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-
-                throw ex;
-            }
-
+                comando.Connection = conexion;
+                try
+                {
+                    conexion.Open();
+                    comando.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            } 
         }
-        //metodo para ejecutar escalar
+
         public object EjecutarEscalar()
         {
-            comando.Connection = conexion;
-            conexion.Open();
-            return comando.ExecuteScalar();
+            using (SqlConnection conexion = new SqlConnection(connectionString))
+            {
+                comando.Connection = conexion;
+                try
+                {
+                    conexion.Open();
+                    return comando.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            } 
         }
-        //metodo para setear parametro
 
         public void SetearParametros(string nombre, object valor)
         {
-
             comando.Parameters.AddWithValue(nombre, valor);
-
         }
-        //metodo para cerrar conexion
+
+        public void LimpiarParametros()
+        {
+            comando.Parameters.Clear();
+        }
+
+        
         public void CerrarConexion()
         {
-            if (lector != null)
+            if (lector != null && !lector.IsClosed)
                 lector.Close();
-            conexion.Close();
 
         }
-
     }
 }

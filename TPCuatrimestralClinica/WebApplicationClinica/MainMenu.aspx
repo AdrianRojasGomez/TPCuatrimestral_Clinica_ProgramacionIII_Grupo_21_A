@@ -40,13 +40,11 @@
                     <div class="card-body d-flex flex-column">
                         <h3 class="card-title mb-2">Pacientes</h3>
                         <p class="card-text text-soft mb-4">
-                            Registra y actualiza la información de tus pacientes de forma segura.
+                            Registra o actualiza la información de tus pacientes de forma segura.
                         </p>
+                                   
 
-                        <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido? Listo --%>
-              
-
-                        <asp:Button ID="BtnAltaPaciente" runat="server" Text="Alta Paciente" CssClass="btn btn-primary mt-auto shadow" OnClick="BtnAltaPaciente_Click" />
+                        <asp:Button ID="BtnAltaPaciente" runat="server" Text="Gestion Paciente" CssClass="btn btn-primary mt-auto shadow" OnClick="BtnAltaPaciente_Click" />
 
 
 
@@ -90,7 +88,7 @@
             <div class="ms-md-auto">
                 <asp:HyperLink ID="btnCrearTurno"
                     runat="server"
-                    NavigateUrl="~/CrearTurno.aspx"
+                    NavigateUrl="~/turnos/CrearTurno.aspx"
                     CssClass="btn btn-primary">
         Crear turno
                 </asp:HyperLink>

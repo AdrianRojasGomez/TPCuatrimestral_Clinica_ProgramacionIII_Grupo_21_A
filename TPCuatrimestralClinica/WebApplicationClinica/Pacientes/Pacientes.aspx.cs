@@ -1,7 +1,7 @@
-﻿using System;
-using System.Configuration;
+﻿using Dominio;
+using Negocio;
+using System;
 using System.Data;
-using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -9,8 +9,6 @@ namespace WebApplicationClinica
 {
     public partial class Pacientes : System.Web.UI.Page
     {
-        readonly string connectionString = ConfigurationManager.ConnectionStrings["ClinicaConnection"].ConnectionString;
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -20,53 +18,34 @@ namespace WebApplicationClinica
             }
         }
 
-        #region MÉTODOS DE DATOS (BD)
+        #region MÉTODOS DE DATOS (LLAMAN A NEGOCIO)
 
         void CargarPacientes(string filtro = "")
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                PacienteNegocio negocio = new PacienteNegocio();
+                DataTable dt = negocio.Listar(filtro);
+
+                if (dt.Rows.Count > 0)
                 {
-                    string query = "SELECT IdPaciente, Dni, Apellido, Nombre, Email, Telefono FROM Pacientes ";
-                    
-                    if (!string.IsNullOrEmpty(filtro))
+                    DataView dv = dt.DefaultView;
+
+                    if (!string.IsNullOrEmpty(this.SortExpression))
                     {
-                        query += "WHERE Dni LIKE @Filtro OR Apellido LIKE @Filtro OR Nombre LIKE @Filtro ";
-                    }                    
-
-                    SqlDataAdapter da = new SqlDataAdapter(query, con);
-                    if (!string.IsNullOrEmpty(filtro))
-                    {
-                        da.SelectCommand.Parameters.AddWithValue("@Filtro", "%" + filtro + "%");
-                    }
-
-                    DataTable dt = new DataTable();
-                    da.Fill(dt);
-                    if (dt.Rows.Count > 0)
-                    {                        
-                        DataView dv = dt.DefaultView;
-
-                        if (!string.IsNullOrEmpty(this.SortExpression))
-                        {
-                            
-                            dv.Sort = string.Format("{0} {1}", this.SortExpression, this.SortDirection);
-                        }
-                        else
-                        {
-                            
-                            dv.Sort = "Apellido ASC, Nombre ASC";
-                        }
-                                                
-                        gvPacientes.DataSource = dv;
+                        dv.Sort = string.Format("{0} {1}", this.SortExpression, this.SortDirection);
                     }
                     else
                     {
-                        gvPacientes.DataSource = dt;
+                        dv.Sort = "Apellido ASC, Nombre ASC";
                     }
-                                       
-                    gvPacientes.DataBind();
+                    gvPacientes.DataSource = dv;
                 }
+                else
+                {
+                    gvPacientes.DataSource = dt;
+                }
+                gvPacientes.DataBind();
             }
             catch (Exception ex)
             {
@@ -78,35 +57,27 @@ namespace WebApplicationClinica
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
+                PacienteNegocio negocio = new PacienteNegocio();
+                Paciente pac = negocio.BuscarPorId(id);
+
+                if (pac != null)
                 {
-                    string query = "SELECT * FROM Pacientes WHERE IdPaciente = @IdPaciente";
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@IdPaciente", id);
+                    hfPacienteId.Value = pac.IdPaciente.ToString();
+                    txtNombre.Text = pac.Nombre;
+                    txtApellido.Text = pac.Apellido;
+                    txtDni.Text = pac.Dni;
+                    txtEmail.Text = pac.Email;
+                    txtTelefono.Text = pac.Telefono;
+                    txtDireccion.Text = pac.Direccion;
 
-                    con.Open();
-                    SqlDataReader reader = cmd.ExecuteReader();
-
-                    if (reader.Read())
+                    if (pac.FechaNacimiento != null)
                     {
-                        hfPacienteId.Value = reader["IdPaciente"].ToString();
-                        txtNombre.Text = reader["Nombre"].ToString();
-                        txtApellido.Text = reader["Apellido"].ToString();
-                        txtDni.Text = reader["Dni"].ToString();
-                        txtEmail.Text = reader["Email"].ToString();
-                        txtTelefono.Text = reader["Telefono"].ToString();
-                        txtDireccion.Text = reader["Direccion"].ToString();
-
-                        if (reader["FechaNacimiento"] != DBNull.Value)
-                        {
-                            txtFechaNacimiento.Text = Convert.ToDateTime(reader["FechaNacimiento"]).ToString("yyyy-MM-dd");
-                        }
-                        else
-                        {
-                            txtFechaNacimiento.Text = "";
-                        }
+                        txtFechaNacimiento.Text = ((DateTime)pac.FechaNacimiento).ToString("yyyy-MM-dd");
                     }
-                    reader.Close();
+                    else
+                    {
+                        txtFechaNacimiento.Text = "";
+                    }
                 }
             }
             catch (Exception ex)
@@ -119,29 +90,13 @@ namespace WebApplicationClinica
         {
             try
             {
-                using (SqlConnection con = new SqlConnection(connectionString))
-                {
-                    string query = "DELETE FROM Pacientes WHERE IdPaciente = @IdPaciente";
-                    SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@IdPaciente", id);
-
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-
-                    MostrarMensaje("Paciente eliminado correctamente.", "success");
-                }
+                PacienteNegocio negocio = new PacienteNegocio();
+                negocio.Eliminar(id);
+                MostrarMensaje("Paciente eliminado correctamente.", "success");
             }
             catch (Exception ex)
             {
-                // Verifica si la excepción es por una restricción de clave externa
-                if (ex is SqlException sqlEx && sqlEx.Number == 547) // Número de error para FK constraint violation
-                {
-                    MostrarMensaje("No se puede eliminar el paciente porque tiene turnos asociados.", "danger");
-                }
-                else
-                {
-                    MostrarMensaje($"Error al eliminar paciente: {ex.Message}", "danger");
-                }
+                MostrarMensaje(ex.Message, "danger");
             }
         }
 
@@ -166,7 +121,6 @@ namespace WebApplicationClinica
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            
             if (!Page.IsValid)
             {
                 return;
@@ -174,88 +128,37 @@ namespace WebApplicationClinica
 
             try
             {
-                int pacienteIdActual = Convert.ToInt32(hfPacienteId.Value); 
-                string dniIngresado = txtDni.Text.Trim();
+                Paciente pac = new Paciente();
+                pac.IdPaciente = Convert.ToInt32(hfPacienteId.Value);
+                pac.Dni = txtDni.Text.Trim();
+                pac.Apellido = txtApellido.Text.Trim();
+                pac.Nombre = txtNombre.Text.Trim();
+                pac.Email = txtEmail.Text.Trim();
+                pac.Telefono = txtTelefono.Text.Trim();
+                pac.Direccion = txtDireccion.Text.Trim();
 
-                int idPacienteExistente = 0;
-                string nombreExistente = "";
-                string apellidoExistente = "";
-
-                using (SqlConnection conCheck = new SqlConnection(connectionString))
+                if (!string.IsNullOrEmpty(txtFechaNacimiento.Text))
                 {
-                    string queryCheck = "SELECT IdPaciente, Nombre, Apellido FROM Pacientes WHERE Dni = @Dni";
-                    SqlCommand cmdCheck = new SqlCommand(queryCheck, conCheck);
-                    cmdCheck.Parameters.AddWithValue("@Dni", dniIngresado);
+                    pac.FechaNacimiento = Convert.ToDateTime(txtFechaNacimiento.Text);
+                }
 
-                    conCheck.Open();
-                    using (SqlDataReader reader = cmdCheck.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            idPacienteExistente = Convert.ToInt32(reader["IdPaciente"]);
-                            nombreExistente = reader["Nombre"].ToString();
-                            apellidoExistente = reader["Apellido"].ToString();
-                        }
-                    }
-                }
-                // si DNI Duplicado
-                if (idPacienteExistente != 0 && idPacienteExistente != pacienteIdActual)
-                {                    
-                    MostrarMensaje($"Error: El DNI '{dniIngresado}' ya está registrado a nombre de: {nombreExistente} {apellidoExistente}.", "danger");
-                    return;
-                }
-                string query;
-                if (pacienteIdActual == 0)
+                PacienteNegocio negocio = new PacienteNegocio();
+                if (pac.IdPaciente == 0)
                 {
-                    query = @"INSERT INTO Pacientes (Dni, Apellido, Nombre, FechaNacimiento, Email, Telefono, Direccion)
-                      VALUES (@Dni, @Apellido, @Nombre, @FechaNacimiento, @Email, @Telefono, @Direccion)";
+                    negocio.GuardarNuevo(pac);
                 }
                 else
                 {
-                    query = @"UPDATE Pacientes
-                      SET Dni = @Dni, Apellido = @Apellido, Nombre = @Nombre,
-                          FechaNacimiento = @FechaNacimiento, Email = @Email,
-                          Telefono = @Telefono, Direccion = @Direccion
-                      WHERE IdPaciente = @IdPaciente";
+                    negocio.Modificar(pac);
                 }
 
-                using (SqlConnection con = new SqlConnection(connectionString))
-                {
-                    SqlCommand cmd = new SqlCommand(query, con);
-
-                    if (pacienteIdActual != 0)
-                    {
-                        cmd.Parameters.AddWithValue("@IdPaciente", pacienteIdActual);
-                    }
-
-                    cmd.Parameters.AddWithValue("@Dni", dniIngresado);
-                    cmd.Parameters.AddWithValue("@Apellido", txtApellido.Text.Trim());
-                    cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text.Trim());
-                    cmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
-                    cmd.Parameters.AddWithValue("@Telefono", txtTelefono.Text.Trim());
-                    cmd.Parameters.AddWithValue("@Direccion", txtDireccion.Text.Trim());
-
-                    if (string.IsNullOrEmpty(txtFechaNacimiento.Text))
-                    {
-                        cmd.Parameters.AddWithValue("@FechaNacimiento", DBNull.Value);
-                    }
-                    else
-                    {
-                        cmd.Parameters.AddWithValue("@FechaNacimiento", Convert.ToDateTime(txtFechaNacimiento.Text));
-                    }
-
-                    con.Open();
-                    cmd.ExecuteNonQuery();
-
-                    MostrarMensaje(pacienteIdActual == 0 ? "Paciente creado exitosamente." : "Paciente actualizado exitosamente.", "success");
-
-                    pnlFormulario.Visible = false;
-                    CargarPacientes();
-                }
+                MostrarMensaje(pac.IdPaciente == 0 ? "Paciente creado exitosamente." : "Paciente actualizado exitosamente.", "success");
+                pnlFormulario.Visible = false;
+                CargarPacientes();
             }
             catch (Exception ex)
             {
-                MostrarMensaje($"Error al guardar paciente: {ex.Message}", "danger");
+                MostrarMensaje(ex.Message, "danger");
             }
         }
 
@@ -268,7 +171,7 @@ namespace WebApplicationClinica
         #endregion
 
         #region EVENTOS DEL GRIDVIEW
-        
+
         public string SortExpression
         {
             get { return ViewState["SortExpression"] as string ?? string.Empty; }
@@ -282,7 +185,6 @@ namespace WebApplicationClinica
         }
         protected void gvPacientes_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-           
             gvPacientes.PageIndex = e.NewPageIndex;
             CargarPacientes();
         }
@@ -306,14 +208,11 @@ namespace WebApplicationClinica
                     CargarPacientes(txtBuscarPaciente.Text.Trim());
                 }
             }
-           
         }
         protected void gvPacientes_Sorting(object sender, GridViewSortEventArgs e)
         {
-            
             string newSortExpression = e.SortExpression;
 
-           
             if (this.SortExpression == newSortExpression)
             {
                 this.SortDirection = (this.SortDirection == "ASC") ? "DESC" : "ASC";
@@ -322,14 +221,13 @@ namespace WebApplicationClinica
             {
                 this.SortDirection = "ASC";
             }
-                       
             this.SortExpression = newSortExpression;
-
             CargarPacientes();
         }
+
         protected void gvPacientes_RowCreated(object sender, GridViewRowEventArgs e)
         {
-           if (e.Row.RowType == DataControlRowType.Header)
+            if (e.Row.RowType == DataControlRowType.Header)
             {
                 foreach (TableCell cell in e.Row.Cells)
                 {
@@ -339,20 +237,18 @@ namespace WebApplicationClinica
 
                         if (sortButton.CommandArgument == this.SortExpression)
                         {
-                            string sortIcon = "";
-                            if (this.SortDirection == "ASC")
-                            {
-                                sortIcon = " <i class='bi bi-caret-up-fill'></i>";
-                            }
-                            else
-                            {
-                                sortIcon = " <i class='bi bi-caret-down-fill'></i>";
-                            }
-
+                            string sortIcon = (this.SortDirection == "ASC")
+                                ? " <i class='bi bi-caret-up-fill'></i>"
+                                : " <i class='bi bi-caret-down-fill'></i>";
                             cell.Controls.Add(new LiteralControl(sortIcon));
                         }
                     }
                 }
+            }
+
+            else if (e.Row.RowType == DataControlRowType.Pager)
+            {
+                // Aquí va tu código para el paginador de Bootstrap
             }
         }
 
@@ -375,7 +271,7 @@ namespace WebApplicationClinica
         void MostrarMensaje(string mensaje, string tipo)
         {
             lblMensaje.Text = mensaje;
-            divMensaje.Attributes["class"] = $"alert alert-{tipo} alert-dismissible fade show"; 
+            divMensaje.Attributes["class"] = $"alert alert-{tipo} alert-dismissible fade show";
             divMensaje.Visible = true;
             lblMensaje.Text += "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
         }

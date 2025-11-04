@@ -1,107 +1,158 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="CrearTurno.aspx.cs" Inherits="WebApplicationClinica.CrearTurno" %>
+﻿<%@ Page Title="Crear Nuevo Turno" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="CrearTurno.aspx.cs" Inherits="WebApplicationClinica.CrearTurno" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <h1 class="text-center my-4">Crear Nuevo Turno</h1>
+    <h1 class="text-center my-4"><%: Title %></h1>
 
     <main class="min-vh-100 d-flex align-items-stretch py-4">
         <div class="container-fluid">
             <div class="row justify-content-center">
                 <div class="col-12 col-xl-10">
                     <div class="card shadow-lg border-0 rounded-3 w-100">
-                        <%--Cabecera opcional fija--%>
                         <div class="card-header bg-white sticky-top">
                             <h4 class="mb-0 text-center">Ingrese el detalle del turno</h4>
                         </div>
 
-                        <%--Cuerpo con scroll interno --%>
                         <div class="card-body p-4 p-md-5 overflow-auto">
-                            <label for="txtDocumento" class="form-label">Documento</label>
+                            <label for="txtDocumento" class="form-label"><b>1. Buscar Paciente por Documento</b></label>
                             <div class="d-flex align-items-center gap-3 flex-wrap mb-4">
-                                <asp:TextBox runat="server" ID="txtDocumento" CssClass="form-control w-25"
-                                    required="required" pattern="\d+" inputmode="numeric" />
-
+                                <asp:TextBox runat="server" ID="txtDocumento" CssClass="form-control w-25" />
+                                <asp:Button runat="server" ID="btnBuscarPaciente"
+                                    CssClass="btn btn-primary btn-sm"
+                                    Text="Buscar Paciente" UseSubmitBehavior="false"
+                                    OnClick="btnBuscarPaciente_Click" CausesValidation="false" />
                                 <asp:Label runat="server" ID="lblPacienteEstado" CssClass="badge bg-secondary" Text="Pendiente"></asp:Label>
-
-                                <asp:Button runat="server" ID="btnAgregarPaciente"
+                                <asp:Button runat="server" ID="btnIrAgregarPaciente"
                                     CssClass="btn btn-outline-secondary btn-sm"
-                                    Text="Agregar paciente" UseSubmitBehavior="false" />
+                                    Text="Agregar Nuevo Paciente" UseSubmitBehavior="false"
+                                    OnClick="btnIrAgregarPaciente_Click" Visible="false" CausesValidation="false" />
                             </div>
+                            <asp:Label ID="lblMensajeError" runat="server"
+                                CssClass="text-danger d-block" Visible="false"></asp:Label>
 
-
-                            <div class="row g-3 align-items-end">
-                                <%--Especialidad--%>
-                                <div class="col-12 col-md-4">
-                                    <label for="ddlEspecialidad" class="form-label">Especialidad</label>
-                                    <asp:DropDownList runat="server" ID="ddlEspecialidad"
-                                        ClientIDMode="Static"
-                                        CssClass="form-select"
-                                        AppendDataBoundItems="true">
-                                        <asp:ListItem Value="">Seleccione una especialidad…</asp:ListItem>
-                                        <asp:ListItem Value="GEN">Medicina General</asp:ListItem>
-                                        <asp:ListItem Value="CAR">Cardiología</asp:ListItem>
-                                        <asp:ListItem Value="PED">Pediatría</asp:ListItem>
-                                        <asp:ListItem Value="OFT">Oftalmología</asp:ListItem>
-                                    </asp:DropDownList>
+                            <asp:Panel ID="pnlDatosPaciente" runat="server" Visible="false" CssClass="card bg-light mb-4">
+                                <div class="card-header">
+                                    <b>Datos del Paciente Encontrado</b>
                                 </div>
-
-                                <%--Médico--%>
-                                <div class="col-12 col-md-4">
-                                    <label for="ddlMedicoDisponible" class="form-label">Médico</label>
-                                    <asp:DropDownList runat="server" ID="ddlMedicoDisponible"
-                                        ClientIDMode="Static"
-                                        CssClass="form-select"
-                                        AppendDataBoundItems="true">
-                                        <asp:ListItem Value="">Seleccione un médico…</asp:ListItem>
-                                        <asp:ListItem Value="001">Andres Garcia</asp:ListItem>
-                                        <asp:ListItem Value="002">Calamaro Fuentes</asp:ListItem>
-                                        <asp:ListItem Value="003">SinVerdad Gonzalez</asp:ListItem>
-                                        <asp:ListItem Value="004">Vallano hijo-hijo</asp:ListItem>
-                                    </asp:DropDownList>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <asp:Label ID="Label1" runat="server" Text="Nombre:"></asp:Label>
+                                            <asp:TextBox ID="txtNombrePaciente" runat="server" ReadOnly="true" CssClass="form-control-plaintext" />
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <asp:Label ID="Label2" runat="server" Text="Apellido:"></asp:Label>
+                                            <asp:TextBox ID="txtApellidoPaciente" runat="server" ReadOnly="true" CssClass="form-control-plaintext" />
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <asp:Label ID="Label3" runat="server" Text="Email:"></asp:Label>
+                                            <asp:TextBox ID="txtEmailPaciente" runat="server" ReadOnly="true" CssClass="form-control-plaintext" />
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <asp:Label ID="Label4" runat="server" Text="Teléfono:"></asp:Label>
+                                            <asp:TextBox ID="txtTelefonoPaciente" runat="server" ReadOnly="true" CssClass="form-control-plaintext" />
+                                        </div>
+                                    </div>
                                 </div>
+                            </asp:Panel>
+                            <asp:Panel ID="pnlAgregarPaciente" runat="server" Visible="false" CssClass="card card-body bg-light mb-4">
+                                <h5 class="mb-3">Registrar Nuevo Paciente</h5>
 
-                                <%--Fecha--%>
-                                <div class="col-12 col-md-4">
-                                    <label for="dtFechaTurno" class="form-label">Fecha</label>
-                                    <input type="date" id="dtFechaTurno" class="form-control" />
+                                <asp:Label ID="lblMensajeNuevoPaciente" runat="server" CssClass="text-danger" Visible="false"></asp:Label>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <asp:Label ID="Label5" runat="server" Text="Nombre:" AssociatedControlID="txtNuevoNombre"></asp:Label>
+                                        <asp:TextBox ID="txtNuevoNombre" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="rfvNuevoNombre" runat="server" ErrorMessage="Nombre es obligatorio." ControlToValidate="txtNuevoNombre" Display="Dynamic" CssClass="text-danger" ValidationGroup="NuevoPaciente" />
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <asp:Label ID="Label6" runat="server" Text="Apellido:" AssociatedControlID="txtNuevoApellido"></asp:Label>
+                                        <asp:TextBox ID="txtNuevoApellido" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="rfvNuevoApellido" runat="server" ErrorMessage="Apellido es obligatorio." ControlToValidate="txtNuevoApellido" Display="Dynamic" CssClass="text-danger" ValidationGroup="NuevoPaciente" />
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="row mt-4">
-                                <div class="col-12">
-                                    <label for="txtObservaciones" class="form-label">Observaciones</label>
-                                    <asp:TextBox runat="server" ID="txtObservaciones"
-                                        ClientIDMode="Static"
-                                        TextMode="MultiLine"
-                                        Rows="6"
-                                        CssClass="form-control"
-                                        placeholder="Notas u observaciones relevantes…"></asp:TextBox>
-                                    <div class="form-text">Detalla indicaciones o restricciones.</div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <asp:Label ID="Label7" runat="server" Text="DNI:" AssociatedControlID="txtNuevoDni"></asp:Label>
+                                        <asp:TextBox ID="txtNuevoDni" runat="server" CssClass="form-control" ReadOnly="true" ToolTip="DNI tomado de la búsqueda"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <asp:Label ID="Label8" runat="server" Text="Email:" AssociatedControlID="txtNuevoEmail"></asp:Label>
+                                        <asp:TextBox ID="txtNuevoEmail" runat="server" CssClass="form-control" TextMode="Email"></asp:TextBox>
+                                        <asp:RequiredFieldValidator ID="rfvNuevoEmail" runat="server" ErrorMessage="Email es obligatorio." ControlToValidate="txtNuevoEmail" Display="Dynamic" CssClass="text-danger" ValidationGroup="NuevoPaciente" />
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <asp:Label ID="Label9" runat="server" Text="Teléfono:" AssociatedControlID="txtNuevoTelefono"></asp:Label>
+                                        <asp:TextBox ID="txtNuevoTelefono" runat="server" CssClass="form-control"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <asp:Label ID="Label10" runat="server" Text="Fecha de Nacimiento:" AssociatedControlID="txtNuevoFechaNacimiento"></asp:Label>
+                                        <asp:TextBox ID="txtNuevoFechaNacimiento" runat="server" CssClass="form-control" TextMode="Date"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <asp:Label ID="Label11" runat="server" Text="Dirección:" AssociatedControlID="txtNuevoDireccion"></asp:Label>
+                                    <asp:TextBox ID="txtNuevoDireccion" runat="server" CssClass="form-control"></asp:TextBox>
+                                </div>
+                                <div class="d-flex justify-content-end gap-2 mt-3">
+                                    <asp:Button ID="btnGuardarNuevoPaciente" runat="server" Text="Guardar y Usar" CssClass="btn btn-success" OnClick="btnGuardarNuevoPaciente_Click" ValidationGroup="NuevoPaciente" />
+                                    <asp:Button ID="btnCancelarRegistro" runat="server" Text="Cancelar" CssClass="btn btn-secondary" OnClick="btnCancelarRegistro_Click" CausesValidation="false" />
+                                </div>
+                            </asp:Panel>
+                            <asp:Panel ID="pnlDatosTurno" runat="server" Visible="true">
+                                <div class="border-top border border-secondary-subtle opacity-50 my-4"></div>
+                                <label class="form-label"><b>2. Completar Datos del Turno</b></label>
 
-
+                                <div class="row g-3 align-items-end">
+                                    <div class="col-12 col-md-4">
+                                        <%--Especialidad--%>
+                                        <label for="ddlEspecialidad" class="form-label">Especialidad</label>
+                                        <asp:DropDownList runat="server" ID="ddlEspecialidad" ClientIDMode="Static" CssClass="form-select" AppendDataBoundItems="true">
+                                            <asp:ListItem Value="">Seleccione una especialidad…</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                    <%--Médico--%>
+                                    <div class="col-12 col-md-4">
+                                        <label for="ddlMedicoDisponible" class="form-label">Médico</label>
+                                        <asp:DropDownList runat="server" ID="ddlMedicoDisponible" ClientIDMode="Static" CssClass="form-select" AppendDataBoundItems="true">
+                                            <asp:ListItem Value="">Seleccione un médico…</asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                    <%--Fecha--%>
+                                    <div class="col-12 col-md-4">
+                                        <label for="dtFechaTurno" class="form-label">Fecha</label>
+                                        <input type="date" id="dtFechaTurno" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <label for="txtObservaciones" class="form-label">Observaciones</label>
+                                        <asp:TextBox runat="server" ID="txtObservaciones" ClientIDMode="Static" TextMode="MultiLine" Rows="6"
+                                            CssClass="form-control" placeholder="Notas u observaciones relevantes…"></asp:TextBox>
+                                    </div>
+                                </div>
+                            </asp:Panel>
                         </div>
-
                         <%--Pie (botones) fijo--%>
-                        <div class="card-footer bg-white sticky-bottom">
-                            <div class="d-flex justify-content-end gap-2">
-                                <asp:Button runat="server" ID="btnGuardar"
-                                    CssClass="btn btn-primary"
-                                    Text="Guardar" />
-
-                                <asp:Button runat="server" ID="btnCancelar"
-                                    CssClass="btn btn-secondary"
-                                    Text="Cancelar"
-                                    CausesValidation="false" UseSubmitBehavior="false" />
+                        <asp:Panel ID="pnlFooter" runat="server" Visible="true">
+                            <div class="card-footer bg-white sticky-bottom">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <asp:Button runat="server" ID="btnGuardar" CssClass="btn btn-primary" Text="Guardar" OnClick="btnGuardar_Click" />
+                                    <asp:Button runat="server" ID="btnCancelar" CssClass="btn btn-secondary" Text="Cancelar"
+                                        CausesValidation="false" UseSubmitBehavior="false" OnClick="btnCancelar_Click" />
+                                </div>
                             </div>
-                        </div>
+                        </asp:Panel>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-
 </asp:Content>

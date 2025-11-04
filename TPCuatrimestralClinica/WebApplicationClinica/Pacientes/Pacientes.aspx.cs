@@ -166,40 +166,69 @@ namespace WebApplicationClinica
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-
+            
             if (!Page.IsValid)
             {
                 return;
             }
+
             try
             {
-                int pacienteId = Convert.ToInt32(hfPacienteId.Value);
+                int pacienteIdActual = Convert.ToInt32(hfPacienteId.Value); 
+                string dniIngresado = txtDni.Text.Trim();
 
+                int idPacienteExistente = 0;
+                string nombreExistente = "";
+                string apellidoExistente = "";
+
+                using (SqlConnection conCheck = new SqlConnection(connectionString))
+                {
+                    string queryCheck = "SELECT IdPaciente, Nombre, Apellido FROM Pacientes WHERE Dni = @Dni";
+                    SqlCommand cmdCheck = new SqlCommand(queryCheck, conCheck);
+                    cmdCheck.Parameters.AddWithValue("@Dni", dniIngresado);
+
+                    conCheck.Open();
+                    using (SqlDataReader reader = cmdCheck.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            idPacienteExistente = Convert.ToInt32(reader["IdPaciente"]);
+                            nombreExistente = reader["Nombre"].ToString();
+                            apellidoExistente = reader["Apellido"].ToString();
+                        }
+                    }
+                }
+                // si DNI Duplicado
+                if (idPacienteExistente != 0 && idPacienteExistente != pacienteIdActual)
+                {                    
+                    MostrarMensaje($"Error: El DNI '{dniIngresado}' ya está registrado a nombre de: {nombreExistente} {apellidoExistente}.", "danger");
+                    return;
+                }
                 string query;
-                if (pacienteId == 0)
+                if (pacienteIdActual == 0)
                 {
                     query = @"INSERT INTO Pacientes (Dni, Apellido, Nombre, FechaNacimiento, Email, Telefono, Direccion)
-                              VALUES (@Dni, @Apellido, @Nombre, @FechaNacimiento, @Email, @Telefono, @Direccion)";
+                      VALUES (@Dni, @Apellido, @Nombre, @FechaNacimiento, @Email, @Telefono, @Direccion)";
                 }
                 else
                 {
                     query = @"UPDATE Pacientes
-                              SET Dni = @Dni, Apellido = @Apellido, Nombre = @Nombre,
-                                  FechaNacimiento = @FechaNacimiento, Email = @Email,
-                                  Telefono = @Telefono, Direccion = @Direccion
-                              WHERE IdPaciente = @IdPaciente";
+                      SET Dni = @Dni, Apellido = @Apellido, Nombre = @Nombre,
+                          FechaNacimiento = @FechaNacimiento, Email = @Email,
+                          Telefono = @Telefono, Direccion = @Direccion
+                      WHERE IdPaciente = @IdPaciente";
                 }
 
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
                     SqlCommand cmd = new SqlCommand(query, con);
 
-                    if (pacienteId != 0)
+                    if (pacienteIdActual != 0)
                     {
-                        cmd.Parameters.AddWithValue("@IdPaciente", pacienteId);
+                        cmd.Parameters.AddWithValue("@IdPaciente", pacienteIdActual);
                     }
 
-                    cmd.Parameters.AddWithValue("@Dni", txtDni.Text.Trim());
+                    cmd.Parameters.AddWithValue("@Dni", dniIngresado);
                     cmd.Parameters.AddWithValue("@Apellido", txtApellido.Text.Trim());
                     cmd.Parameters.AddWithValue("@Nombre", txtNombre.Text.Trim());
                     cmd.Parameters.AddWithValue("@Email", txtEmail.Text.Trim());
@@ -212,22 +241,22 @@ namespace WebApplicationClinica
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@FechaNacimiento", Convert.ToDateTime(txtFechaNacimiento.Text)); 
+                        cmd.Parameters.AddWithValue("@FechaNacimiento", Convert.ToDateTime(txtFechaNacimiento.Text));
                     }
 
                     con.Open();
                     cmd.ExecuteNonQuery();
 
-                    MostrarMensaje(pacienteId == 0 ? "Paciente creado exitosamente." : "Paciente actualizado exitosamente.", "success");
+                    MostrarMensaje(pacienteIdActual == 0 ? "Paciente creado exitosamente." : "Paciente actualizado exitosamente.", "success");
+
                     pnlFormulario.Visible = false;
-                    CargarPacientes(); 
+                    CargarPacientes();
                 }
             }
             catch (Exception ex)
             {
                 MostrarMensaje($"Error al guardar paciente: {ex.Message}", "danger");
             }
-            
         }
 
         protected void btnBuscar_Click(object sender, EventArgs e)

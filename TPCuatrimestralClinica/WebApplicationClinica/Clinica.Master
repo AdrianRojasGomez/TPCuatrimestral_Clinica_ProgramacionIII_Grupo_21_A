@@ -36,11 +36,13 @@
                             </li>
 
                             <li class="nav-item">
+
                                 <a class="nav-link active" aria-current="page" href="<%: ResolveUrl("~/Turnos/AtenderTurno.aspx") %>">Atender Turno</a>
                             </li>
 
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="<%: ResolveUrl("~/Pacientes/Pacientes.aspx") %>">Alta Paciente</a>
+
                             </li>
 
                         </ul>

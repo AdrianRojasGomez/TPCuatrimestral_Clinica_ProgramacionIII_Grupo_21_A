@@ -110,12 +110,12 @@
             </div>
         </div>
 
-        <asp:Panel ID="panelEliminar" runat="server" Visible="false"  > 
+        <asp:Panel ID="panelEliminar" runat="server" Visible="false">
 
-           
+
             <style>
                 .btn-eliminar {
-                    background-color: #dc3545; 
+                    background-color: #dc3545;
                     color: #fff;
                     border: none;
                     border-radius: 8px;
@@ -134,16 +134,23 @@
 
             <asp:Label ID="lblEliminarLogicamente" runat="server" CssClass="form-label" Text="Desea Eliminar este Medico?" />
 
-           
+
             <asp:Button ID="txtEliminarLgocimante" runat="server" CssClass="btn-eliminar" Text="Si,eliminar" OnClick="txtEliminarLgocimante_Click" />
 
-             <asp:Button ID="txtNoeleiminarlogicamente" runat="server" CssClass="bg-primary" Text="No deseo Eliminarlo" OnClick="txtNoeleiminarlogicamente_Click" />
+            <asp:Button ID="txtNoeleiminarlogicamente" runat="server" CssClass="bg-primary" Text="No deseo Eliminarlo" OnClick="txtNoeleiminarlogicamente_Click" />
 
-            <asp:Label ID="lblEliminado" runat="server"   CssClass="alert alert-success d-inline-block mt-2" Text="Eliminado correctamente" />
+       
 
-            <asp:Label ID="lblEminadoEror" runat="server"   CssClass="alert alert-danger d-inline-block mt-2" Text="Error al eliminar" />
+            <asp:Label ID="lblEliminado" runat="server" CssClass="alert alert-success d-inline-block mt-2" Text="Eliminado correctamente" />
 
-          
+            <asp:Label ID="lblEminadoEror" runat="server" CssClass="alert alert-danger d-inline-block mt-2" Text="Error al eliminar" />
+
+            <asp:Label ID="lblModificao" runat="server" CssClass="alert alert_success d-inline-block mt-2"  />
+
+            <asp:Label ID="lblEroorGuardar" runat="server" CssClass="alert alert_success d-inline-block mt-2"  />
+
+            <asp:Button ID="btnVolver" runat="server" CssClass="bg bg-primary" Text="Volver" OnClick="btnVolver_Click" />
+
         </asp:Panel>
 
 
@@ -157,9 +164,10 @@
             <div class="card-body p-0">
 
                 <asp:GridView ID="gvMedicos" runat="server" EmptyDataText="No hay datos" CssClass="table table-hover mb-0 align-middle" HeaderStyle-CssClass="table-light" AutoGenerateColumns="false" DataKeyNames="IdMedico" AllowPaging="true" PageSize="10" OnPageIndexChanging="gvMedicos_PageIndexChanging"
-                    OnRowEditing="gvMedicos_RowEditing" OnRowUpdating="gvMedicos_RowUpdating" OnRowCancelingEdit="gvMedicos_RowCancelingEdit" OnRowDeleting="gvMedicos_RowDeleting" OnRowCommand="gvMedicos_RowCommand">
+                    OnRowEditing="gvMedicos_RowEditing" OnRowUpdating="gvMedicos_RowUpdating" OnRowCancelingEdit="gvMedicos_RowCancelingEdit" OnRowDeleting="gvMedicos_RowDeleting" OnRowDataBound="gvMedicos_RowDataBound">
 
                     <Columns>
+
 
 
 
@@ -216,10 +224,26 @@
                                 <%# String.Format("{0:hh\\:mm}-{1:hh\\:mm}",
                 Eval("TurnoTrabajo.HoraInicio"), Eval("TurnoTrabajo.HoraFin")) %>
                             </ItemTemplate>
+                            <EditItemTemplate>
 
+                                <asp:TextBox ID="txtHoraInicioEdit" runat="server"
+                                    CssClass="form-control d-inline-block"
+                                    Style="width: 80px">
+                                   
+
+                                </asp:TextBox>
+                                &nbsp;a&nbsp;
+
+                             <asp:TextBox ID="txtHoraFinEdit" runat="server"
+                                 CssClass="form-control d-inline-block"
+                                 Style="width: 80px">
+                                
+
+                             
+                             </asp:TextBox>
+
+                            </EditItemTemplate>
                         </asp:TemplateField>
-
-
 
 
 
@@ -232,29 +256,38 @@
                                 </asp:Repeater>
                             </ItemTemplate>
                             <EditItemTemplate>
-                                <asp:CheckBoxList ID="cblEspEdit" runat="server" DataTextField="Nombre" DataValueField="IdEspecialidad" RepeatDirection="Horizontal" />
+                                <asp:CheckBoxList ID="cblEspEdit" runat="server" DataTextField="Nombre" DataValueField="IdEspecialidad" RepeatDirection="Horizontal" RepeatColumns="5" CssClass="form-check form-check-inline" />
+
                             </EditItemTemplate>
                         </asp:TemplateField>
 
-             
-                       
+
+
+
+
 
                         <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>
 
-                           <asp:Button ID="btnEditar" runat="server" Text="Modificar" OnClick="btnEditar_Click"
-                                    CssClass="btn btn-sm btn-outline-primary mx-1"
-                               
-                                    CommandName="Editar" CommandArgument='<%# Eval("IdMedico") %>' />
+                                <asp:Button ID="btnEditar" runat="server" Text="Modificar"
+                                    CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Edit" />
 
-                             <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" OnClick="btnEliminar_Click"
+                                <asp:Button ID="btnModificar" runat="server" Text="Guardar Cambios"
+                                    CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Update" />
+
+                                <asp:Button ID="btnCancelar" runat="server" Text="Cancelar Edicion"
+                                    CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Cancel" />
 
 
+
+
+
+                                <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" OnClick="btnEliminar_Click"
                                     CssClass="btn btn-sm btn-outline-danger mx-1"
                                     CommandName="Eliminar" CommandArgument='<%# Eval("IdMedico") %>' />
                             </ItemTemplate>
 
-                            
+
 
 
                         </asp:TemplateField>
@@ -271,7 +304,7 @@
 
 
 
-              
+
                     </Columns>
 
 

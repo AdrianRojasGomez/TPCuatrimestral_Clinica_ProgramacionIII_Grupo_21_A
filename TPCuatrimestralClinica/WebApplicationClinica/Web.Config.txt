@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+
+  <connectionStrings>
+    <add name="ClinicaConnection"
+         connectionString="Server=localhost\SQLEXPRESS02; Database=CLINICA_DB; Integrated Security=True;"
+         providerName="System.Data.SqlClient" />
+  </connectionStrings>
+
+  <system.web>
+    <compilation debug="true" targetFramework="4.8" />
+    <httpRuntime targetFramework="4.8" />
+    <pages controlRenderingCompatibilityVersion="4.0" clientIDMode="AutoID" />
+    <authentication mode="None" />
+    <authorization>
+      <allow users="*" />
+    </authorization>
+  </system.web>
+
+  <system.webServer>
+    <defaultDocument>
+      <files>
+        <add value="Login.aspx" />
+      </files>
+    </defaultDocument>
+  </system.webServer>
+
+</configuration>

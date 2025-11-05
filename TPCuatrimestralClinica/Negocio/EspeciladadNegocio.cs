@@ -15,8 +15,10 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("SELECT IdEspecialidad, Nombre FROM Especialidad ORDER BY Nombre");
+                // ✅ Cambié 'Especialidad' por 'Especialidades'
+                d.SetearConsulta("SELECT IdEspecialidad, Nombre FROM Especialidades ORDER BY Nombre");
                 d.EjecutarLectura();
+
                 while (d.Lector.Read())
                 {
                     Especialidad e = new Especialidad();
@@ -26,7 +28,10 @@ namespace Negocio
                 }
                 return listaespecilidad;
             }
-            finally { d.CerrarConexion(); }
+            finally
+            {
+                d.CerrarConexion();
+            }
         }
 
         // OBTENER

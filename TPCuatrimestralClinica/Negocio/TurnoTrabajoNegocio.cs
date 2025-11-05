@@ -17,13 +17,21 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("SELECT IdTurnoTrabajo, Nombre, HoraInicio, HoraFin FROM TurnoTrabajo ORDER BY IdTurnoTrabajo");
+                d.SetearConsulta(@"
+            SELECT 
+                IdGuardia AS IdTurnoTrabajo,  -- alias para que el nombre coincida
+                Nombre,
+                HoraInicio,
+                HoraFin
+            FROM Guardias
+            ORDER BY IdGuardia");
+
                 d.EjecutarLectura();
 
                 while (d.Lector.Read())
                 {
                     var t = new TurnoTrabajo();
-                    t.IdTurnoTrabajo = (int)d.Lector["IdTurnoTrabajo"];
+                    t.IdTurnoTrabajo = (int)d.Lector["IdTurnoTrabajo"];  
                     t.Nombre = (string)d.Lector["Nombre"];
                     t.HoraInicio = (TimeSpan)d.Lector["HoraInicio"];
                     t.HoraFin = (TimeSpan)d.Lector["HoraFin"];
@@ -31,7 +39,10 @@ namespace Negocio
                 }
                 return lista;
             }
-            finally { d.CerrarConexion(); }
+            finally
+            {
+                d.CerrarConexion();
+            }
         }
 
 

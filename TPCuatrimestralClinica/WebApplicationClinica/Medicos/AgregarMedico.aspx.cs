@@ -15,7 +15,7 @@ namespace WebApplicationClinica.Medicos
     public partial class WebForm2 : System.Web.UI.Page
     {
 
-        public bool confirmar = false;
+      
         protected void Page_Load(object sender, EventArgs e)
         {
             panelGrillaMedico.Visible = false;
@@ -115,11 +115,11 @@ namespace WebApplicationClinica.Medicos
                 string idTurno = ddllistTurnoTrabajo.SelectedValue ?? "0";
                 string idEsp = DdlistEspecilidad.SelectedValue ?? "0";
 
-                // ⏰ AHORA USAMOS TUS TEXTBOX REALES
+                
                 string horaInicioStr = (txtHoraInicio.Text ?? "").Trim();
                 string horaFinStr = (txtHoraFin.Text ?? "").Trim();
 
-                // ===== VALIDACIONES BÁSICAS =====
+             
                 if (string.IsNullOrWhiteSpace(nombre) ||
                     string.IsNullOrWhiteSpace(apellido) ||
                     string.IsNullOrWhiteSpace(matricula))
@@ -167,7 +167,7 @@ namespace WebApplicationClinica.Medicos
                 TimeSpan horaInicio;
                 TimeSpan horaFin;
 
-                // TextMode="Time" te manda algo tipo "08:00" → TimeSpan.TryParse lo toma bien
+                
                 if (!TimeSpan.TryParse(horaInicioStr, out horaInicio) ||
                     !TimeSpan.TryParse(horaFinStr, out horaFin))
                 {
@@ -176,7 +176,7 @@ namespace WebApplicationClinica.Medicos
                     return;
                 }
 
-                // ===== ARMAR OBJETO MÉDICO =====
+              
                 medico.Nombre = nombre;
                 medico.Apellido = apellido;
                 medico.Matricula = matricula;
@@ -191,18 +191,18 @@ namespace WebApplicationClinica.Medicos
                 esp.IdEspecialidad = int.Parse(idEsp);
                 medico.Especialidades.Add(esp);
 
-                // ===== GUARDAR EN BD =====
+               
                 medicoNegocio.AgregarMedico(medico);
 
-                // ===== OK =====
+                
                 lblError.CssClass = "text-success";
                 lblError.Text = "✅ Médico agregado correctamente.";
                 lblError.Visible = true;
 
-                // Recargo grilla
+                
                 CargarGrillaMedicos();
 
-                // Limpio campos del formulario
+                
                 txtNombreMedico.Text = "";
                 txtApellidoMedico.Text = "";
                 txtMatriculaMedico.Text = "";
@@ -393,7 +393,7 @@ namespace WebApplicationClinica.Medicos
             }
             catch (Exception)
             {
-                // ===== SI HAY ERROR =====
+                
                 panelEliminar.Visible = true;
                 lblEroorGuardar.Visible = true;
                 lblEroorGuardar.Text = "❌ Error al guardar los cambios. Verifique los datos.";

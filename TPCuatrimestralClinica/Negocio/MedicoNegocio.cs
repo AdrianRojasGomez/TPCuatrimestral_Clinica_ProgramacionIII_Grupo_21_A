@@ -83,7 +83,7 @@ namespace Negocio
             }
         }
 
-        public void AgregarMedico(Medico medico)
+        public int AgregarMedico(Medico medico)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -100,6 +100,9 @@ namespace Negocio
                 datos.SetearParametros("@Matricula", medico.Matricula);
 
                 int idMedicoNuevo = Convert.ToInt32(datos.EjecutarEscalar());
+               
+
+
                 datos.CerrarConexion();
 
                 // 2) RELACIONAR MÉDICO CON GUARDIA EN MedicosPorGuardia
@@ -128,6 +131,7 @@ namespace Negocio
                     datos.SetearParametros("@IdEspecialidad", medico.Especialidades[0].IdEspecialidad);
                     datos.EjecutarAccion();
                 }
+                return idMedicoNuevo;
             }
             catch (Exception ex)
             {

@@ -192,9 +192,12 @@ namespace WebApplicationClinica.Medicos
                 medico.Especialidades.Add(esp);
 
                
-                medicoNegocio.AgregarMedico(medico);
-
                 
+                int idNuevoMedico = medicoNegocio.AgregarMedico(medico);
+                Session["idMedicoCreado"] = idNuevoMedico;
+
+
+
                 lblError.CssClass = "text-success";
                 lblError.Text = "✅ Médico agregado correctamente.";
                 lblError.Visible = true;
@@ -660,6 +663,11 @@ namespace WebApplicationClinica.Medicos
 
            
            
+        }
+
+        protected void btnCrearUsuario_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("CrearUsuario.aspx");
         }
     }
 }

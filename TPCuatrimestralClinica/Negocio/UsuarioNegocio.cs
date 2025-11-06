@@ -55,6 +55,44 @@ namespace Negocio
 
         }
 
+        public void GuardarUsuario(Usuario usuario)
+        {
+
+
+             AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta(
+                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUsuario, IdMedico) " +
+                    "VALUES (@NombreUsuario, @Clave, @TipoUsuario, @IdMedico)"
+                );
+
+                datos.SetearParametros("@NombreUsuario", usuario.NombreUsuario);
+                datos.SetearParametros("@Clave", usuario.Password);
+                datos.SetearParametros("@TipoUsuario", (int)usuario.TipoUsuario);
+
+                if (usuario.Medico != null && usuario.Medico.IdMedico > 0)
+                    datos.SetearParametros("@IdMedico", usuario.Medico.IdMedico);
+                else
+                    datos.SetearParametros("@IdMedico", DBNull.Value);
+
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+
+
+
+        }
+
 
      
 

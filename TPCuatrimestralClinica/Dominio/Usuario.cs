@@ -27,6 +27,8 @@ namespace Dominio
 
         public TipoUsuario TipoUsuario { get; set; } = new TipoUsuario();
 
+        public Medico Medico { get; set; }
+
 
 
     }

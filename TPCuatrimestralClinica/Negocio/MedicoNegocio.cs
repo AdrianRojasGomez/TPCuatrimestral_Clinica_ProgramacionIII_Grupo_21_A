@@ -11,7 +11,7 @@ namespace Negocio
     {
 
 
-        public List<Medico> ListarMedicos(string id = "")
+        public List<Medico> ListarMedicos()
         {
 
             List<Medico> lista = new List<Medico>();
@@ -36,8 +36,8 @@ namespace Negocio
             LEFT JOIN Guardias         t          ON t.IdGuardia   = mt.IdGuardia
             LEFT JOIN MedicosPorEspecialidad me   ON me.IdMedico   = m.IdMedico
             LEFT JOIN Especialidades   e          ON e.IdEspecialidad = me.IdEspecialidad
-                WHERE m.Activo = 1
-            ORDER BY m.Apellido, m.Nombre, e.Nombre");
+                WHERE m.Activo = 1 
+            ORDER BY m.IdMedico DESC, m.Apellido ASC, m.Nombre ASC");
 
                 accesoDatos.EjecutarLectura();
 
@@ -89,7 +89,7 @@ namespace Negocio
 
             try
             {
-                // 1) INSERT EN MEDICOS Y OBTENER ID NUEVO
+                
                 datos.SetearConsulta(
                   "INSERT INTO Medicos (Nombre, Apellido, Matricula) " +
                   "VALUES (@Nombre, @Apellido, @Matricula); " +
@@ -105,7 +105,7 @@ namespace Negocio
 
                 datos.CerrarConexion();
 
-                // 2) RELACIONAR MÉDICO CON GUARDIA EN MedicosPorGuardia
+               
                 if (medico.TurnoTrabajo != null)
                 {
                     datos = new AccesoDatos();
@@ -119,7 +119,7 @@ namespace Negocio
                     datos.CerrarConexion();
                 }
 
-                // 3) RELACIONAR MÉDICO CON ESPECIALIDAD EN MedicosPorEspecialidad
+              
                 if (medico.Especialidades != null && medico.Especialidades.Count > 0)
                 {
                     datos = new AccesoDatos();

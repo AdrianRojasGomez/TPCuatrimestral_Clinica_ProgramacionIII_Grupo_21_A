@@ -287,7 +287,8 @@ namespace WebApplicationClinica.Medicos
 
         protected void gvMedicos_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-
+            gvMedicos.PageIndex = e.NewPageIndex;
+            CargarGrillaMedicos();
         }
 
         protected void gvMedicos_RowEditing(object sender, GridViewEditEventArgs e)
@@ -436,6 +437,7 @@ namespace WebApplicationClinica.Medicos
                 listafiltrada = lista.FindAll(x =>
                     x.Nombre.ToUpper().Contains(filtro) ||
                     x.Apellido.ToUpper().Contains(filtro) ||
+                    
                     (x.TurnoTrabajo != null && x.TurnoTrabajo.Nombre.ToUpper().Contains(filtro)));
             }
 

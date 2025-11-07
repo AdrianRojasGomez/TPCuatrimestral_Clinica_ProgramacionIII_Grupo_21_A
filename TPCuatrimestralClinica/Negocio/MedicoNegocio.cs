@@ -89,7 +89,7 @@ namespace Negocio
 
             try
             {
-                // 1) INSERT EN MEDICOS Y OBTENER ID NUEVO
+                
                 datos.SetearConsulta(
                   "INSERT INTO Medicos (Nombre, Apellido, Matricula) " +
                   "VALUES (@Nombre, @Apellido, @Matricula); " +
@@ -105,7 +105,7 @@ namespace Negocio
 
                 datos.CerrarConexion();
 
-                // 2) RELACIONAR MÉDICO CON GUARDIA EN MedicosPorGuardia
+               
                 if (medico.TurnoTrabajo != null)
                 {
                     datos = new AccesoDatos();
@@ -119,7 +119,7 @@ namespace Negocio
                     datos.CerrarConexion();
                 }
 
-                // 3) RELACIONAR MÉDICO CON ESPECIALIDAD EN MedicosPorEspecialidad
+              
                 if (medico.Especialidades != null && medico.Especialidades.Count > 0)
                 {
                     datos = new AccesoDatos();
@@ -166,7 +166,7 @@ namespace Negocio
                 datosMedico.CerrarConexion();
             }
 
-            // 2) ACTUALIZAR RELACIÓN CON GUARDIA (MedicosPorGuardia)
+           
             if (medico.TurnoTrabajo != null)
             {
                 AccesoDatos datosGuardia = new AccesoDatos();
@@ -180,7 +180,7 @@ namespace Negocio
                 VALUES (@IdMedico, @IdGuardia);");
 
                     datosGuardia.SetearParametros("@IdMedico", medico.IdMedico);
-                    // En tu dominio seguís usando IdTurnoTrabajo, pero en la base es IdGuardia
+                   
                     datosGuardia.SetearParametros("@IdGuardia", medico.TurnoTrabajo.IdTurnoTrabajo);
                     datosGuardia.EjecutarAccion();
                 }
@@ -190,7 +190,6 @@ namespace Negocio
                 }
             }
 
-            // 3) BORRAR ESPECIALIDADES ACTUALES DEL MÉDICO
             AccesoDatos datosEsp = new AccesoDatos();
             try
             {
@@ -203,7 +202,7 @@ namespace Negocio
                 datosEsp.CerrarConexion();
             }
 
-            // 4) INSERTAR NUEVAS ESPECIALIDADES SELECCIONADAS
+           
             foreach (int idEsp in idsEspecialidades)
             {
                 AccesoDatos datosIns = new AccesoDatos();

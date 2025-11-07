@@ -33,6 +33,7 @@ namespace WebApplicationClinica
                 usuario.NombreUsuario = TxtNombreUsuario.Text.Trim();
                 usuario.Password = TxtPassword.Text.Trim();
                 usuario.TipoUsuario = (TipoUsuario)int.Parse(ddlTipoUsuario.SelectedValue);
+                
 
                 usuario.Medico = null;
 
@@ -44,6 +45,8 @@ namespace WebApplicationClinica
                 {
                     usuario.Medico = new Medico();
                     usuario.Medico.IdMedico = idMedico;
+                    usuario.IdMedicoAsociado = idMedico;
+
                 }
 
                 UsuarioNegocio negocio = new UsuarioNegocio();

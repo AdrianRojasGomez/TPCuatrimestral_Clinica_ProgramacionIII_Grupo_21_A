@@ -64,7 +64,7 @@ namespace Negocio
             try
             {
                 datos.SetearConsulta(
-                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUsuario, IdMedico) " +
+                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUusario, IdMedico) " +
                     "VALUES (@NombreUsuario, @Clave, @TipoUsuario, @IdMedico)"
                 );
 
@@ -72,8 +72,8 @@ namespace Negocio
                 datos.SetearParametros("@Clave", usuario.Password);
                 datos.SetearParametros("@TipoUsuario", (int)usuario.TipoUsuario);
 
-                if (usuario.Medico != null && usuario.Medico.IdMedico > 0)
-                    datos.SetearParametros("@IdMedico", usuario.Medico.IdMedico);
+                if (usuario.IdMedicoAsociado > 0)
+                    datos.SetearParametros("@IdMedico", usuario.IdMedicoAsociado);
                 else
                     datos.SetearParametros("@IdMedico", DBNull.Value);
 

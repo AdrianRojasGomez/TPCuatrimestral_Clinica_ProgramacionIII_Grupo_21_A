@@ -195,6 +195,7 @@ namespace WebApplicationClinica.Medicos
                 
                 int idNuevoMedico = medicoNegocio.AgregarMedico(medico);
                 Session["idMedicoCreado"] = idNuevoMedico;
+                
 
 
 
@@ -667,7 +668,7 @@ namespace WebApplicationClinica.Medicos
 
         protected void btnCrearUsuario_Click(object sender, EventArgs e)
         {
-            Response.Redirect("CrearUsuario.aspx");
+            Response.Redirect("~/CrearUsuario.aspx");
         }
     }
 }

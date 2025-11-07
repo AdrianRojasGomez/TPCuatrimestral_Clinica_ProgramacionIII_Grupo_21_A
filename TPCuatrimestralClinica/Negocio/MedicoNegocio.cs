@@ -83,7 +83,7 @@ namespace Negocio
             }
         }
 
-        public void AgregarMedico(Medico medico)
+        public int AgregarMedico(Medico medico)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -100,6 +100,9 @@ namespace Negocio
                 datos.SetearParametros("@Matricula", medico.Matricula);
 
                 int idMedicoNuevo = Convert.ToInt32(datos.EjecutarEscalar());
+               
+
+
                 datos.CerrarConexion();
 
                 // 2) RELACIONAR MÉDICO CON GUARDIA EN MedicosPorGuardia
@@ -128,6 +131,7 @@ namespace Negocio
                     datos.SetearParametros("@IdEspecialidad", medico.Especialidades[0].IdEspecialidad);
                     datos.EjecutarAccion();
                 }
+                return idMedicoNuevo;
             }
             catch (Exception ex)
             {
@@ -162,7 +166,7 @@ namespace Negocio
                 datosMedico.CerrarConexion();
             }
 
-            // 2) ACTUALIZAR RELACIÓN CON GUARDIA (MedicosPorGuardia)
+           
             if (medico.TurnoTrabajo != null)
             {
                 AccesoDatos datosGuardia = new AccesoDatos();
@@ -176,7 +180,7 @@ namespace Negocio
                 VALUES (@IdMedico, @IdGuardia);");
 
                     datosGuardia.SetearParametros("@IdMedico", medico.IdMedico);
-                    // En tu dominio seguís usando IdTurnoTrabajo, pero en la base es IdGuardia
+                   
                     datosGuardia.SetearParametros("@IdGuardia", medico.TurnoTrabajo.IdTurnoTrabajo);
                     datosGuardia.EjecutarAccion();
                 }
@@ -186,7 +190,6 @@ namespace Negocio
                 }
             }
 
-            // 3) BORRAR ESPECIALIDADES ACTUALES DEL MÉDICO
             AccesoDatos datosEsp = new AccesoDatos();
             try
             {
@@ -199,7 +202,7 @@ namespace Negocio
                 datosEsp.CerrarConexion();
             }
 
-            // 4) INSERTAR NUEVAS ESPECIALIDADES SELECCIONADAS
+           
             foreach (int idEsp in idsEspecialidades)
             {
                 AccesoDatos datosIns = new AccesoDatos();

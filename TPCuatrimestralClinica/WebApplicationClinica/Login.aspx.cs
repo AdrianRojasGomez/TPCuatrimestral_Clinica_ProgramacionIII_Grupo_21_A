@@ -71,7 +71,29 @@ namespace WebApplicationClinica
                 {
                     usuario.Password = null;
                     Session.Add("usuario", usuario);
-                    Response.Redirect("MainMenu.aspx");
+                   
+
+                    if (usuario.TipoUsuario == TipoUsuario.Medico)
+                    {
+
+                        Response.Redirect("Medicos/MenuMedico.aspx");
+
+                    }
+                    else if (usuario.TipoUsuario == TipoUsuario.Admin)
+                    {
+
+                        Response.Redirect("MainMenu.aspx");
+
+                    }
+
+                    else if (usuario.TipoUsuario == TipoUsuario.Recepcion) 
+                    { 
+                         
+                        
+                    
+                    } 
+                  
+
 
                 }
                 else

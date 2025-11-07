@@ -78,6 +78,7 @@
     <Content Include="Pacientes\Pacientes.aspx" />
     <Content Include="Web.config" />
     <Content Include="Error.aspx" />
+    <Content Include="CrearUsuario.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clinica.Master.cs">
@@ -143,6 +144,13 @@
     </Compile>
     <Compile Include="Error.aspx.designer.cs">
       <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CrearUsuario.aspx.cs">
+      <DependentUpon>CrearUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CrearUsuario.aspx.designer.cs">
+      <DependentUpon>CrearUsuario.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

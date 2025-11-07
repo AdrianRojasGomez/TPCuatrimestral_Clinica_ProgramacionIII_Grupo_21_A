@@ -57,5 +57,10 @@ namespace WebApplicationClinica
         {
             Response.Redirect("Pacientes/Pacientes.aspx");
         }
+
+        protected void btnAgregarMedico_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Medicos/AgregarMedico.aspx");
+        }
     }
 }

@@ -15,7 +15,7 @@
                             <div class="mb-3 row">
                                 <label for="inputUser" class="col-sm-3 col-form-label text-sm-end">Usuario</label>
                                 <div class="col-sm-6">
-                                                                        <asp:TextBox ID="TxtUsuario" CssClass="form-control" runat="server"></asp:TextBox>
+                                 <asp:TextBox ID="TxtUsuario" CssClass="form-control" runat="server"></asp:TextBox>
 
                                 </div>
                             </div>

@@ -5,7 +5,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <!-- ===================== CONTENEDOR PRINCIPAL ===================== -->
     <div class="container py-4">
-
         <!-- ===================== ENCABEZADO ===================== -->
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
@@ -293,6 +292,9 @@
                         </asp:TemplateField>
 
 
+                        
+
+
 
 
 
@@ -310,6 +312,8 @@
 
 
                 </asp:GridView>
+
+                <asp:Button ID="btnCrearUsuario" runat="server" CssClass="btn btn-outline-primary" Text="Crear Usuario" OnClick="btnCrearUsuario_Click" />
 
 
             </div>

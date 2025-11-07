@@ -13,6 +13,87 @@ namespace Negocio
     public class UsuarioNegocio
     {
 
+        public List<Usuario> listarusuario()
+        {
+            List<Usuario> lista = new List<Usuario>();
+            AccesoDatos accesoDatos = new AccesoDatos();
+
+
+            try
+            {
+
+                accesoDatos.SetearConsulta(@"
+            SELECT 
+                u.IdUsuario,
+                u.NombreUsuario,
+                u.Clave,
+                u.TipoUusario,
+                u.Activo,
+                u.IdMedico,
+                m.Nombre AS NombreMedico,
+                m.Apellido,
+                m.Matricula
+            FROM UsuariosApp u
+            INNER JOIN Medicos m ON m.IdMedico = u.IdMedico
+            WHERE m.Activo = 1 
+            ORDER BY u.IdUsuario DESC");
+
+
+                accesoDatos.EjecutarLectura();
+
+                while (accesoDatos.Lector.Read())
+                {
+
+
+                    Usuario aux = new Usuario();
+
+                    aux.IdUsuario = (int)accesoDatos.Lector["IdUsuario"];
+                    aux.NombreUsuario = (string)accesoDatos.Lector["NombreUsuario"];
+                    aux.Password = (string)accesoDatos.Lector["Clave"];
+                    aux.TipoUsuario = (TipoUsuario)(int)accesoDatos.Lector["TipoUusario"];
+                    aux.Activo = (bool)accesoDatos.Lector["Activo"];
+
+
+                    if (accesoDatos.Lector["IdMedico"] != DBNull.Value)
+                    {
+                        aux.Medico = new Medico();
+                        aux.Medico.IdMedico = (int)accesoDatos.Lector["IdMedico"];
+                        aux.Medico.Nombre = accesoDatos.Lector["NombreMedico"].ToString();
+                        aux.Medico.Apellido = accesoDatos.Lector["Apellido"].ToString();
+                        aux.Medico.Matricula = accesoDatos.Lector["Matricula"].ToString();
+                    }
+
+
+                    lista.Add(aux);
+                }
+
+
+
+
+
+                return lista;
+
+            }
+
+             
+
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            finally
+            {
+
+                accesoDatos.CerrarConexion();
+            }
+
+
+
+
+
+        }
+
 
         public bool Loguear(Usuario usuario)
         {
@@ -59,7 +140,7 @@ namespace Negocio
         {
 
 
-             AccesoDatos datos = new AccesoDatos();
+            AccesoDatos datos = new AccesoDatos();
 
             try
             {
@@ -93,8 +174,24 @@ namespace Negocio
 
         }
 
+        public void CambiarEstadoUsuario(int idUsuario, bool activar)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("UPDATE UsuariosApp SET Activo = @Activo WHERE IdUsuario = @IdUsuario");
+                datos.SetearParametros("@Activo", activar);
+                datos.SetearParametros("@IdUsuario", idUsuario);
+                datos.EjecutarAccion();
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
 
-     
+
+
 
 
 

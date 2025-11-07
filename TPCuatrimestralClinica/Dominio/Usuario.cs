@@ -29,6 +29,8 @@ namespace Dominio
 
         public Medico Medico { get; set; }
 
+        public bool Activo {  get; set; }   
+
 
 
     }

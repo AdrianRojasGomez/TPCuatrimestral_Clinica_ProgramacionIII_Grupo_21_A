@@ -11,7 +11,7 @@ namespace Negocio
     {
 
 
-        public List<Medico> ListarMedicos(string id = "")
+        public List<Medico> ListarMedicos()
         {
 
             List<Medico> lista = new List<Medico>();
@@ -36,8 +36,8 @@ namespace Negocio
             LEFT JOIN Guardias         t          ON t.IdGuardia   = mt.IdGuardia
             LEFT JOIN MedicosPorEspecialidad me   ON me.IdMedico   = m.IdMedico
             LEFT JOIN Especialidades   e          ON e.IdEspecialidad = me.IdEspecialidad
-                WHERE m.Activo = 1
-            ORDER BY m.Apellido, m.Nombre, e.Nombre");
+                WHERE m.Activo = 1 
+            ORDER BY m.IdMedico DESC, m.Apellido ASC, m.Nombre ASC");
 
                 accesoDatos.EjecutarLectura();
 

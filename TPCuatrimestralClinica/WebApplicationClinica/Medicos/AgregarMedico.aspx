@@ -13,7 +13,7 @@
             </div>
 
 
-            <asp:Button ID="btnMostrar" runat="server" Text="Cargar nuevo medico" CssClass="btn-outline-secondary" OnClick="btnMostrar_Click" />
+            <asp:Button ID="btnMostrar" runat="server" Text="Cargar nuevo medico" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnMostrar_Click" />
             <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold" />
         </div>
 
@@ -85,12 +85,12 @@
 
 
 
-            <asp:Button ID="btnGuardarMedico" runat="server" Text="Guardar Medico" CssClass="bnt btn-success" OnClick="btnGuardarMedico_Click" />
+            <asp:Button ID="btnGuardarMedico" runat="server" Text="💾 Guardar Medico" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnGuardarMedico_Click" />
 
 
 
-            <asp:Button ID="btnBotonLimpiarMedico" runat="server" Text="Limpiar" CssClass="btn btn-outline-secondary" OnClick="btnBotonLimpiarMedico_Click" />
-            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn-outline-secondary" OnClick="btnCancelar_Click" />
+            <asp:Button ID="btnBotonLimpiarMedico" runat="server" Text=" 🧹 Limpiar" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnBotonLimpiarMedico_Click" />
+            <asp:Button ID="btnCancelar" runat="server" Text="↩️ Cancelar" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnCancelar_Click" />
         </div>
 
         <!-- CONTENEDOR DEL FILTRO -->
@@ -102,7 +102,7 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <asp:TextBox ID="txtFiltrarMedico" runat="server" CssClass="" OnTextChanged="txtFiltrarMedico_TextChanged" AutoPostBack="true"></asp:TextBox>
+                        <asp:TextBox ID="txtFiltrarMedico" runat="server" CssClass="form-control rounded-end" placeholder="Buscar por Nombre o apellido" OnTextChanged="txtFiltrarMedico_TextChanged" AutoPostBack="true"></asp:TextBox>
 
                     </div>
                 </div>
@@ -170,7 +170,7 @@
 
 
 
-                        <asp:TemplateField HeaderText="Idmedico">
+                        <asp:TemplateField HeaderText="Idmedico" Visible="false" >
                             <ItemTemplate><%# Eval("IdMedico") %></ItemTemplate>
                             <EditItemTemplate>
                                 <asp:Label ID="lblIdMedico" runat="server" Text='<%# Eval("IdMedico") %>'></asp:Label>
@@ -268,20 +268,20 @@
                         <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>
 
-                                <asp:Button ID="btnEditar" runat="server" Text="Modificar"
+                                <asp:Button ID="btnEditar" runat="server" Text="✏️ Modificar"
                                     CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Edit" />
 
-                                <asp:Button ID="btnModificar" runat="server" Text="Guardar Cambios"
+                                <asp:Button ID="btnModificar" runat="server" Text="💾 Guardar Cambios"
                                     CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Update" />
 
-                                <asp:Button ID="btnCancelar" runat="server" Text="Cancelar Edicion"
+                                <asp:Button ID="btnCancelar" runat="server" Text="↩️ Cancelar Edicion"
                                     CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Cancel" />
 
 
 
 
 
-                                <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" OnClick="btnEliminar_Click"
+                                <asp:Button ID="btnEliminar" runat="server" Text="🗑️ Eliminar" OnClick="btnEliminar_Click"
                                     CssClass="btn btn-sm btn-outline-danger mx-1"
                                     CommandName="Eliminar" CommandArgument='<%# Eval("IdMedico") %>' />
                             </ItemTemplate>

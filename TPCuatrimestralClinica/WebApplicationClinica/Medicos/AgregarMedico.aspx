@@ -5,7 +5,6 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <!-- ===================== CONTENEDOR PRINCIPAL ===================== -->
     <div class="container py-4">
-
         <!-- ===================== ENCABEZADO ===================== -->
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
@@ -14,7 +13,7 @@
             </div>
 
 
-            <asp:Button ID="btnMostrar" runat="server" Text="Cargar nuevo medico" CssClass="btn-outline-secondary" OnClick="btnMostrar_Click" />
+            <asp:Button ID="btnMostrar" runat="server" Text="Cargar nuevo medico" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnMostrar_Click" />
             <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold" />
         </div>
 
@@ -55,7 +54,19 @@
                                 <label for="ddlTurnoHtml" class="form-label">Turno de trabajo</label>
                                 <asp:DropDownList ID="ddllistTurnoTrabajo" runat="server" CssClass="form-select"></asp:DropDownList>
                             </div>
-
+                            <div class="col-md-4">
+                                <label class="form-label">Día de la semana</label>
+                                <asp:DropDownList ID="ddlDiaSemanaNuevo" runat="server" CssClass="form-select">
+                                    <asp:ListItem Text="-- Seleccionar día --" Value="" />
+                                    <asp:ListItem Text="Lunes" Value="Lunes" />
+                                    <asp:ListItem Text="Martes" Value="Martes" />
+                                    <asp:ListItem Text="Miércoles" Value="Miércoles" />
+                                    <asp:ListItem Text="Jueves" Value="Jueves" />
+                                    <asp:ListItem Text="Viernes" Value="Viernes" />
+                                    <asp:ListItem Text="Sábado" Value="Sábado" />
+                                    <asp:ListItem Text="Domingo" Value="Domingo" />
+                                </asp:DropDownList>
+                            </div>
 
                             <div class="col-md-8">
                                 <label class="form-label d-block">Especialidades</label>
@@ -86,12 +97,12 @@
 
 
 
-            <asp:Button ID="btnGuardarMedico" runat="server" Text="Guardar Medico" CssClass="bnt btn-success" OnClick="btnGuardarMedico_Click" />
+            <asp:Button ID="btnGuardarMedico" runat="server" Text="💾 Guardar Medico" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnGuardarMedico_Click" />
 
 
 
-            <asp:Button ID="btnBotonLimpiarMedico" runat="server" Text="Limpiar" CssClass="btn btn-outline-secondary" OnClick="btnBotonLimpiarMedico_Click" />
-            <asp:Button ID="btnCancelar" runat="server" Text="Cancelar" CssClass="btn-outline-secondary" OnClick="btnCancelar_Click" />
+            <asp:Button ID="btnBotonLimpiarMedico" runat="server" Text=" 🧹 Limpiar" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnBotonLimpiarMedico_Click" />
+            <asp:Button ID="btnCancelar" runat="server" Text="↩️ Cancelar" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnCancelar_Click" />
         </div>
 
         <!-- CONTENEDOR DEL FILTRO -->
@@ -103,7 +114,7 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-6">
-                        <asp:TextBox ID="txtFiltrarMedico" runat="server" CssClass="" OnTextChanged="txtFiltrarMedico_TextChanged" AutoPostBack="true"></asp:TextBox>
+                        <asp:TextBox ID="txtFiltrarMedico" runat="server" CssClass="form-control rounded-end" placeholder="Buscar por Nombre o apellido" OnTextChanged="txtFiltrarMedico_TextChanged" AutoPostBack="true"></asp:TextBox>
 
                     </div>
                 </div>
@@ -132,24 +143,24 @@
                     }
             </style>
 
-            <asp:Label ID="lblEliminarLogicamente" runat="server" CssClass="form-label" Text="Desea Eliminar este Medico?" />
+            <asp:Label ID="lblEliminarLogicamente" runat="server" CssClass="fw-semibold fs-5 text-dark d-block mb-3" Text="Desea Eliminar este Medico?" />
 
 
-            <asp:Button ID="txtEliminarLgocimante" runat="server" CssClass="btn-eliminar" Text="Si,eliminar" OnClick="txtEliminarLgocimante_Click" />
+            <asp:Button ID="txtEliminarLgocimante" runat="server" CssClass="btn btn-danger rounded-pill px-4 py-2 fw-semibold shadow-sm" Text="Si,eliminar" OnClick="txtEliminarLgocimante_Click" />
 
-            <asp:Button ID="txtNoeleiminarlogicamente" runat="server" CssClass="bg-primary" Text="No deseo Eliminarlo" OnClick="txtNoeleiminarlogicamente_Click" />
+            <asp:Button ID="txtNoeleiminarlogicamente" runat="server" CssClass="btn btn-outline-primary rounded-pill px-4 py-2 fw-semibold ms-2" Text="No deseo Eliminarlo" OnClick="txtNoeleiminarlogicamente_Click" />
 
-       
 
-            <asp:Label ID="lblEliminado" runat="server" CssClass="alert alert-success d-inline-block mt-2" Text="Eliminado correctamente" />
+
+            <asp:Label ID="lblEliminado" runat="server" CssClass="alert alert-success fw-semibold rounded-pill px-4 py-2 shadow-sm d-inline-block mt-2" Text="Eliminado correctamente" />
 
             <asp:Label ID="lblEminadoEror" runat="server" CssClass="alert alert-danger d-inline-block mt-2" Text="Error al eliminar" />
 
-            <asp:Label ID="lblModificao" runat="server" CssClass="alert alert_success d-inline-block mt-2"  />
+            <asp:Label ID="lblModificao" runat="server" CssClass="alert alert_success d-inline-block mt-2" />
 
-            <asp:Label ID="lblEroorGuardar" runat="server" CssClass="alert alert_success d-inline-block mt-2"  />
+            <asp:Label ID="lblEroorGuardar" runat="server" CssClass="alert alert_success d-inline-block mt-2" />
 
-            <asp:Button ID="btnVolver" runat="server" CssClass="bg bg-primary" Text="Volver" OnClick="btnVolver_Click" />
+            <asp:Button ID="btnVolver" runat="server" CssClass="btn btn-outline-primary rounded-pill px-4 py-2 fw-semibold" Text="Volver" OnClick="btnVolver_Click" />
 
         </asp:Panel>
 
@@ -163,15 +174,19 @@
 
             <div class="card-body p-0">
 
-                <asp:GridView ID="gvMedicos" runat="server" EmptyDataText="No hay datos" CssClass="table table-hover mb-0 align-middle" HeaderStyle-CssClass="table-light" AutoGenerateColumns="false" DataKeyNames="IdMedico" AllowPaging="true" PageSize="10" OnPageIndexChanging="gvMedicos_PageIndexChanging"
-                    OnRowEditing="gvMedicos_RowEditing" OnRowUpdating="gvMedicos_RowUpdating" OnRowCancelingEdit="gvMedicos_RowCancelingEdit" OnRowDeleting="gvMedicos_RowDeleting" OnRowDataBound="gvMedicos_RowDataBound">
+                <asp:GridView ID="gvMedicos" runat="server" EmptyDataText="No hay datos" CssClass="table table-hover mb-0 align-middle"
+                    HeaderStyle-CssClass="table-light" AutoGenerateColumns="false" DataKeyNames="IdMedico"
+                    AllowPaging="true" PageSize="10" OnPageIndexChanging="gvMedicos_PageIndexChanging"
+                    OnRowEditing="gvMedicos_RowEditing" OnRowUpdating="gvMedicos_RowUpdating"
+                    OnRowCancelingEdit="gvMedicos_RowCancelingEdit" OnRowDeleting="gvMedicos_RowDeleting"
+                    OnRowDataBound="gvMedicos_RowDataBound" OnRowCommand="gvMedicos_RowCommand1">
 
                     <Columns>
 
 
 
 
-                        <asp:TemplateField HeaderText="Idmedico">
+                        <asp:TemplateField HeaderText="Idmedico" Visible="false">
                             <ItemTemplate><%# Eval("IdMedico") %></ItemTemplate>
                             <EditItemTemplate>
                                 <asp:Label ID="lblIdMedico" runat="server" Text='<%# Eval("IdMedico") %>'></asp:Label>
@@ -200,7 +215,10 @@
                                 <asp:TextBox ID="txtMatriculaEdit" runat="server" CssClass="form-control"
                                     Text='<%# Bind("Matricula") %>'></asp:TextBox>
                             </EditItemTemplate>
+
                         </asp:TemplateField>
+
+
 
 
 
@@ -216,6 +234,25 @@
                             </EditItemTemplate>
                         </asp:TemplateField>
 
+                        <asp:TemplateField HeaderText="Día">
+                            
+                            <ItemTemplate>
+                                <%# Eval("TurnoTrabajo.DiaSemana") %>
+                            </ItemTemplate>
+
+                         
+                            <EditItemTemplate>
+                                <asp:DropDownList ID="ddlDiaSemanaEdit" runat="server" CssClass="form-select">
+                                    <asp:ListItem Text="Lunes" Value="Lunes" />
+                                    <asp:ListItem Text="Martes" Value="Martes" />
+                                    <asp:ListItem Text="Miércoles" Value="Miércoles" />
+                                    <asp:ListItem Text="Jueves" Value="Jueves" />
+                                    <asp:ListItem Text="Viernes" Value="Viernes" />
+                                    <asp:ListItem Text="Sábado" Value="Sábado" />
+                                    <asp:ListItem Text="Domingo" Value="Domingo" />
+                                </asp:DropDownList>
+                            </EditItemTemplate>
+                        </asp:TemplateField>
 
 
 
@@ -269,20 +306,20 @@
                         <asp:TemplateField HeaderText="Acciones">
                             <ItemTemplate>
 
-                                <asp:Button ID="btnEditar" runat="server" Text="Modificar"
+                                <asp:Button ID="btnEditar" runat="server" Text="✏️ Modificar"
                                     CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Edit" />
 
-                                <asp:Button ID="btnModificar" runat="server" Text="Guardar Cambios"
+                                <asp:Button ID="btnModificar" runat="server" Text="💾 Guardar Cambios"
                                     CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Update" />
 
-                                <asp:Button ID="btnCancelar" runat="server" Text="Cancelar Edicion"
+                                <asp:Button ID="btnCancelar" runat="server" Text="↩️ Cancelar Edicion"
                                     CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Cancel" />
 
 
 
 
 
-                                <asp:Button ID="btnEliminar" runat="server" Text="Eliminar" OnClick="btnEliminar_Click"
+                                <asp:Button ID="btnEliminar" runat="server" Text="🗑️ Eliminar" OnClick="btnEliminar_Click"
                                     CssClass="btn btn-sm btn-outline-danger mx-1"
                                     CommandName="Eliminar" CommandArgument='<%# Eval("IdMedico") %>' />
                             </ItemTemplate>
@@ -305,11 +342,16 @@
 
 
 
+
+
+
                     </Columns>
 
 
 
                 </asp:GridView>
+
+
 
 
             </div>

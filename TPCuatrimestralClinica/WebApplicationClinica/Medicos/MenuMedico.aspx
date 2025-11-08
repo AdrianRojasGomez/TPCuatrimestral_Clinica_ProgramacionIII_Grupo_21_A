@@ -12,9 +12,10 @@
         <div class="d-flex align-items-center justify-content-between mb-3">
             <h2 class="h4 mb-0">Panel del Médico</h2>
             <div class="d-flex gap-2">
-                <span class="badge text-bg-primary">Dr. Juan Pérez</span>
-                <span class="badge text-bg-secondary">Consultorio 3</span>
-                <span class="badge text-bg-success">Especialidad: Clínica</span>
+                <asp:Label ID="lblNombreDoctor" runat="server" CssClass="badge text-bg-primary" Text="Dr. Matías Gómez" />
+                <asp:Label ID="lblNombreConsultorio" runat="server" CssClass="badge text-bg-secondary" Text="Consultorio 3" />
+                <asp:Label ID="lblEspecialidad" runat="server" CssClass="badge text-bg-success" Text="Clínica Médica" />
+
             </div>
         </div>
 
@@ -24,17 +25,19 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <div class="small text-muted">Turno en curso</div>
-                        <div class="display-6" id="kpiActual">#A-023</div>
-                        <div class="small text-muted">Paciente: <span id="kpiPaciente">María López</span></div>
+                        <asp:Label ID="lblTurnoCurso" runat="server" CssClass="display-6" Text="15:30 hs" />
+                        <asp:Label ID="lblNombrePaciente" runat="server" CssClass="small text-muted" Text="Paciente: Juan Pérez" />
+
                     </div>
                 </div>
             </div>
             <div class="col-6 col-md-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <div class="small text-muted">En espera</div>
-                        <div class="display-6" id="kpiEspera">5</div>
-                        <div class="small text-muted">Tiempo prom.: 7 min</div>
+                        <asp:Label ID="lblEsperaTurno" runat="server" CssClass="small text-muted" Text="En espera" />
+                        <asp:Label ID="lblMinutosEspera" runat="server" CssClass="display-6" Text="5" />
+                        <asp:Label ID="lblTiempoEspera" runat="server" CssClass="small text-muted" Text="Tiempo prom.: 7 min" />
+
                     </div>
                 </div>
             </div>
@@ -42,8 +45,9 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <div class="small text-muted">Atendidos hoy</div>
-                        <div class="display-6" id="kpiAtendidos">12</div>
-                        <div class="small text-muted">Objetivo: 20</div>
+                        <asp:Label ID="lblAtendidos" runat="server" CssClass="display-6" Text="12" />
+                        <asp:Label ID="lblOjetivo" runat="server" CssClass="small text-muted" Text="Objetivo: 20" />
+
                     </div>
                 </div>
             </div>
@@ -51,8 +55,8 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <div class="small text-muted">Siguiente estimado</div>
-                        <div class="display-6" id="kpiProximo">#A-024</div>
-                        <div class="small text-muted">Paciente: Carlos Díaz</div>
+                        <asp:Label ID="lblSiguienteTurno" runat="server" CssClass="small text-muted" Text="#A-024" />
+                        <asp:Label ID="lblSiguientePaciente" runat="server" CssClass="small text-muted" Text="Paciente: Carlos Díaz" />
                     </div>
                 </div>
             </div>
@@ -65,28 +69,36 @@
                 <div class="card shadow-sm">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span class="fw-semibold">Turno en curso</span>
-                        <span class="badge text-bg-info">#A-023</span>
+                        <asp:Label ID="lblturnoActual" runat="server" CssClass="badge text-bg-info" Text="#A-023" />
+
                     </div>
                     <div class="card-body">
                         <div class="mb-2">
                             <div class="fw-semibold">Paciente</div>
-                            <div id="pacienteActual">María López (DNI 32.123.456)</div>
+                            <asp:Label ID="lblPaciente" runat="server" Text="María López (DNI 32.123.456)" />
+
                         </div>
                         <div class="mb-2">
                             <div class="fw-semibold">Motivo</div>
-                            <div id="motivoActual">Control general</div>
+                            <asp:Label ID="lblMotivoConsulta" runat="server" Text="Control general" />
+
                         </div>
                         <div class="mb-3">
                             <div class="fw-semibold">Observaciones</div>
-                            <textarea class="form-control" id="obsActual" rows="3" placeholder="Anotaciones del médico..."></textarea>
+                            <asp:TextBox ID="txtObservaciones" runat="server" TextMode="MultiLine" Rows="6" CssClass="form-control" placeholder="Anotaciones del médico..." />
+
+
+
 
                         </div>
                         <div class="d-flex flex-wrap gap-2">
-                            <button class="btn btn-outline-primary" id="btnLlamar">Llamar</button>
-                            <button class="btn btn-primary" id="btnAtender">Atender</button>
-                            <button class="btn btn-success" id="btnFinalizar" data-bs-toggle="modal" data-bs-target="#modalFinalizar">Finalizar</button>
-                            <button class="btn btn-warning" id="btnReprogramar" data-bs-toggle="modal" data-bs-target="#modalReprogramar">Reprogramar</button>
-                            <button class="btn btn-outline-secondary" id="btnSiguiente">Siguiente turno</button>
+                            <asp:Button ID="btnLLamarPaciente" runat="server" CssClass="btn btn-outline-primary" Text="Llamar" OnClick="btnLLamarPaciente_Click" />
+                            <asp:Button ID="btnAtender" runat="server" CssClass="btn btn-primary" Text="Atender" OnClick="btnAtender_Click" />
+
+                            <asp:Button ID="btnFinalizar" runat="server" CssClass="btn btn-success" Text="Finalizar" OnClick="btnFinalizar_Click" />
+                            <asp:Button ID="btnReprogramar" runat="server" CssClass="btn btn-warning" Text="Reprogramar" OnClick="btnReprogramar_Click" />
+                            <asp:Button ID="btnSiguientePaciente" runat="server" CssClass="btn btn-outline-secondary" Text="Siguiente" OnClick="btnSiguientePaciente_Click" />
+
                         </div>
                     </div>
                 </div>
@@ -98,8 +110,9 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <span class="fw-semibold">Cola de turnos</span>
                         <div class="input-group" style="max-width: 260px;">
-                            <span class="input-group-text">Buscar</span>
-                            <input type="text" class="form-control" placeholder="DNI / Nombre / Nº turno" />
+                            <span class="input-group-text">Buscar Paciente</span>
+                            <asp:TextBox ID="txteBuscarPaciente" runat="server" OnTextChanged="txteBuscarPaciente_TextChanged" />
+
                         </div>
                     </div>
                     <div class="card-body p-0">
@@ -107,6 +120,7 @@
                             <!-- Ejemplos de items -->
                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                 <div>
+
                                     <div class="fw-semibold">#A-024 — Carlos Díaz</div>
                                     <div class="small text-muted">DNI 28.987.654 • 09:40 • Motivo: Control</div>
                                 </div>
@@ -119,12 +133,69 @@
                                 </div>
                                 <span class="badge text-bg-secondary">Espera 00:58</span>
                             </li>
+                            <!-- ========================================================== -->
+                            <!-- 🔹 BLOQUE OPCIONAL: COLA DE TURNOS EN ESPERA (REPEATER DINÁMICO FUTURO) -->
+                            <!-- ========================================================== -->
+                            <!-- 
+📘 Descripción general:
+Este bloque está comentado para evitar ejecución por ahora.
+Más adelante, el compañero encargado de TURNOS podrá descomentar 
+todo el contenido para hacer la cola de espera dinámica.
+
+🧩 Qué hará el Repeater:
+- Generará un <li> automáticamente por cada turno en espera.
+- Mostrará: código de turno, nombre del paciente, DNI, hora, motivo y tiempo de espera.
+- El diseño es compatible con Bootstrap (list-group).
+
+⚙️ Qué debe implementar el compañero de TURNOS:
+1. Crear una lista de turnos en espera (por ejemplo, List<Turno> listaColaTurnos).
+2. Asignarla como fuente de datos:
+       rptColaTurnos.DataSource = listaColaTurnos;
+       rptColaTurnos.DataBind();
+3. Asegurarse de que el objeto Turno tenga las propiedades:
+       CodigoTurno, NombrePaciente, DniPaciente, HoraTurno, Motivo, TiempoEspera.
+4. Si no hay pacientes, puede usar EmptyDataTemplate para mostrar un mensaje.
+-->
+
+                            <%-- 
+<h5 class="fw-bold mb-2">Cola de Turnos en Espera</h5>
+
+<asp:Repeater ID="rptColaTurnos" runat="server">
+    <ItemTemplate>
+        <!-- Cada elemento <li> representa un turno en espera -->
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <!-- Código del turno y nombre del paciente -->
+                <div class="fw-semibold">
+                    <%# Eval("CodigoTurno") %> — <%# Eval("NombrePaciente") %>
+                </div>
+
+                <!-- Datos adicionales: DNI, hora y motivo -->
+                <div class="small text-muted">
+                    DNI <%# Eval("DniPaciente") %> • 
+                    <%# Eval("HoraTurno", "{0:HH:mm}") %> • 
+                    Motivo: <%# Eval("Motivo") %>
+                </div>
+            </div>
+
+            <!-- Tiempo estimado de espera mostrado como badge -->
+            <span class="badge text-bg-secondary">
+                Espera <%# Eval("TiempoEspera") %>
+            </span>
+        </li>
+    </ItemTemplate>
+</asp:Repeater>
+                            --%>
+
+                            <!-- 🟢 Fin del bloque comentado del Repeater -->
+
                             <!-- ... -->
                         </ul>
                     </div>
                     <div class="card-footer d-flex justify-content-end gap-2">
-                        <button class="btn btn-outline-secondary">Actualizar</button>
-                        <button class="btn btn-outline-primary">Llamar siguiente</button>
+                        <asp:Button ID="btnActualizar" runat="server" CssClass="btn btn-outline-secondary" Text="Actualizar" OnClick="btnActualizar_Click" />
+                        <asp:Button ID="btnLlamarProxPaciente" runat="server" CssClass="btn btn-outline-primary" Text="Llamar Siguiente" OnClick="btnLlamarProxPaciente_Click" />
+                       
                     </div>
                 </div>
             </div>
@@ -137,7 +208,7 @@
             <form class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Finalizar consulta</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="holaaaaaaaaa"></button>
                 </div>
                 <div class="modal-body">
                     <label class="form-label">Diagnóstico</label>

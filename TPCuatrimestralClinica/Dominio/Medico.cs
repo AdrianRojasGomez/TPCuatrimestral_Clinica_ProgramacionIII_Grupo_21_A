@@ -15,6 +15,7 @@ namespace Dominio
 
         public TurnoTrabajo TurnoTrabajo { get; set; }
         public List<Especialidad> Especialidades { get; set; }
+      
 
         
 

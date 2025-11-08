@@ -42,7 +42,7 @@
                         <p class="card-text text-soft mb-4">
                             Registra o actualiza la información de tus pacientes de forma segura.
                         </p>
-                                   
+
 
                         <asp:Button ID="BtnAltaPaciente" runat="server" Text="Gestion Paciente" CssClass="btn btn-primary mt-auto shadow" OnClick="BtnAltaPaciente_Click" />
 
@@ -111,7 +111,7 @@
                         Gestion Turnos
                     </button>
 
-                    
+
 
                 </h2>
 
@@ -189,6 +189,7 @@
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMedicos" aria-expanded="false" aria-controls="collapseMedicos">
                         Gestion Medicos
+                       
                     </button>
                 </h2>
                 <div id="collapseMedicos" class="accordion-collapse collapse" data-bs-parent="#accordionMedicos">
@@ -196,9 +197,9 @@
                         <%--Elementos dentro del acordeon--%>
                         <div class="row row-cols-2 g-2">
                             <div class="col py-1">
-                                <a href="<%: ResolveUrl("~/Turnos/Crear.aspx") %>"
-                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Agregar nuevo Medico
-                                </a>
+                           
+                    <asp:Button ID="btnAgregarMedico" runat="server" CssClass="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center" Text="Agregar Medico" OnClick="btnAgregarMedico_Click"  />
+                                
                             </div>
                             <div class="col py-1">
                                 <a href="<%: ResolveUrl("~/Turnos/Modificar.aspx") %>"

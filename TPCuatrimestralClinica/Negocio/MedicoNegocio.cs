@@ -11,7 +11,7 @@ namespace Negocio
     {
 
 
-        public List<Medico> ListarMedicos(string id = "")
+        public List<Medico> ListarMedicos()
         {
 
             List<Medico> lista = new List<Medico>();
@@ -36,8 +36,10 @@ namespace Negocio
             LEFT JOIN Guardias         t          ON t.IdGuardia   = mt.IdGuardia
             LEFT JOIN MedicosPorEspecialidad me   ON me.IdMedico   = m.IdMedico
             LEFT JOIN Especialidades   e          ON e.IdEspecialidad = me.IdEspecialidad
+
                 WHERE m.Estado = 1
             ORDER BY m.Apellido, m.Nombre, e.Nombre");
+
 
                 accesoDatos.EjecutarLectura();
 
@@ -83,13 +85,13 @@ namespace Negocio
             }
         }
 
-        public void AgregarMedico(Medico medico)
+        public int AgregarMedico(Medico medico)
         {
             AccesoDatos datos = new AccesoDatos();
 
             try
             {
-                // 1) INSERT EN MEDICOS Y OBTENER ID NUEVO
+                
                 datos.SetearConsulta(
                   "INSERT INTO Medicos (Nombre, Apellido, Matricula) " +
                   "VALUES (@Nombre, @Apellido, @Matricula); " +
@@ -100,9 +102,12 @@ namespace Negocio
                 datos.SetearParametros("@Matricula", medico.Matricula);
 
                 int idMedicoNuevo = Convert.ToInt32(datos.EjecutarEscalar());
+               
+
+
                 datos.CerrarConexion();
 
-                // 2) RELACIONAR MÉDICO CON GUARDIA EN MedicosPorGuardia
+               
                 if (medico.TurnoTrabajo != null)
                 {
                     datos = new AccesoDatos();
@@ -116,7 +121,7 @@ namespace Negocio
                     datos.CerrarConexion();
                 }
 
-                // 3) RELACIONAR MÉDICO CON ESPECIALIDAD EN MedicosPorEspecialidad
+              
                 if (medico.Especialidades != null && medico.Especialidades.Count > 0)
                 {
                     datos = new AccesoDatos();
@@ -128,6 +133,7 @@ namespace Negocio
                     datos.SetearParametros("@IdEspecialidad", medico.Especialidades[0].IdEspecialidad);
                     datos.EjecutarAccion();
                 }
+                return idMedicoNuevo;
             }
             catch (Exception ex)
             {
@@ -162,7 +168,7 @@ namespace Negocio
                 datosMedico.CerrarConexion();
             }
 
-            // 2) ACTUALIZAR RELACIÓN CON GUARDIA (MedicosPorGuardia)
+           
             if (medico.TurnoTrabajo != null)
             {
                 AccesoDatos datosGuardia = new AccesoDatos();
@@ -176,7 +182,7 @@ namespace Negocio
                 VALUES (@IdMedico, @IdGuardia);");
 
                     datosGuardia.SetearParametros("@IdMedico", medico.IdMedico);
-                    // En tu dominio seguís usando IdTurnoTrabajo, pero en la base es IdGuardia
+                   
                     datosGuardia.SetearParametros("@IdGuardia", medico.TurnoTrabajo.IdTurnoTrabajo);
                     datosGuardia.EjecutarAccion();
                 }
@@ -186,7 +192,6 @@ namespace Negocio
                 }
             }
 
-            // 3) BORRAR ESPECIALIDADES ACTUALES DEL MÉDICO
             AccesoDatos datosEsp = new AccesoDatos();
             try
             {
@@ -199,7 +204,7 @@ namespace Negocio
                 datosEsp.CerrarConexion();
             }
 
-            // 4) INSERTAR NUEVAS ESPECIALIDADES SELECCIONADAS
+           
             foreach (int idEsp in idsEspecialidades)
             {
                 AccesoDatos datosIns = new AccesoDatos();

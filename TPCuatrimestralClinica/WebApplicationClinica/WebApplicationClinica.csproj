@@ -74,11 +74,12 @@
     <Content Include="Medicos\AgregarMedico.aspx" />
     <Content Include="Turnos\AtenderTurno.aspx" />
     <Content Include="Turnos\CrearTurno.aspx" />
-    <Content Include="Login.aspx" />
+    <Content Include="Login y Usuarios\Login.aspx" />
     <Content Include="MainMenu.aspx" />
     <Content Include="Pacientes\Pacientes.aspx" />
     <Content Include="Web.config" />
     <Content Include="Error.aspx" />
+    <Content Include="Login y Usuarios\CrearUsuario.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clinica.Master.cs">
@@ -116,11 +117,11 @@
     <Compile Include="Turnos\CrearTurno.aspx.designer.cs">
       <DependentUpon>CrearTurno.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Login.aspx.cs">
+    <Compile Include="Login y Usuarios\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Login.aspx.designer.cs">
+    <Compile Include="Login y Usuarios\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="MainMenu.aspx.cs">
@@ -144,6 +145,13 @@
     </Compile>
     <Compile Include="Error.aspx.designer.cs">
       <DependentUpon>Error.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Login y Usuarios\CrearUsuario.aspx.cs">
+      <DependentUpon>CrearUsuario.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Login y Usuarios\CrearUsuario.aspx.designer.cs">
+      <DependentUpon>CrearUsuario.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

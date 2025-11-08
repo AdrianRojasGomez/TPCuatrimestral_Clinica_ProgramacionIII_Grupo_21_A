@@ -58,6 +58,7 @@ namespace WebApplicationClinica.Medicos
                     panelEliminar.Visible = false;
                     lblEliminado.Visible = false;
                     lblEminadoEror.Visible = false;
+                    btnVolver.Visible = false;
 
                    
 
@@ -192,9 +193,13 @@ namespace WebApplicationClinica.Medicos
                 medico.Especialidades.Add(esp);
 
                
-                medicoNegocio.AgregarMedico(medico);
-
                 
+                int idNuevoMedico = medicoNegocio.AgregarMedico(medico);
+                Session["idMedicoCreado"] = idNuevoMedico;
+                
+
+
+
                 lblError.CssClass = "text-success";
                 lblError.Text = "✅ Médico agregado correctamente.";
                 lblError.Visible = true;
@@ -283,7 +288,8 @@ namespace WebApplicationClinica.Medicos
 
         protected void gvMedicos_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
-
+            gvMedicos.PageIndex = e.NewPageIndex;
+            CargarGrillaMedicos();
         }
 
         protected void gvMedicos_RowEditing(object sender, GridViewEditEventArgs e)
@@ -432,6 +438,7 @@ namespace WebApplicationClinica.Medicos
                 listafiltrada = lista.FindAll(x =>
                     x.Nombre.ToUpper().Contains(filtro) ||
                     x.Apellido.ToUpper().Contains(filtro) ||
+                    
                     (x.TurnoTrabajo != null && x.TurnoTrabajo.Nombre.ToUpper().Contains(filtro)));
             }
 
@@ -523,6 +530,8 @@ namespace WebApplicationClinica.Medicos
 
                 lblEliminado.Visible = true;
                 lblEminadoEror.Visible = false;
+
+                btnVolver.Visible=true;
 
 
 
@@ -658,8 +667,41 @@ namespace WebApplicationClinica.Medicos
            
             btnVolver.Visible = false;
 
+       
+
            
            
+        }
+
+        protected void btnCrearUsuario_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/CrearUsuario.aspx");
+        }
+
+        protected void gvMedicos_RowCommand1(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Eliminar")
+            {
+               
+                int idMedico = Convert.ToInt32(e.CommandArgument);
+
+               
+                ViewState["IdMedicoEliminar"] = idMedico;
+
+                
+                panelEliminar.Visible = true;
+                lblEliminarLogicamente.Visible = true;
+
+                lblEliminado.Visible = false;
+                lblEminadoEror.Visible = false;
+                lblModificao.Visible = false;
+                lblEroorGuardar.Visible = false;
+
+                txtEliminarLgocimante.Visible = true;
+                txtNoeleiminarlogicamente.Visible = true;
+
+                btnVolver.Visible = false;
+            }
         }
     }
 }

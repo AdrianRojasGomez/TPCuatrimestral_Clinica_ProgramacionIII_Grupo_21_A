@@ -34,8 +34,8 @@ namespace Negocio
                 m.Apellido,
                 m.Matricula
             FROM UsuariosApp u
-            INNER JOIN Medicos m ON m.IdMedico = u.IdMedico
-            WHERE m.Activo = 1 
+            inner JOIN Medicos m ON m.IdMedico = u.IdMedico
+         
             ORDER BY u.IdUsuario DESC");
 
 

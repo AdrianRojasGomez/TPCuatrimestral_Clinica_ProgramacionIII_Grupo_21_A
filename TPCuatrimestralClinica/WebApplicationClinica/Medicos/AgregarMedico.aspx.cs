@@ -58,6 +58,7 @@ namespace WebApplicationClinica.Medicos
                     panelEliminar.Visible = false;
                     lblEliminado.Visible = false;
                     lblEminadoEror.Visible = false;
+                    btnVolver.Visible = false;
 
                    
 
@@ -530,6 +531,8 @@ namespace WebApplicationClinica.Medicos
                 lblEliminado.Visible = true;
                 lblEminadoEror.Visible = false;
 
+                btnVolver.Visible=true;
+
 
 
 
@@ -664,6 +667,8 @@ namespace WebApplicationClinica.Medicos
            
             btnVolver.Visible = false;
 
+       
+
            
            
         }
@@ -671,6 +676,32 @@ namespace WebApplicationClinica.Medicos
         protected void btnCrearUsuario_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/CrearUsuario.aspx");
+        }
+
+        protected void gvMedicos_RowCommand1(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Eliminar")
+            {
+               
+                int idMedico = Convert.ToInt32(e.CommandArgument);
+
+               
+                ViewState["IdMedicoEliminar"] = idMedico;
+
+                
+                panelEliminar.Visible = true;
+                lblEliminarLogicamente.Visible = true;
+
+                lblEliminado.Visible = false;
+                lblEminadoEror.Visible = false;
+                lblModificao.Visible = false;
+                lblEroorGuardar.Visible = false;
+
+                txtEliminarLgocimante.Visible = true;
+                txtNoeleiminarlogicamente.Visible = true;
+
+                btnVolver.Visible = false;
+            }
         }
     }
 }

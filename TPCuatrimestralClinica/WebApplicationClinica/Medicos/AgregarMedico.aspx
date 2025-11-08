@@ -54,7 +54,19 @@
                                 <label for="ddlTurnoHtml" class="form-label">Turno de trabajo</label>
                                 <asp:DropDownList ID="ddllistTurnoTrabajo" runat="server" CssClass="form-select"></asp:DropDownList>
                             </div>
-
+                            <div class="col-md-4">
+                                <label class="form-label">Día de la semana</label>
+                                <asp:DropDownList ID="ddlDiaSemanaNuevo" runat="server" CssClass="form-select">
+                                    <asp:ListItem Text="-- Seleccionar día --" Value="" />
+                                    <asp:ListItem Text="Lunes" Value="Lunes" />
+                                    <asp:ListItem Text="Martes" Value="Martes" />
+                                    <asp:ListItem Text="Miércoles" Value="Miércoles" />
+                                    <asp:ListItem Text="Jueves" Value="Jueves" />
+                                    <asp:ListItem Text="Viernes" Value="Viernes" />
+                                    <asp:ListItem Text="Sábado" Value="Sábado" />
+                                    <asp:ListItem Text="Domingo" Value="Domingo" />
+                                </asp:DropDownList>
+                            </div>
 
                             <div class="col-md-8">
                                 <label class="form-label d-block">Especialidades</label>
@@ -131,24 +143,24 @@
                     }
             </style>
 
-            <asp:Label ID="lblEliminarLogicamente" runat="server" CssClass="form-label" Text="Desea Eliminar este Medico?" />
+            <asp:Label ID="lblEliminarLogicamente" runat="server" CssClass="fw-semibold fs-5 text-dark d-block mb-3" Text="Desea Eliminar este Medico?" />
 
 
-            <asp:Button ID="txtEliminarLgocimante" runat="server" CssClass="btn-eliminar" Text="Si,eliminar" OnClick="txtEliminarLgocimante_Click" />
+            <asp:Button ID="txtEliminarLgocimante" runat="server" CssClass="btn btn-danger rounded-pill px-4 py-2 fw-semibold shadow-sm" Text="Si,eliminar" OnClick="txtEliminarLgocimante_Click" />
 
-            <asp:Button ID="txtNoeleiminarlogicamente" runat="server" CssClass="bg-primary" Text="No deseo Eliminarlo" OnClick="txtNoeleiminarlogicamente_Click" />
+            <asp:Button ID="txtNoeleiminarlogicamente" runat="server" CssClass="btn btn-outline-primary rounded-pill px-4 py-2 fw-semibold ms-2" Text="No deseo Eliminarlo" OnClick="txtNoeleiminarlogicamente_Click" />
 
-       
 
-            <asp:Label ID="lblEliminado" runat="server" CssClass="alert alert-success d-inline-block mt-2" Text="Eliminado correctamente" />
+
+            <asp:Label ID="lblEliminado" runat="server" CssClass="alert alert-success fw-semibold rounded-pill px-4 py-2 shadow-sm d-inline-block mt-2" Text="Eliminado correctamente" />
 
             <asp:Label ID="lblEminadoEror" runat="server" CssClass="alert alert-danger d-inline-block mt-2" Text="Error al eliminar" />
 
-            <asp:Label ID="lblModificao" runat="server" CssClass="alert alert_success d-inline-block mt-2"  />
+            <asp:Label ID="lblModificao" runat="server" CssClass="alert alert_success d-inline-block mt-2" />
 
-            <asp:Label ID="lblEroorGuardar" runat="server" CssClass="alert alert_success d-inline-block mt-2"  />
+            <asp:Label ID="lblEroorGuardar" runat="server" CssClass="alert alert_success d-inline-block mt-2" />
 
-            <asp:Button ID="btnVolver" runat="server" CssClass="bg bg-primary" Text="Volver" OnClick="btnVolver_Click" />
+            <asp:Button ID="btnVolver" runat="server" CssClass="btn btn-outline-primary rounded-pill px-4 py-2 fw-semibold" Text="Volver" OnClick="btnVolver_Click" />
 
         </asp:Panel>
 
@@ -162,15 +174,19 @@
 
             <div class="card-body p-0">
 
-                <asp:GridView ID="gvMedicos" runat="server" EmptyDataText="No hay datos" CssClass="table table-hover mb-0 align-middle" HeaderStyle-CssClass="table-light" AutoGenerateColumns="false" DataKeyNames="IdMedico" AllowPaging="true" PageSize="10" OnPageIndexChanging="gvMedicos_PageIndexChanging"
-                    OnRowEditing="gvMedicos_RowEditing" OnRowUpdating="gvMedicos_RowUpdating" OnRowCancelingEdit="gvMedicos_RowCancelingEdit" OnRowDeleting="gvMedicos_RowDeleting" OnRowDataBound="gvMedicos_RowDataBound">
+                <asp:GridView ID="gvMedicos" runat="server" EmptyDataText="No hay datos" CssClass="table table-hover mb-0 align-middle"
+                    HeaderStyle-CssClass="table-light" AutoGenerateColumns="false" DataKeyNames="IdMedico"
+                    AllowPaging="true" PageSize="10" OnPageIndexChanging="gvMedicos_PageIndexChanging"
+                    OnRowEditing="gvMedicos_RowEditing" OnRowUpdating="gvMedicos_RowUpdating"
+                    OnRowCancelingEdit="gvMedicos_RowCancelingEdit" OnRowDeleting="gvMedicos_RowDeleting"
+                    OnRowDataBound="gvMedicos_RowDataBound" OnRowCommand="gvMedicos_RowCommand1">
 
                     <Columns>
 
 
 
 
-                        <asp:TemplateField HeaderText="Idmedico" Visible="false" >
+                        <asp:TemplateField HeaderText="Idmedico" Visible="false">
                             <ItemTemplate><%# Eval("IdMedico") %></ItemTemplate>
                             <EditItemTemplate>
                                 <asp:Label ID="lblIdMedico" runat="server" Text='<%# Eval("IdMedico") %>'></asp:Label>
@@ -199,7 +215,10 @@
                                 <asp:TextBox ID="txtMatriculaEdit" runat="server" CssClass="form-control"
                                     Text='<%# Bind("Matricula") %>'></asp:TextBox>
                             </EditItemTemplate>
+
                         </asp:TemplateField>
+
+
 
 
 
@@ -215,6 +234,25 @@
                             </EditItemTemplate>
                         </asp:TemplateField>
 
+                        <asp:TemplateField HeaderText="Día">
+                            
+                            <ItemTemplate>
+                                <%# Eval("TurnoTrabajo.DiaSemana") %>
+                            </ItemTemplate>
+
+                         
+                            <EditItemTemplate>
+                                <asp:DropDownList ID="ddlDiaSemanaEdit" runat="server" CssClass="form-select">
+                                    <asp:ListItem Text="Lunes" Value="Lunes" />
+                                    <asp:ListItem Text="Martes" Value="Martes" />
+                                    <asp:ListItem Text="Miércoles" Value="Miércoles" />
+                                    <asp:ListItem Text="Jueves" Value="Jueves" />
+                                    <asp:ListItem Text="Viernes" Value="Viernes" />
+                                    <asp:ListItem Text="Sábado" Value="Sábado" />
+                                    <asp:ListItem Text="Domingo" Value="Domingo" />
+                                </asp:DropDownList>
+                            </EditItemTemplate>
+                        </asp:TemplateField>
 
 
 
@@ -292,7 +330,7 @@
                         </asp:TemplateField>
 
 
-                        
+
 
 
 
@@ -313,7 +351,7 @@
 
                 </asp:GridView>
 
-                <asp:Button ID="btnCrearUsuario" runat="server" CssClass="btn btn-outline-primary" Text="Crear Usuario" OnClick="btnCrearUsuario_Click" />
+
 
 
             </div>

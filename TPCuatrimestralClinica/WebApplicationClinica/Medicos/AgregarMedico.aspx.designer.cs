@@ -78,6 +78,15 @@ namespace WebApplicationClinica.Medicos
         protected global::System.Web.UI.WebControls.DropDownList ddllistTurnoTrabajo;
 
         /// <summary>
+        /// Control ddlDiaSemanaNuevo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlDiaSemanaNuevo;
+
+        /// <summary>
         /// Control DdlistEspecilidad.
         /// </summary>
         /// <remarks>
@@ -229,14 +238,5 @@ namespace WebApplicationClinica.Medicos
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvMedicos;
-
-        /// <summary>
-        /// Control btnCrearUsuario.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCrearUsuario;
     }
 }

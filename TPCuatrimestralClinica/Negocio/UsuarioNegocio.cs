@@ -34,7 +34,7 @@ namespace Negocio
                 m.Apellido,
                 m.Matricula
             FROM UsuariosApp u
-            left JOIN Medicos m ON m.IdMedico = u.IdMedico
+            inner JOIN Medicos m ON m.IdMedico = u.IdMedico
          
             ORDER BY u.IdUsuario DESC");
 

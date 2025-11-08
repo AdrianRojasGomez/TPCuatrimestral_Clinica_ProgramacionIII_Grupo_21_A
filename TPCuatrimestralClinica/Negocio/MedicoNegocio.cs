@@ -36,8 +36,10 @@ namespace Negocio
             LEFT JOIN Guardias         t          ON t.IdGuardia   = mt.IdGuardia
             LEFT JOIN MedicosPorEspecialidad me   ON me.IdMedico   = m.IdMedico
             LEFT JOIN Especialidades   e          ON e.IdEspecialidad = me.IdEspecialidad
-                WHERE m.Activo = 1 
-            ORDER BY m.IdMedico DESC, m.Apellido ASC, m.Nombre ASC");
+
+                WHERE m.Estado = 1
+            ORDER BY m.Apellido, m.Nombre, e.Nombre");
+
 
                 accesoDatos.EjecutarLectura();
 
@@ -227,7 +229,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("UPDATE Medicos SET Activo = 0 WHERE IdMedico = @Id");
+                datos.SetearConsulta("UPDATE Medicos SET Estado = 0 WHERE IdMedico = @Id");
                 datos.SetearParametros("@Id", id);
                 datos.EjecutarAccion();
             }

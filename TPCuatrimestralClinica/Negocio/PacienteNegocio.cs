@@ -130,6 +130,7 @@ namespace Negocio
                 datos.SetearParametros("@Telefono", nuevo.Telefono);
                 datos.SetearParametros("@Direccion", nuevo.Direccion);
 
+
                 datos.EjecutarAccion();
             }
             catch (Exception ex)

@@ -131,6 +131,7 @@ namespace Negocio
                 datos.SetearParametros("@Direccion", nuevo.Direccion);
                 datos.SetearParametros("@Estado", true);
 
+
                 datos.EjecutarAccion();
             }
             catch (Exception ex)

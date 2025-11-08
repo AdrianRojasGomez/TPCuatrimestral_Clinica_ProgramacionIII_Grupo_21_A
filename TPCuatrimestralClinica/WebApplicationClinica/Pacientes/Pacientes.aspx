@@ -158,7 +158,7 @@
                     AllowPaging="true" PageSize="10" OnPageIndexChanging="gvPacientes_PageIndexChanging"
                     AllowSorting="true" OnSorting="gvPacientes_Sorting" OnRowCreated="gvPacientes_RowCreated">
                     <Columns>
-                        <asp:BoundField DataField="IdPaciente" HeaderText="ID" ReadOnly="True" SortExpression="IdPaciente" />
+                        <%--<asp:BoundField DataField="IdPaciente" HeaderText="ID" ReadOnly="True" SortExpression="IdPaciente" />--%>
                         <asp:BoundField DataField="Dni" HeaderText="DNI" SortExpression="Dni" />
                         <asp:BoundField DataField="Apellido" HeaderText="Apellido" SortExpression="Apellido" />
                         <asp:BoundField DataField="Nombre" HeaderText="Nombre" SortExpression="Nombre" />

@@ -14,11 +14,17 @@ namespace WebApplicationClinica
         protected void Page_Load(object sender, EventArgs e)
         {
 
-             
+
             if (!IsPostBack)
             {
 
                 CargarGrillaUsuario();
+                txtFiltradoUsario.Attributes["oninput"] = $"liveFilter('{txtFiltradoUsario.UniqueID}')";
+                lblActivoCorrectamente.Visible = false;
+                lblInactivoCorecto.Visible = false;
+                btnVolver.Visible = false;
+
+
 
             }
         }
@@ -40,11 +46,11 @@ namespace WebApplicationClinica
                 usuario.NombreUsuario = TxtNombreUsuario.Text.Trim();
                 usuario.Password = TxtPassword.Text.Trim();
                 usuario.TipoUsuario = (TipoUsuario)int.Parse(ddlTipoUsuario.SelectedValue);
-                
+
 
                 usuario.Medico = null;
 
-               
+
                 int idMedico;
                 if (usuario.TipoUsuario == TipoUsuario.Medico &&
                     Session["idMedicoCreado"] != null &&
@@ -103,10 +109,10 @@ namespace WebApplicationClinica
             Button btn = (Button)sender;
             GridViewRow fila = (GridViewRow)btn.NamingContainer;
 
-           
+
             btn.Visible = false;
 
-            
+
             Button btnGuardar = (Button)fila.FindControl("btnGuardarInactivacion");
             if (btnGuardar != null)
                 btnGuardar.Visible = true;
@@ -119,13 +125,16 @@ namespace WebApplicationClinica
             Button btn = (Button)sender;
             GridViewRow fila = (GridViewRow)btn.NamingContainer;
 
-            
+
             btn.Visible = false;
 
-            
             Button btnGuardar = (Button)fila.FindControl("btnActivarUsuario");
+            Button btnCncelar2 = (Button)fila.FindControl("btnCncelar2");
             if (btnGuardar != null)
                 btnGuardar.Visible = true;
+
+            if (btnCncelar2 != null)
+                btnCncelar2.Visible = true;
 
         }
 
@@ -134,13 +143,19 @@ namespace WebApplicationClinica
             Button btn = (Button)sender;
             GridViewRow fila = (GridViewRow)btn.NamingContainer;
 
-            
+
             btn.Visible = false;
 
-            
+
+
             Button btnGuardar = (Button)fila.FindControl("btnActivarUsuario");
+            Button btnCancelar = (Button)fila.FindControl("btnCancelar");
             if (btnGuardar != null)
                 btnGuardar.Visible = true;
+
+
+            if (btnCancelar != null)
+                btnCancelar.Visible = true;
         }
 
         protected void gvUsuario_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -166,7 +181,14 @@ namespace WebApplicationClinica
             int idUsuario = Convert.ToInt32(gvUsuario.DataKeys[fila.RowIndex].Value);
 
             UsuarioNegocio negocio = new UsuarioNegocio();
-            negocio.CambiarEstadoUsuario(idUsuario, false); 
+
+
+            negocio.CambiarEstadoUsuario(idUsuario, false);
+            lblActivoCorrectamente.Visible = false;
+            lblInactivoCorecto.Visible = true;
+            btnVolver.Visible = true;
+
+
 
             CargarGrillaUsuario();
 
@@ -179,9 +201,75 @@ namespace WebApplicationClinica
             int idUsuario = Convert.ToInt32(gvUsuario.DataKeys[fila.RowIndex].Value);
 
             UsuarioNegocio negocio = new UsuarioNegocio();
-            negocio.CambiarEstadoUsuario(idUsuario, true); 
-
+            negocio.CambiarEstadoUsuario(idUsuario, true);
+            lblActivoCorrectamente.Visible = true;
+            lblInactivoCorecto.Visible = false;
+            btnVolver.Visible = true;
+            
             CargarGrillaUsuario();
+        }
+
+        protected void btnCancelar_Click(object sender, EventArgs e)
+        {
+            CargarGrillaUsuario();
+        }
+
+        protected void btnCncelar2_Click(object sender, EventArgs e)
+        {
+            CargarGrillaUsuario();
+        }
+
+        protected void txtFiltradoUsario_TextChanged(object sender, EventArgs e)
+        {
+
+
+            List<Usuario> lista = (List<Usuario>)Session["listausuario"];
+            string filtro = txtFiltradoUsario.Text.ToUpper();
+
+            List<Usuario> listafiltrada;
+
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+
+                listafiltrada = lista;
+            }
+            else
+            {
+
+                listafiltrada = lista.FindAll(
+                  x => x.NombreUsuario != null &&
+                   x.NombreUsuario.ToUpper().Contains(filtro));
+
+
+
+
+
+            }
+
+            gvUsuario.DataSource = listafiltrada;
+            gvUsuario.DataBind();
+
+            txtFiltradoUsario.Focus();
+        }
+
+        protected void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            TxtNombreUsuario.Text = "";
+            TxtPassword.Text = "";
+        }
+
+        protected void btnVolver_Click(object sender, EventArgs e)
+        {
+            lblActivoCorrectamente.Visible = false;
+            lblInactivoCorecto.Visible = false;
+            btnVolver.Visible = false;
+
+       
+            CargarGrillaUsuario();
+
+      
+            txtFiltradoUsario.Text = string.Empty;
+            txtFiltradoUsario.Focus();
         }
     }
 }

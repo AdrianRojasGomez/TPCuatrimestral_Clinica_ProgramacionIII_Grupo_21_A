@@ -78,22 +78,22 @@ namespace WebApplicationClinica.Medicos
         protected global::System.Web.UI.WebControls.DropDownList ddllistTurnoTrabajo;
 
         /// <summary>
-        /// Control ddlDiaSemanaNuevo.
+        /// Control cblDiasSemanaNuevo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlDiaSemanaNuevo;
+        protected global::System.Web.UI.WebControls.CheckBoxList cblDiasSemanaNuevo;
 
         /// <summary>
-        /// Control DdlistEspecilidad.
+        /// Control cblEspecialidades.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DdlistEspecilidad;
+        protected global::System.Web.UI.WebControls.CheckBoxList cblEspecialidades;
 
         /// <summary>
         /// Control txtHoraInicio.

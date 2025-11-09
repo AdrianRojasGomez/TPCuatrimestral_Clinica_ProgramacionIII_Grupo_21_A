@@ -19,7 +19,7 @@ namespace Negocio
             {
                 d.SetearConsulta(@"
             SELECT 
-                IdGuardia AS IdTurnoTrabajo,  -- alias para que el nombre coincida
+                IdGuardia AS IdTurnoTrabajo,  
                 Nombre,
                 HoraInicio,
                 HoraFin
@@ -31,10 +31,11 @@ namespace Negocio
                 while (d.Lector.Read())
                 {
                     var t = new TurnoTrabajo();
-                    t.IdTurnoTrabajo = (int)d.Lector["IdTurnoTrabajo"];  
+                    t.IdTurnoTrabajo = (int)d.Lector["IdTurnoTrabajo"];
                     t.Nombre = (string)d.Lector["Nombre"];
                     t.HoraInicio = (TimeSpan)d.Lector["HoraInicio"];
                     t.HoraFin = (TimeSpan)d.Lector["HoraFin"];
+                  
                     lista.Add(t);
                 }
                 return lista;
@@ -52,7 +53,7 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("SELECT IdTurnoTrabajo, Nombre, HoraInicio, HoraFin FROM TurnoTrabajo WHERE IdTurnoTrabajo=@id");
+                d.SetearConsulta("SELECT IdTurnoTrabajo, Nombre, HoraInicio, HoraFin ,DiaSemana FROM TurnoTrabajo WHERE IdTurnoTrabajo=@id");
                 d.SetearParametros("@id", id);
                 d.EjecutarLectura();
 
@@ -63,7 +64,8 @@ namespace Negocio
                         IdTurnoTrabajo = (int)d.Lector["IdTurnoTrabajo"],
                         Nombre = (string)d.Lector["Nombre"],
                         HoraInicio = (TimeSpan)d.Lector["HoraInicio"],
-                        HoraFin = (TimeSpan)d.Lector["HoraFin"]
+                        HoraFin = (TimeSpan)d.Lector["HoraFin"],
+                        DiaSemana = (string)d.Lector["DiaSemana"]
                     };
                 }
                 return null;
@@ -76,10 +78,11 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("INSERT INTO TurnoTrabajo (Nombre, HoraInicio, HoraFin) VALUES (@n, @hi, @hf)");
+                d.SetearConsulta("INSERT INTO TurnoTrabajo (Nombre, HoraInicio, HoraFin,DiaSemana) VALUES (@n, @hi, @hf,ds)");
                 d.SetearParametros("@n", turno.Nombre);
                 d.SetearParametros("@hi", turno.HoraInicio);
                 d.SetearParametros("@hf", turno.HoraFin);
+                d.SetearParametros("@ds" ,turno.DiaSemana);
                 d.EjecutarAccion();
             }
             finally { d.CerrarConexion(); }
@@ -91,12 +94,13 @@ namespace Negocio
             try
             {
                 d.SetearConsulta(@"UPDATE TurnoTrabajo
-                               SET Nombre=@n, HoraInicio=@hi, HoraFin=@hf
+                               SET Nombre=@n, HoraInicio=@hi, HoraFin=@hf ,DiaSemana=@df
                                WHERE IdTurnoTrabajo=@id");
                 d.SetearParametros("@id", turno.IdTurnoTrabajo);
                 d.SetearParametros("@n", turno.Nombre);
                 d.SetearParametros("@hi", turno.HoraInicio);
                 d.SetearParametros("@hf", turno.HoraFin);
+                d.SetearParametros("@df", turno.DiaSemana);
                 d.EjecutarAccion();
             }
             finally { d.CerrarConexion(); }

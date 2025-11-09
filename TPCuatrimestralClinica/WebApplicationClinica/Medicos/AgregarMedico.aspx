@@ -52,12 +52,12 @@
 
                             <div class="col-md-4">
                                 <label for="ddlTurnoHtml" class="form-label">Turno de trabajo</label>
-                                <asp:DropDownList ID="ddllistTurnoTrabajo" runat="server" CssClass="form-select"></asp:DropDownList>
+                                <asp:DropDownList ID="ddllistTurnoTrabajo" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddllistTurnoTrabajo_SelectedIndexChanged"></asp:DropDownList>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Día de la semana</label>
-                                <asp:DropDownList ID="ddlDiaSemanaNuevo" runat="server" CssClass="form-select">
-                                    <asp:ListItem Text="-- Seleccionar día --" Value="" />
+                                <label class="form-label">Días de la semana</label>
+                                <asp:CheckBoxList ID="cblDiasSemanaNuevo" runat="server" CssClass="form-check"
+                                    RepeatDirection="Vertical">
                                     <asp:ListItem Text="Lunes" Value="Lunes" />
                                     <asp:ListItem Text="Martes" Value="Martes" />
                                     <asp:ListItem Text="Miércoles" Value="Miércoles" />
@@ -65,12 +65,14 @@
                                     <asp:ListItem Text="Viernes" Value="Viernes" />
                                     <asp:ListItem Text="Sábado" Value="Sábado" />
                                     <asp:ListItem Text="Domingo" Value="Domingo" />
-                                </asp:DropDownList>
+                                </asp:CheckBoxList>
                             </div>
 
                             <div class="col-md-8">
                                 <label class="form-label d-block">Especialidades</label>
-                                <asp:DropDownList ID="DdlistEspecilidad" runat="server" CssClass="form-select"></asp:DropDownList>
+                                <asp:CheckBoxList ID="cblEspecialidades" runat="server" CssClass="form-check"
+                                    RepeatDirection="Vertical">
+                                </asp:CheckBoxList>
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Hora Inicio</label>
@@ -229,20 +231,24 @@
                         <asp:TemplateField HeaderText="Turno">
                             <ItemTemplate><%# Eval ("TurnoTrabajo.Nombre") %> </ItemTemplate>
                             <EditItemTemplate>
-                                <asp:DropDownList ID="ddlTurnoEdit" runat="server" CssClass="form-select" DataTextField="Nombre" DataValueField="IdTurnoTrabajo">
+                                <asp:DropDownList ID="ddlTurnoEdit" runat="server" CssClass="form-select" DataTextField="Nombre" DataValueField="IdTurnoTrabajo" 
+                                     AutoPostBack="true"  OnSelectedIndexChanged="ddlTurnoEdit_SelectedIndexChanged">
+                               
                                 </asp:DropDownList>
                             </EditItemTemplate>
                         </asp:TemplateField>
 
                         <asp:TemplateField HeaderText="Día">
-                            
+
                             <ItemTemplate>
-                                <%# Eval("TurnoTrabajo.DiaSemana") %>
+                                <%# Eval("DiasResumen") %>
                             </ItemTemplate>
 
-                         
+
                             <EditItemTemplate>
-                                <asp:DropDownList ID="ddlDiaSemanaEdit" runat="server" CssClass="form-select">
+                                    <asp:CheckBoxList ID="cblDiasSemanaEdit" runat="server" CssClass="form-check" RepeatDirection="Vertical">
+
+                                
                                     <asp:ListItem Text="Lunes" Value="Lunes" />
                                     <asp:ListItem Text="Martes" Value="Martes" />
                                     <asp:ListItem Text="Miércoles" Value="Miércoles" />
@@ -250,7 +256,7 @@
                                     <asp:ListItem Text="Viernes" Value="Viernes" />
                                     <asp:ListItem Text="Sábado" Value="Sábado" />
                                     <asp:ListItem Text="Domingo" Value="Domingo" />
-                                </asp:DropDownList>
+                                     </asp:CheckBoxList>
                             </EditItemTemplate>
                         </asp:TemplateField>
 
@@ -293,7 +299,8 @@
                                 </asp:Repeater>
                             </ItemTemplate>
                             <EditItemTemplate>
-                                <asp:CheckBoxList ID="cblEspEdit" runat="server" DataTextField="Nombre" DataValueField="IdEspecialidad" RepeatDirection="Horizontal" RepeatColumns="5" CssClass="form-check form-check-inline" />
+                                <asp:CheckBoxList ID="cblEspEdit" runat="server" DataTextField="Nombre" DataValueField="IdEspecialidad" 
+                                    RepeatDirection="Horizontal" RepeatColumns="5" CssClass="form-check form-check-inline" />
 
                             </EditItemTemplate>
                         </asp:TemplateField>

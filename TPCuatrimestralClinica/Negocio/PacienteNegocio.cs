@@ -119,8 +119,8 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta(@"INSERT INTO Pacientes (Dni, Apellido, Nombre, FechaNacimiento, Email, Telefono, Direccion)
-                                       VALUES (@Dni, @Apellido, @Nombre, @FechaNacimiento, @Email, @Telefono, @Direccion)");
+                datos.SetearConsulta(@"INSERT INTO Pacientes (Dni, Apellido, Nombre, FechaNacimiento, Email, Telefono, Direccion, Estado)
+                                       VALUES (@Dni, @Apellido, @Nombre, @FechaNacimiento, @Email, @Telefono, @Direccion, @Estado)");
 
                 datos.SetearParametros("@Dni", nuevo.Dni);
                 datos.SetearParametros("@Apellido", nuevo.Apellido);
@@ -129,6 +129,8 @@ namespace Negocio
                 datos.SetearParametros("@Email", nuevo.Email);
                 datos.SetearParametros("@Telefono", nuevo.Telefono);
                 datos.SetearParametros("@Direccion", nuevo.Direccion);
+                datos.SetearParametros("@Estado", true);
+
 
                 datos.EjecutarAccion();
             }

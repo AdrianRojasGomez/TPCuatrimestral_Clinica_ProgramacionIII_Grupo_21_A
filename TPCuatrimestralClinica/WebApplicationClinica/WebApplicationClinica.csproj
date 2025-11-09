@@ -77,7 +77,6 @@
     <Content Include="Login y Usuarios\Login.aspx" />
     <Content Include="MainMenu.aspx" />
     <Content Include="Pacientes\Pacientes.aspx" />
-    <Content Include="Web.config" />
     <Content Include="Error.aspx" />
     <Content Include="Login y Usuarios\CrearUsuario.aspx" />
   </ItemGroup>
@@ -153,10 +152,19 @@
     <Compile Include="Login y Usuarios\CrearUsuario.aspx.designer.cs">
       <DependentUpon>CrearUsuario.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Turnos\GestionTurno.aspx.cs">
+      <DependentUpon>GestionTurno.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Turnos\GestionTurno.aspx.designer.cs">
+      <DependentUpon>GestionTurno.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Clinica.Master" />
     <None Include="packages.config" />
+    <Content Include="Turnos\GestionTurno.aspx" />
+    <Content Include="Web.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

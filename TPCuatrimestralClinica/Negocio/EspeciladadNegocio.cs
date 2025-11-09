@@ -15,7 +15,7 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                // ✅ Cambié 'Especialidad' por 'Especialidades'
+                
                 d.SetearConsulta("SELECT IdEspecialidad, Nombre FROM Especialidades ORDER BY Nombre");
                 d.EjecutarLectura();
 
@@ -34,7 +34,7 @@ namespace Negocio
             }
         }
 
-        // OBTENER
+       
         public Especialidad ObtenerEspecialidad(int id)
         {
             AccesoDatos d = new AccesoDatos();
@@ -56,7 +56,7 @@ namespace Negocio
             finally { d.CerrarConexion(); }
         }
 
-        // AGREGAR
+     
         public void AgregarEspecialidad(Especialidad esp)
         {
             AccesoDatos d = new AccesoDatos();
@@ -69,7 +69,7 @@ namespace Negocio
             finally { d.CerrarConexion(); }
         }
 
-        // MODIFICAR
+        
         public void ModificarEspecilidad(Especialidad esp)
         {
             AccesoDatos d = new AccesoDatos();
@@ -83,7 +83,7 @@ namespace Negocio
             finally { d.CerrarConexion(); }
         }
 
-        // ELIMINAR
+        
         public void EliminarEspecilidad(int id)
         {
             AccesoDatos d = new AccesoDatos();

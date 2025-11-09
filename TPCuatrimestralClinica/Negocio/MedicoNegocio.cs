@@ -13,8 +13,7 @@ namespace Negocio
 
         public List<Medico> ListarMedicos()
         {
-
-            List<Medico> lista = new List<Medico>();
+            var dict = new Dictionary<int, Medico>();
             AccesoDatos accesoDatos = new AccesoDatos();
 
             try
@@ -29,7 +28,7 @@ namespace Negocio
                 t.Nombre    AS TurnoNombre,
                 t.HoraInicio,
                 t.HoraFin,
-                 t.DiaSemana,
+                mt.DiaSemana,               
                 e.IdEspecialidad,
                 e.Nombre    AS EspecialidadNombre
             FROM Medicos m
@@ -37,43 +36,81 @@ namespace Negocio
             LEFT JOIN Guardias         t          ON t.IdGuardia   = mt.IdGuardia
             LEFT JOIN MedicosPorEspecialidad me   ON me.IdMedico   = m.IdMedico
             LEFT JOIN Especialidades   e          ON e.IdEspecialidad = me.IdEspecialidad
-                WHERE m.Activo = 1 
+            WHERE m.Activo = 1 
             ORDER BY m.IdMedico DESC, m.Apellido ASC, m.Nombre ASC");
 
                 accesoDatos.EjecutarLectura();
 
                 while (accesoDatos.Lector.Read())
                 {
-                    Medico aux = new Medico();
+                    int idMedico = (int)accesoDatos.Lector["IdMedico"];
 
-                    aux.IdMedico = (int)accesoDatos.Lector["IdMedico"];
-                    aux.Nombre = (string)accesoDatos.Lector["Nombre"];
-                    aux.Apellido = (string)accesoDatos.Lector["Apellido"];
-                    aux.Matricula = (string)accesoDatos.Lector["Matricula"];
+                 
+                    if (!dict.TryGetValue(idMedico, out Medico aux))
+                    {
+                        aux = new Medico();
+                        aux.IdMedico = idMedico;
+                        aux.Nombre = (string)accesoDatos.Lector["Nombre"];
+                        aux.Apellido = (string)accesoDatos.Lector["Apellido"];
+                        aux.Matricula = (string)accesoDatos.Lector["Matricula"];
 
-                    aux.TurnoTrabajo = new TurnoTrabajo();
+                        aux.turnoTrabajos = new List<TurnoTrabajo>();
+                        aux.Especialidades = new List<Especialidad>();
+                        aux.TurnoTrabajo = null; 
+
+                        dict.Add(idMedico, aux);
+                    }
+
+                   
                     if (accesoDatos.Lector["IdTurnoTrabajo"] != DBNull.Value)
                     {
-                        aux.TurnoTrabajo.IdTurnoTrabajo = (int)accesoDatos.Lector["IdTurnoTrabajo"];
-                        aux.TurnoTrabajo.Nombre = accesoDatos.Lector["TurnoNombre"].ToString();
-                        aux.TurnoTrabajo.HoraInicio = (TimeSpan)accesoDatos.Lector["HoraInicio"];
-                        aux.TurnoTrabajo.HoraFin = (TimeSpan)accesoDatos.Lector["HoraFin"];
-                        aux.TurnoTrabajo.DiaSemana = (string)accesoDatos.Lector["DiaSemana"];
+                        int idTurno = (int)accesoDatos.Lector["IdTurnoTrabajo"];
+                        string diaSemana = (string)accesoDatos.Lector["DiaSemana"];
+
+                        bool yaExisteTurno = aux.turnoTrabajos.Any(t =>
+                            t.IdTurnoTrabajo == idTurno && t.DiaSemana == diaSemana);
+
+                        if (!yaExisteTurno)
+                        {
+                            var turno = new TurnoTrabajo
+                            {
+                                IdTurnoTrabajo = idTurno,
+                                Nombre = accesoDatos.Lector["TurnoNombre"].ToString(),
+                                HoraInicio = (TimeSpan)accesoDatos.Lector["HoraInicio"],
+                                HoraFin = (TimeSpan)accesoDatos.Lector["HoraFin"],
+                                DiaSemana = diaSemana
+                            };
+
+                            aux.turnoTrabajos.Add(turno);
+
+                          
+                            if (aux.TurnoTrabajo == null)
+                                aux.TurnoTrabajo = turno;
+                        }
                     }
 
-                    aux.Especialidades = new List<Especialidad>();
+                  
                     if (accesoDatos.Lector["IdEspecialidad"] != DBNull.Value)
                     {
-                        Especialidad esp = new Especialidad();
-                        esp.IdEspecialidad = (int)accesoDatos.Lector["IdEspecialidad"];
-                        esp.Nombre = (string)accesoDatos.Lector["EspecialidadNombre"];
-                        aux.Especialidades.Add(esp);
-                    }
+                        int idEsp = (int)accesoDatos.Lector["IdEspecialidad"];
 
-                    lista.Add(aux);
+                        bool yaExisteEsp = aux.Especialidades.Any(e =>
+                            e.IdEspecialidad == idEsp);
+
+                        if (!yaExisteEsp)
+                        {
+                            Especialidad esp = new Especialidad
+                            {
+                                IdEspecialidad = idEsp,
+                                Nombre = (string)accesoDatos.Lector["EspecialidadNombre"]
+                            };
+
+                            aux.Especialidades.Add(esp);
+                        }
+                    }
                 }
 
-                return lista;
+                return dict.Values.ToList();
             }
             catch (Exception ex)
             {
@@ -88,55 +125,21 @@ namespace Negocio
         public int AgregarMedico(Medico medico)
         {
             AccesoDatos datos = new AccesoDatos();
+            int idMedicoNuevo = 0;
 
             try
             {
 
                 datos.SetearConsulta(
-                  "INSERT INTO Medicos (Nombre, Apellido, Matricula) " +
-                  "VALUES (@Nombre, @Apellido, @Matricula); " +
-                  "SELECT CAST(SCOPE_IDENTITY() AS INT);"
+                    "INSERT INTO Medicos (Nombre, Apellido, Matricula) " +
+                    "VALUES (@Nombre, @Apellido, @Matricula); " +
+                    "SELECT CAST(SCOPE_IDENTITY() AS INT);"
                 );
                 datos.SetearParametros("@Nombre", medico.Nombre);
                 datos.SetearParametros("@Apellido", medico.Apellido);
                 datos.SetearParametros("@Matricula", medico.Matricula);
 
-                int idMedicoNuevo = Convert.ToInt32(datos.EjecutarEscalar());
-
-
-
-                datos.CerrarConexion();
-
-
-                if (medico.TurnoTrabajo != null)
-                {
-                    datos = new AccesoDatos();
-                    datos.SetearConsulta(
-                        "INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia) " +
-                        "VALUES (@IdMedico, @IdGuardia)"
-                    );
-                    datos.SetearParametros("@IdMedico", idMedicoNuevo);
-                    datos.SetearParametros("@IdGuardia", medico.TurnoTrabajo.IdTurnoTrabajo);
-                    datos.EjecutarAccion();
-                    datos.CerrarConexion();
-                }
-
-                if (medico.Especialidades != null && medico.Especialidades.Count > 0)
-                {
-                    foreach (var esp in medico.Especialidades)
-                    {
-                        datos = new AccesoDatos();
-                        datos.SetearConsulta(
-                            "INSERT INTO MedicosPorEspecialidad (IdMedico, IdEspecialidad) " +
-                            "VALUES (@IdMedico, @IdEspecialidad)"
-                        );
-                        datos.SetearParametros("@IdMedico", idMedicoNuevo);
-                        datos.SetearParametros("@IdEspecialidad", esp.IdEspecialidad);
-                        datos.EjecutarAccion();
-                        datos.CerrarConexion();
-                    }
-                }
-                return idMedicoNuevo;
+                idMedicoNuevo = Convert.ToInt32(datos.EjecutarEscalar());
             }
             catch (Exception ex)
             {
@@ -146,6 +149,74 @@ namespace Negocio
             {
                 datos.CerrarConexion();
             }
+
+
+            if (medico.turnoTrabajos != null && medico.turnoTrabajos.Count > 0)
+            {
+                foreach (var turno in medico.turnoTrabajos)
+                {
+                    AccesoDatos datosGuardia = new AccesoDatos();
+                    try
+                    {
+                        datosGuardia.SetearConsulta(@"
+                    IF NOT EXISTS (
+                        SELECT 1 
+                        FROM MedicosPorGuardia
+                        WHERE IdMedico = @IdMedico
+                          AND IdGuardia = @IdGuardia
+                          AND DiaSemana = @DiaSemana
+                    )
+                    BEGIN
+                        INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia, DiaSemana)
+                        VALUES (@IdMedico, @IdGuardia, @DiaSemana)
+                    END
+                ");
+
+                        datosGuardia.SetearParametros("@IdMedico", idMedicoNuevo);
+                        datosGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
+                        datosGuardia.SetearParametros("@DiaSemana", turno.DiaSemana);
+
+                        datosGuardia.EjecutarAccion();
+                    }
+                    finally
+                    {
+                        datosGuardia.CerrarConexion();
+                    }
+                }
+            }
+
+
+            if (medico.Especialidades != null && medico.Especialidades.Count > 0)
+            {
+                foreach (var esp in medico.Especialidades)
+                {
+                    AccesoDatos datosEsp = new AccesoDatos();
+                    try
+                    {
+                        datosEsp.SetearConsulta(@"
+                    IF NOT EXISTS (
+                        SELECT 1 
+                        FROM MedicosPorEspecialidad 
+                        WHERE IdMedico = @IdMedico AND IdEspecialidad = @IdEspecialidad
+                    )
+                    BEGIN
+                        INSERT INTO MedicosPorEspecialidad (IdMedico, IdEspecialidad)
+                        VALUES (@IdMedico, @IdEspecialidad)
+                    END
+                ");
+
+                        datosEsp.SetearParametros("@IdMedico", idMedicoNuevo);
+                        datosEsp.SetearParametros("@IdEspecialidad", esp.IdEspecialidad);
+                        datosEsp.EjecutarAccion();
+                    }
+                    finally
+                    {
+                        datosEsp.CerrarConexion();
+                    }
+                }
+            }
+
+            return idMedicoNuevo;
         }
 
         public void ModificarMedico(Medico medico, List<int> idsEspecialidades)
@@ -172,28 +243,41 @@ namespace Negocio
             }
 
 
-            if (medico.TurnoTrabajo != null)
+            AccesoDatos datosGuardia = new AccesoDatos();
+            try
             {
-                AccesoDatos datosGuardia = new AccesoDatos();
-                try
+                datosGuardia.SetearConsulta("DELETE FROM MedicosPorGuardia WHERE IdMedico = @IdMedico");
+                datosGuardia.SetearParametros("@IdMedico", medico.IdMedico);
+                datosGuardia.EjecutarAccion();
+            }
+            finally
+            {
+                datosGuardia.CerrarConexion();
+            }
+
+
+            if (medico.turnoTrabajos != null && medico.turnoTrabajos.Count > 0)
+            {
+                foreach (var turno in medico.turnoTrabajos)
                 {
-                    datosGuardia.SetearConsulta(@"
-                DELETE FROM MedicosPorGuardia 
-                 WHERE IdMedico = @IdMedico;
-
-                INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia)
-                VALUES (@IdMedico, @IdGuardia);");
-
-                    datosGuardia.SetearParametros("@IdMedico", medico.IdMedico);
-
-                    datosGuardia.SetearParametros("@IdGuardia", medico.TurnoTrabajo.IdTurnoTrabajo);
-                    datosGuardia.EjecutarAccion();
-                }
-                finally
-                {
-                    datosGuardia.CerrarConexion();
+                    AccesoDatos datosInsGuardia = new AccesoDatos();
+                    try
+                    {
+                        datosInsGuardia.SetearConsulta(@"
+                    INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia, DiaSemana)
+                    VALUES (@IdMedico, @IdGuardia, @DiaSemana)");
+                        datosInsGuardia.SetearParametros("@IdMedico", medico.IdMedico);
+                        datosInsGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
+                        datosInsGuardia.SetearParametros("@DiaSemana", turno.DiaSemana);
+                        datosInsGuardia.EjecutarAccion();
+                    }
+                    finally
+                    {
+                        datosInsGuardia.CerrarConexion();
+                    }
                 }
             }
+
 
             AccesoDatos datosEsp = new AccesoDatos();
             try

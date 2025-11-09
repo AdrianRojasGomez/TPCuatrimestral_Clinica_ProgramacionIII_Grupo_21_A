@@ -15,12 +15,12 @@ namespace WebApplicationClinica.Medicos
     public partial class WebForm2 : System.Web.UI.Page
     {
 
-      
+
         protected void Page_Load(object sender, EventArgs e)
         {
             panelGrillaMedico.Visible = false;
-           
-          
+
+
 
             MedicoNegocio medicoNegocio = new MedicoNegocio();
 
@@ -38,17 +38,19 @@ namespace WebApplicationClinica.Medicos
                     ddllistTurnoTrabajo.DataSource = listaturnotrabajo;
                     ddllistTurnoTrabajo.DataValueField = "IdTurnoTrabajo";
                     ddllistTurnoTrabajo.DataTextField = "Nombre";
-                    ddlDiaSemanaNuevo.DataTextField = "DiaSmena";
                     ddllistTurnoTrabajo.DataBind();
+
+
+
                     ddllistTurnoTrabajo.Items.Insert(0, new ListItem("-- Seleccionar turno --", "0"));
-                    ddlDiaSemanaNuevo.Items.Insert(0, new ListItem("-- Seleccionar Dia Laboral --", "0"));
 
-                    DdlistEspecilidad.DataSource = listaespecialidad;
-                    DdlistEspecilidad.DataValueField = "IdEspecialidad";
-                    DdlistEspecilidad.DataTextField = "Nombre";
-                    DdlistEspecilidad.DataBind();
 
-                    DdlistEspecilidad.Items.Insert(0, new ListItem("-- Seleccione turno --", "0"));
+                    cblEspecialidades.DataSource = listaespecialidad;
+                    cblEspecialidades.DataTextField = "Nombre";
+                    cblEspecialidades.DataValueField = "IdEspecialidad";
+                    cblEspecialidades.DataBind();
+
+
 
 
 
@@ -62,7 +64,7 @@ namespace WebApplicationClinica.Medicos
                     lblEminadoEror.Visible = false;
                     btnVolver.Visible = false;
 
-                   
+
 
 
 
@@ -116,14 +118,13 @@ namespace WebApplicationClinica.Medicos
                 string apellido = (txtApellidoMedico.Text ?? "").Trim();
                 string matricula = (txtMatriculaMedico.Text ?? "").Trim();
                 string idTurno = ddllistTurnoTrabajo.SelectedValue ?? "0";
-                string dia = ddlDiaSemanaNuevo.SelectedValue ?? "0";
-                string idEsp = DdlistEspecilidad.SelectedValue ?? "0";
+               
 
-                
+
                 string horaInicioStr = (txtHoraInicio.Text ?? "").Trim();
                 string horaFinStr = (txtHoraFin.Text ?? "").Trim();
 
-             
+
                 if (string.IsNullOrWhiteSpace(nombre) ||
                     string.IsNullOrWhiteSpace(apellido) ||
                     string.IsNullOrWhiteSpace(matricula))
@@ -154,19 +155,26 @@ namespace WebApplicationClinica.Medicos
                     return;
                 }
 
-                if (dia == "0")
-                {
+                var diasSeleccionados = cblDiasSemanaNuevo.Items
+                                         .Cast<ListItem>()
+                                         .Where(i => i.Selected)
+                                                .ToList();
 
-                    lblError.Text = "❌ Seleccioná un Dia de trabajo.";
+                if (diasSeleccionados.Count == 0)
+                {
+                    lblError.Text = "❌ Seleccioná al menos un día de trabajo.";
                     lblError.Visible = true;
                     return;
-
-
                 }
 
-                if (idEsp == "0")
+
+                var especialidadesSeleccionadas = cblEspecialidades.Items
+                                             .Cast<ListItem>()
+                                              .Where(i => i.Selected)
+                                             .ToList();
+                if (especialidadesSeleccionadas.Count == 0)
                 {
-                    lblError.Text = "❌ Seleccioná una especialidad.";
+                    lblError.Text = "❌ Seleccioná al menos una especialidad.";
                     lblError.Visible = true;
                     return;
                 }
@@ -181,7 +189,7 @@ namespace WebApplicationClinica.Medicos
                 TimeSpan horaInicio;
                 TimeSpan horaFin;
 
-                
+
                 if (!TimeSpan.TryParse(horaInicioStr, out horaInicio) ||
                     !TimeSpan.TryParse(horaFinStr, out horaFin))
                 {
@@ -190,27 +198,41 @@ namespace WebApplicationClinica.Medicos
                     return;
                 }
 
-              
+
                 medico.Nombre = nombre;
                 medico.Apellido = apellido;
                 medico.Matricula = matricula;
 
-                medico.TurnoTrabajo = new TurnoTrabajo();
-                medico.TurnoTrabajo.IdTurnoTrabajo = int.Parse(idTurno);
-                medico.TurnoTrabajo.DiaSemana = dia;
-                medico.TurnoTrabajo.HoraInicio = horaInicio;
-                medico.TurnoTrabajo.HoraFin = horaFin;
+                medico.turnoTrabajos = new List<TurnoTrabajo>();
 
-                medico.Especialidades = new List<Especialidad>();
-                Especialidad esp = new Especialidad();
-                esp.IdEspecialidad = int.Parse(idEsp);
-                medico.Especialidades.Add(esp);
+                foreach (var diaItem in diasSeleccionados)
+                {
+                    TurnoTrabajo turno = new TurnoTrabajo();
+                    turno.IdTurnoTrabajo = int.Parse(idTurno);   
+                    turno.DiaSemana = diaItem.Value;              
+                    turno.HoraInicio = horaInicio;
+                    turno.HoraFin = horaFin;
 
-               
+                    medico.turnoTrabajos.Add(turno);
+                }
                 
+                medico.Especialidades = new List<Especialidad>();
+
+                foreach (var espItem in especialidadesSeleccionadas)
+                {
+                    Especialidad esp = new Especialidad();
+                    esp.IdEspecialidad = int.Parse(espItem.Value);
+                    esp.Nombre = espItem.Text;   
+
+                    medico.Especialidades.Add(esp);
+                }
+
+
+
+
                 int idNuevoMedico = medicoNegocio.AgregarMedico(medico);
                 Session["idMedicoCreado"] = idNuevoMedico;
-                
+
 
 
 
@@ -218,17 +240,23 @@ namespace WebApplicationClinica.Medicos
                 lblError.Text = "✅ Médico agregado correctamente.";
                 lblError.Visible = true;
 
-                
+
                 CargarGrillaMedicos();
 
-                
+
                 txtNombreMedico.Text = "";
                 txtApellidoMedico.Text = "";
                 txtMatriculaMedico.Text = "";
                 txtHoraInicio.Text = "";
                 txtHoraFin.Text = "";
                 ddllistTurnoTrabajo.SelectedIndex = 0;
-                DdlistEspecilidad.SelectedIndex = 0;
+              
+
+                foreach (ListItem item in cblDiasSemanaNuevo.Items)
+                    item.Selected = false;
+
+                foreach (ListItem item in cblEspecialidades.Items)
+                    item.Selected = false;
             }
             catch (Exception ex)
             {
@@ -257,7 +285,11 @@ namespace WebApplicationClinica.Medicos
             txtApellidoMedico.Text = "";
             txtMatriculaMedico.Text = "";
             ddllistTurnoTrabajo.SelectedIndex = 0;
-            DdlistEspecilidad.SelectedIndex = 0;
+            foreach (ListItem item in cblDiasSemanaNuevo.Items)
+                item.Selected = false;
+
+            foreach (ListItem item in cblEspecialidades.Items)
+                item.Selected = false;
 
             lblError.Visible = false;
             panelGrillaMedico.Visible = true;
@@ -272,7 +304,7 @@ namespace WebApplicationClinica.Medicos
 
         }
 
-       
+
 
         protected void btnMostrar_Click(object sender, EventArgs e)
         {
@@ -313,7 +345,6 @@ namespace WebApplicationClinica.Medicos
         protected void gvMedicos_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
 
-            
             panelEliminar.Visible = false;
             lblEliminarLogicamente.Visible = false;
             lblEliminado.Visible = false;
@@ -322,7 +353,6 @@ namespace WebApplicationClinica.Medicos
             lblEroorGuardar.Visible = false;
             txtEliminarLgocimante.Visible = false;
             txtNoeleiminarlogicamente.Visible = false;
-           
 
             try
             {
@@ -336,8 +366,10 @@ namespace WebApplicationClinica.Medicos
                 TextBox txtHoraInicioEdit = (TextBox)fila.FindControl("txtHoraInicioEdit");
                 TextBox txtHoraFinEdit = (TextBox)fila.FindControl("txtHoraFinEdit");
                 CheckBoxList cblEspEdit = (CheckBoxList)fila.FindControl("cblEspEdit");
+                CheckBoxList cblDiasSemanaEdit = (CheckBoxList)fila.FindControl("cblDiasSemanaEdit"); 
 
-               
+                // ================= VALIDACIONES =================
+
                 if (string.IsNullOrWhiteSpace(txtNombreEdit.Text) ||
                     string.IsNullOrWhiteSpace(txtApellidoEdit.Text) ||
                     string.IsNullOrWhiteSpace(txtMatriculaEdit.Text) ||
@@ -366,6 +398,21 @@ namespace WebApplicationClinica.Medicos
                 }
 
                 
+                var diasSeleccionados = cblDiasSemanaEdit.Items
+                                      .Cast<ListItem>()
+                                      .Where(i => i.Selected)
+                                      .ToList();
+
+                if (diasSeleccionados.Count == 0)
+                {
+                    panelEliminar.Visible = true;
+                    lblEroorGuardar.Visible = true;
+                    lblEroorGuardar.Text = "Debe seleccionar al menos un día.";
+                    e.Cancel = true;
+                    return;
+                }
+
+               
                 List<int> idsEspecialidades = new List<int>();
                 foreach (ListItem item in cblEspEdit.Items)
                 {
@@ -382,24 +429,32 @@ namespace WebApplicationClinica.Medicos
                     return;
                 }
 
-              
+                
+
                 Medico medico = new Medico();
                 medico.IdMedico = idMedico;
                 medico.Nombre = txtNombreEdit.Text.Trim();
                 medico.Apellido = txtApellidoEdit.Text.Trim();
                 medico.Matricula = txtMatriculaEdit.Text.Trim();
 
-                medico.TurnoTrabajo = new TurnoTrabajo();
-                medico.TurnoTrabajo.IdTurnoTrabajo = int.Parse(ddlTurnoEdit.SelectedValue);
-                medico.TurnoTrabajo.Nombre = ddlTurnoEdit.SelectedItem.Text;
-                medico.TurnoTrabajo.HoraInicio = horaInicio;
-                medico.TurnoTrabajo.HoraFin = horaFin;
+                medico.turnoTrabajos = new List<TurnoTrabajo>();
 
-              
+                
+                foreach (var diaItem in diasSeleccionados)
+                {
+                    TurnoTrabajo turno = new TurnoTrabajo();
+                    turno.IdTurnoTrabajo = int.Parse(ddlTurnoEdit.SelectedValue); 
+                    turno.Nombre = ddlTurnoEdit.SelectedItem.Text;
+                    turno.HoraInicio = horaInicio;
+                    turno.HoraFin = horaFin;
+                    turno.DiaSemana = diaItem.Value; 
+
+                    medico.turnoTrabajos.Add(turno);
+                }
+
                 MedicoNegocio negocio = new MedicoNegocio();
                 negocio.ModificarMedico(medico, idsEspecialidades);
 
-                
                 gvMedicos.EditIndex = -1;
                 CargarGrillaMedicos();
 
@@ -410,7 +465,6 @@ namespace WebApplicationClinica.Medicos
             }
             catch (Exception)
             {
-                
                 panelEliminar.Visible = true;
                 lblEroorGuardar.Visible = true;
                 lblEroorGuardar.Text = "❌ Error al guardar los cambios. Verifique los datos.";
@@ -421,7 +475,7 @@ namespace WebApplicationClinica.Medicos
 
         protected void gvMedicos_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            gvMedicos.EditIndex = -1;              
+            gvMedicos.EditIndex = -1;
             CargarGrillaMedicos();
         }
 
@@ -449,7 +503,7 @@ namespace WebApplicationClinica.Medicos
                 listafiltrada = lista.FindAll(x =>
                     x.Nombre.ToUpper().Contains(filtro) ||
                     x.Apellido.ToUpper().Contains(filtro) ||
-                    
+
                     (x.TurnoTrabajo != null && x.TurnoTrabajo.Nombre.ToUpper().Contains(filtro)));
             }
 
@@ -485,7 +539,7 @@ namespace WebApplicationClinica.Medicos
 
         protected void btnEditar_Click(object sender, EventArgs e)
         {
-           
+
             panelEliminar.Visible = true;
 
             lblEminadoEror.Visible = false;
@@ -495,7 +549,7 @@ namespace WebApplicationClinica.Medicos
 
             txtEliminarLgocimante.Visible = false;
             txtNoeleiminarlogicamente.Visible = false;
-            
+
 
 
         }
@@ -511,7 +565,7 @@ namespace WebApplicationClinica.Medicos
             lblEminadoEror.Visible = false;
 
             lblEliminado.Visible = false;
-           
+
             lblModificao.Visible = false;
 
             btnVolver.Visible = false;
@@ -542,7 +596,7 @@ namespace WebApplicationClinica.Medicos
                 lblEliminado.Visible = true;
                 lblEminadoEror.Visible = false;
 
-                btnVolver.Visible=true;
+                btnVolver.Visible = true;
 
 
 
@@ -577,19 +631,16 @@ namespace WebApplicationClinica.Medicos
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-               
+              
                 Button btnEditar = (Button)e.Row.FindControl("btnEditar");
-                Button btnModificar = (Button)e.Row.FindControl("btnModificar"); 
-                Button btnCancelar = (Button)e.Row.FindControl("btnCancelar");  
+                Button btnModificar = (Button)e.Row.FindControl("btnModificar");
+                Button btnCancelar = (Button)e.Row.FindControl("btnCancelar");
                 Button btnEliminar = (Button)e.Row.FindControl("btnEliminar");
 
-              
                 bool esFilaEdit = (e.Row.RowIndex == gvMedicos.EditIndex);
 
-               
                 if (esFilaEdit)
                 {
-                
                     if (btnEditar != null) btnEditar.Visible = false;
                     if (btnModificar != null) btnModificar.Visible = true;
                     if (btnCancelar != null) btnCancelar.Visible = true;
@@ -597,19 +648,18 @@ namespace WebApplicationClinica.Medicos
                 }
                 else
                 {
-               
                     if (btnEditar != null) btnEditar.Visible = true;
                     if (btnModificar != null) btnModificar.Visible = false;
                     if (btnCancelar != null) btnCancelar.Visible = false;
                     if (btnEliminar != null) btnEliminar.Visible = true;
                 }
 
-             
+                
                 if (esFilaEdit)
                 {
                     Medico medico = (Medico)e.Row.DataItem;
 
-                  
+                   
                     DropDownList ddlTurnoEdit = (DropDownList)e.Row.FindControl("ddlTurnoEdit");
                     if (ddlTurnoEdit != null)
                     {
@@ -627,7 +677,15 @@ namespace WebApplicationClinica.Medicos
                         }
                     }
 
-                
+                   
+                    DropDownList ddlDiaSemanaEdit = (DropDownList)e.Row.FindControl("ddlDiaSemanaEdit");
+                    if (ddlDiaSemanaEdit != null && medico.TurnoTrabajo != null)
+                    {
+                      
+                        ddlDiaSemanaEdit.SelectedValue = medico.TurnoTrabajo.DiaSemana;
+                    }
+
+                  
                     CheckBoxList cblEspEdit = (CheckBoxList)e.Row.FindControl("cblEspEdit");
                     if (cblEspEdit != null)
                     {
@@ -650,6 +708,7 @@ namespace WebApplicationClinica.Medicos
                         }
                     }
 
+                
                     TextBox txtHoraInicioEdit = (TextBox)e.Row.FindControl("txtHoraInicioEdit");
                     TextBox txtHoraFinEdit = (TextBox)e.Row.FindControl("txtHoraFinEdit");
 
@@ -675,13 +734,13 @@ namespace WebApplicationClinica.Medicos
             lblModificao.Visible = false;
             lblEroorGuardar.Visible = false;
 
-           
+
             btnVolver.Visible = false;
 
-       
 
-           
-           
+
+
+
         }
 
         protected void btnCrearUsuario_Click(object sender, EventArgs e)
@@ -693,13 +752,13 @@ namespace WebApplicationClinica.Medicos
         {
             if (e.CommandName == "Eliminar")
             {
-               
+
                 int idMedico = Convert.ToInt32(e.CommandArgument);
 
-               
+
                 ViewState["IdMedicoEliminar"] = idMedico;
 
-                
+
                 panelEliminar.Visible = true;
                 lblEliminarLogicamente.Visible = true;
 
@@ -712,6 +771,42 @@ namespace WebApplicationClinica.Medicos
                 txtNoeleiminarlogicamente.Visible = true;
 
                 btnVolver.Visible = false;
+            }
+        }
+
+        protected void ddlTurnoEdit_SelectedIndexChanged(object sender, EventArgs e)
+        {
+          
+        }
+
+        protected void ddllistTurnoTrabajo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            string idTurnoStr = ddllistTurnoTrabajo.SelectedValue;
+            panelGrillaMedico.Visible = true;
+
+            if (string.IsNullOrEmpty(idTurnoStr) || idTurnoStr == "0")
+            {
+                // Si no hay turno seleccionado, limpio las horas del PANEL
+                txtHoraInicio.Text = "";
+                txtHoraFin.Text = "";
+                return;
+            }
+
+            int idTurno = int.Parse(idTurnoStr);
+
+            // Traigo todos los turnos desde la BD
+            TurnoTrabajoNegocio turnoNegocio = new TurnoTrabajoNegocio();
+            List<TurnoTrabajo> listaTurnos = turnoNegocio.Listar();
+
+            // Busco el que corresponde al ID elegido
+            TurnoTrabajo turnoSeleccionado = listaTurnos
+                .FirstOrDefault(t => t.IdTurnoTrabajo == idTurno);
+
+            if (turnoSeleccionado != null)
+            {
+                // Lleno SOLO los TextBox del PANEL
+                txtHoraInicio.Text = turnoSeleccionado.HoraInicio.ToString(@"hh\:mm");
+                txtHoraFin.Text = turnoSeleccionado.HoraFin.ToString(@"hh\:mm");
             }
         }
     }

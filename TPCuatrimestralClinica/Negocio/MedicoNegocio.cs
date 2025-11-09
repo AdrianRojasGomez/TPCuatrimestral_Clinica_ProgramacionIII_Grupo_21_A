@@ -45,7 +45,7 @@ namespace Negocio
                 {
                     int idMedico = (int)accesoDatos.Lector["IdMedico"];
 
-                 
+
                     if (!dict.TryGetValue(idMedico, out Medico aux))
                     {
                         aux = new Medico();
@@ -56,12 +56,12 @@ namespace Negocio
 
                         aux.turnoTrabajos = new List<TurnoTrabajo>();
                         aux.Especialidades = new List<Especialidad>();
-                        aux.TurnoTrabajo = null; 
+                        aux.TurnoTrabajo = null;
 
                         dict.Add(idMedico, aux);
                     }
 
-                   
+
                     if (accesoDatos.Lector["IdTurnoTrabajo"] != DBNull.Value)
                     {
                         int idTurno = (int)accesoDatos.Lector["IdTurnoTrabajo"];
@@ -83,13 +83,13 @@ namespace Negocio
 
                             aux.turnoTrabajos.Add(turno);
 
-                          
+
                             if (aux.TurnoTrabajo == null)
                                 aux.TurnoTrabajo = turno;
                         }
                     }
 
-                  
+
                     if (accesoDatos.Lector["IdEspecialidad"] != DBNull.Value)
                     {
                         int idEsp = (int)accesoDatos.Lector["IdEspecialidad"];
@@ -331,7 +331,7 @@ namespace Negocio
             Medico medico = null;
             idsEspecialidades = new List<int>();
 
-
+          ///m
             AccesoDatos datosMedico = new AccesoDatos();
             try
             {
@@ -340,32 +340,60 @@ namespace Negocio
                    M.Nombre,
                    M.Apellido,
                    M.Matricula,
-                   G.IdGuardia,
-                   G.DiaSemana,
-                   G.Nombre AS NombreGuardia
+                   MG.IdGuardia,
+                   MG.DiaSemana,
+                   G.Nombre     AS NombreGuardia,
+                   G.HoraInicio,
+                   G.HoraFin
             FROM Medicos M
             LEFT JOIN MedicosPorGuardia MG ON MG.IdMedico = M.IdMedico
-            LEFT JOIN Guardia G ON G.IdGuardia = MG.IdGuardia
+            LEFT JOIN Guardias G          ON G.IdGuardia = MG.IdGuardia
             WHERE M.IdMedico = @IdMedico");
 
                 datosMedico.SetearParametros("@IdMedico", idMedico);
                 datosMedico.EjecutarLectura();
 
-                if (datosMedico.Lector.Read())
+                while (datosMedico.Lector.Read())
                 {
-                    medico = new Medico();
-                    medico.IdMedico = (int)datosMedico.Lector["IdMedico"];
-                    medico.Nombre = datosMedico.Lector["Nombre"].ToString();
-                    medico.Apellido = datosMedico.Lector["Apellido"].ToString();
-                    medico.Matricula = datosMedico.Lector["Matricula"].ToString();
+                    if (medico == null)
+                    {
+                        medico = new Medico();
+                        medico.IdMedico = (int)datosMedico.Lector["IdMedico"];
+                        medico.Nombre = datosMedico.Lector["Nombre"].ToString();
+                        medico.Apellido = datosMedico.Lector["Apellido"].ToString();
+                        medico.Matricula = datosMedico.Lector["Matricula"].ToString();
 
+                        medico.turnoTrabajos = new List<TurnoTrabajo>();
+                        medico.Especialidades = new List<Especialidad>();
+                        medico.TurnoTrabajo = null; 
+                    }
 
+                  
                     if (!(datosMedico.Lector["IdGuardia"] is DBNull))
                     {
-                        medico.TurnoTrabajo = new TurnoTrabajo();
-                        medico.TurnoTrabajo.IdTurnoTrabajo = (int)datosMedico.Lector["IdGuardia"];
-                        medico.TurnoTrabajo.Nombre = datosMedico.Lector["NombreGuardia"].ToString();
-                        medico.TurnoTrabajo.DiaSemana = (string)datosMedico.Lector["DiaSemana"];
+                        TurnoTrabajo turno = new TurnoTrabajo();
+                        turno.IdTurnoTrabajo = (int)datosMedico.Lector["IdGuardia"];
+                        turno.Nombre = datosMedico.Lector["NombreGuardia"].ToString();
+                        turno.DiaSemana = (string)datosMedico.Lector["DiaSemana"];
+
+                        if (!(datosMedico.Lector["HoraInicio"] is DBNull))
+                            turno.HoraInicio = (TimeSpan)datosMedico.Lector["HoraInicio"];
+                        if (!(datosMedico.Lector["HoraFin"] is DBNull))
+                            turno.HoraFin = (TimeSpan)datosMedico.Lector["HoraFin"];
+
+                       
+                        bool existe = medico.turnoTrabajos.Any(t =>
+                            t.IdTurnoTrabajo == turno.IdTurnoTrabajo &&
+                            t.DiaSemana == turno.DiaSemana);
+
+                        if (!existe)
+                        {
+                            medico.turnoTrabajos.Add(turno);
+
+                          
+                            if (medico.TurnoTrabajo == null)
+                                medico.TurnoTrabajo = turno;
+                        }
                     }
                 }
             }
@@ -374,7 +402,7 @@ namespace Negocio
                 datosMedico.CerrarConexion();
             }
 
-
+            
             if (medico != null)
             {
                 AccesoDatos datosEsp = new AccesoDatos();
@@ -383,7 +411,7 @@ namespace Negocio
                     datosEsp.SetearConsulta(@"
                 SELECT E.IdEspecialidad, E.Nombre
                 FROM MedicosPorEspecialidad ME
-                INNER JOIN Especialidad E ON E.IdEspecialidad = ME.IdEspecialidad
+                INNER JOIN Especialidades E ON E.IdEspecialidad = ME.IdEspecialidad
                 WHERE ME.IdMedico = @IdMedico");
 
                     datosEsp.SetearParametros("@IdMedico", idMedico);
@@ -391,9 +419,16 @@ namespace Negocio
 
                     while (datosEsp.Lector.Read())
                     {
-                        Especialidad esp = new Especialidad();
-                        esp.IdEspecialidad = (int)datosEsp.Lector["IdEspecialidad"];
-                        esp.Nombre = datosEsp.Lector["Nombre"].ToString();
+                        int idEsp = (int)datosEsp.Lector["IdEspecialidad"];
+                        string nombreEsp = datosEsp.Lector["Nombre"].ToString();
+
+                        idsEspecialidades.Add(idEsp); 
+
+                        Especialidad esp = new Especialidad
+                        {
+                            IdEspecialidad = idEsp,
+                            Nombre = nombreEsp
+                        };
 
                         medico.Especialidades.Add(esp);
                     }
@@ -405,9 +440,9 @@ namespace Negocio
             }
 
             return medico;
+
+
         }
     }
-
-
 }
 

@@ -38,8 +38,10 @@ namespace WebApplicationClinica.Medicos
                     ddllistTurnoTrabajo.DataSource = listaturnotrabajo;
                     ddllistTurnoTrabajo.DataValueField = "IdTurnoTrabajo";
                     ddllistTurnoTrabajo.DataTextField = "Nombre";
+                    ddlDiaSemanaNuevo.DataTextField = "DiaSmena";
                     ddllistTurnoTrabajo.DataBind();
                     ddllistTurnoTrabajo.Items.Insert(0, new ListItem("-- Seleccionar turno --", "0"));
+                    ddlDiaSemanaNuevo.Items.Insert(0, new ListItem("-- Seleccionar Dia Laboral --", "0"));
 
                     DdlistEspecilidad.DataSource = listaespecialidad;
                     DdlistEspecilidad.DataValueField = "IdEspecialidad";
@@ -114,6 +116,7 @@ namespace WebApplicationClinica.Medicos
                 string apellido = (txtApellidoMedico.Text ?? "").Trim();
                 string matricula = (txtMatriculaMedico.Text ?? "").Trim();
                 string idTurno = ddllistTurnoTrabajo.SelectedValue ?? "0";
+                string dia = ddlDiaSemanaNuevo.SelectedValue ?? "0";
                 string idEsp = DdlistEspecilidad.SelectedValue ?? "0";
 
                 
@@ -151,6 +154,16 @@ namespace WebApplicationClinica.Medicos
                     return;
                 }
 
+                if (dia == "0")
+                {
+
+                    lblError.Text = "❌ Seleccioná un Dia de trabajo.";
+                    lblError.Visible = true;
+                    return;
+
+
+                }
+
                 if (idEsp == "0")
                 {
                     lblError.Text = "❌ Seleccioná una especialidad.";
@@ -184,6 +197,7 @@ namespace WebApplicationClinica.Medicos
 
                 medico.TurnoTrabajo = new TurnoTrabajo();
                 medico.TurnoTrabajo.IdTurnoTrabajo = int.Parse(idTurno);
+                medico.TurnoTrabajo.DiaSemana = dia;
                 medico.TurnoTrabajo.HoraInicio = horaInicio;
                 medico.TurnoTrabajo.HoraFin = horaFin;
 
@@ -258,10 +272,7 @@ namespace WebApplicationClinica.Medicos
 
         }
 
-        protected void btnGuardarMedico_Click1(object sender, EventArgs e)
-        {
-
-        }
+       
 
         protected void btnMostrar_Click(object sender, EventArgs e)
         {
@@ -568,8 +579,8 @@ namespace WebApplicationClinica.Medicos
             {
                
                 Button btnEditar = (Button)e.Row.FindControl("btnEditar");
-                Button btnModificar = (Button)e.Row.FindControl("btnModificar"); // Guardar Cambios
-                Button btnCancelar = (Button)e.Row.FindControl("btnCancelar");  // Cancelar Edición
+                Button btnModificar = (Button)e.Row.FindControl("btnModificar"); 
+                Button btnCancelar = (Button)e.Row.FindControl("btnCancelar");  
                 Button btnEliminar = (Button)e.Row.FindControl("btnEliminar");
 
               

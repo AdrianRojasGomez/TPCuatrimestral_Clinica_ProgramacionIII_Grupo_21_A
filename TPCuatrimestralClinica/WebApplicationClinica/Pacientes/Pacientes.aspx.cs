@@ -91,8 +91,22 @@ namespace WebApplicationClinica
             try
             {
                 PacienteNegocio negocio = new PacienteNegocio();
-                negocio.Eliminar(id);
+                negocio.EliminarLogico(id);
                 MostrarMensaje("Paciente eliminado correctamente.", "success");
+            }
+            catch (Exception ex)
+            {
+                MostrarMensaje(ex.Message, "danger");
+            }
+        }
+
+        void ReactivarPaciente(int id)
+        {
+            try
+            {
+                PacienteNegocio negocio = new PacienteNegocio();
+                negocio.ReactivarLogico(id);
+                MostrarMensaje("Paciente reactivado correctamente.", "success");
             }
             catch (Exception ex)
             {
@@ -191,22 +205,28 @@ namespace WebApplicationClinica
 
         protected void gvPacientes_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "EditarPaciente" || e.CommandName == "CustomDelete")
+            
+            if (!int.TryParse(e.CommandArgument?.ToString(), out int pacienteId))
             {
-                int pacienteId = Convert.ToInt32(e.CommandArgument);
+                return;
+            }
 
-                if (e.CommandName == "EditarPaciente")
-                {
-                    CargarDatosPaciente(pacienteId);
-                    pnlFormulario.Visible = true;
-                    lblFormTitulo.Text = "Editar Paciente";
-                    divMensaje.Visible = false;
-                }
-                else if (e.CommandName == "CustomDelete")
-                {
-                    EliminarPaciente(pacienteId);
-                    CargarPacientes(txtBuscarPaciente.Text.Trim());
-                }
+            if (e.CommandName == "EditarPaciente")
+            {
+                CargarDatosPaciente(pacienteId);
+                pnlFormulario.Visible = true;
+                lblFormTitulo.Text = "Editar Paciente";
+                divMensaje.Visible = false;
+            }
+            else if (e.CommandName == "CustomDelete")
+            {
+                EliminarPaciente(pacienteId);
+                CargarPacientes(txtBuscarPaciente.Text.Trim()); 
+            }
+            else if (e.CommandName == "ReactivarPaciente") 
+            {
+                ReactivarPaciente(pacienteId);
+                CargarPacientes(txtBuscarPaciente.Text.Trim());
             }
         }
         protected void gvPacientes_Sorting(object sender, GridViewSortEventArgs e)

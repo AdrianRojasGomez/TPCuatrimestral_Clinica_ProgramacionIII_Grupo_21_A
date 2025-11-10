@@ -164,13 +164,40 @@
                         <asp:BoundField DataField="Nombre" HeaderText="Nombre" SortExpression="Nombre" />
                         <asp:BoundField DataField="Email" HeaderText="Email" SortExpression="Email" />
                         <asp:BoundField DataField="Telefono" HeaderText="Teléfono" SortExpression="Telefono" />
-                        <asp:TemplateField HeaderText="Acciones">
-                            <ItemTemplate>
-                                <asp:LinkButton ID="btnEditar" runat="server" CommandName="EditarPaciente" CommandArgument='<%# Eval("IdPaciente") %>' CssClass="btn btn-sm btn-info me-2" ToolTip="Editar Paciente"><i class="bi bi-pencil-square"></i> Editar</asp:LinkButton>
-                                <asp:LinkButton ID="btnEliminar" runat="server" CommandName="CustomDelete" CommandArgument='<%# Eval("IdPaciente") %>' CssClass="btn btn-sm btn-danger"
-                                    OnClientClick="return confirm('¿Está seguro que desea eliminar este paciente?');" ToolTip="Eliminar Paciente"><i class="bi bi-trash"></i> Eliminar</asp:LinkButton>
-                            </ItemTemplate>
-                        </asp:TemplateField>
+                       <asp:TemplateField HeaderText="Acciones" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="180px">
+                        <ItemTemplate>
+        
+                            <asp:LinkButton ID="btnEditar" runat="server"
+                                CommandName="EditarPaciente"
+                                CommandArgument='<%# Eval("IdPaciente") %>'
+                                CssClass="btn btn-sm btn-info"
+                                ToolTip="Editar Paciente">
+                                <i class="bi bi-pencil-fill"></i> Editar
+                            </asp:LinkButton>
+        
+                            <%-- Botón Eliminar (Lógico) - Visible solo si Estado = 1 (true) --%>
+                            <asp:LinkButton ID="btnEliminar" runat="server"
+                                CommandName="CustomDelete"
+                                CommandArgument='<%# Eval("IdPaciente") %>'
+                                CssClass="btn btn-sm btn-danger"
+                                ToolTip="Dar de Baja"
+                                OnClientClick="return confirm('¿Está seguro de que desea dar de baja a este paciente?');"
+                                Visible='<%# Convert.ToBoolean(Eval("Estado")) %>'>
+                                <i class="bi bi-trash-fill"></i> Eliminar
+                            </asp:LinkButton>
+
+                            <%-- Botón Reactivar - Visible solo si Estado = 0 (false) --%>
+                            <asp:LinkButton ID="btnReactivar" runat="server"
+                                CommandName="ReactivarPaciente"
+                                CommandArgument='<%# Eval("IdPaciente") %>'
+                                CssClass="btn btn-sm btn-success"
+                                ToolTip="Reactivar Paciente"
+                                Visible='<%# !Convert.ToBoolean(Eval("Estado")) %>'>
+                                <i class="bi bi-arrow-clockwise"></i> Reactivar
+                            </asp:LinkButton>
+
+                        </ItemTemplate>
+                    </asp:TemplateField>
                     </Columns>
                     <HeaderStyle BackColor="#007bff" ForeColor="White" Font-Bold="True" />
                     <RowStyle BackColor="#f8f9fa" />

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient; // <-- AÑADIDO (para SqlException)
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -11,135 +12,182 @@ namespace Negocio
 {
     public class TurnoNegocio
     {
-        public DataTable Listar(string filtro = "")
+        public DataTable Listar(string filtro = "")
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                string query = "SELECT T.IdTurno ,T.NumeroTurno, T.FechaInicio, T.HoraInicio, CONCAT(p.Nombre, ' ', p.Apellido) AS PacienteNombreCompleto, CONCAT(M.Nombre, ' ', M.Apellido) AS MedicoNombreCompleto E.Nombre AS EspecialidadNombre,  " +
-                               "FROM Turnos T " +
-                               "JOIN Pacientes P ON T.IdPaciente = P.IdPaciente " +
-                               "JOIN Medicos M ON T.IdMedico = M.IdMedico " +
-                               "JOIN Especialidades E ON T.IdEspecialidad = E.IdEspecialidad ";
-                // Agregar filtro si se proporciona
+                string query = @"
+                SELECT 
+                    T.IdTurno, 
+                    T.FechaInicio, 
+                    T.HoraInicio,
+                    P.Dni AS PacienteDNI,
+                    CONCAT(P.Nombre, ' ', P.Apellido) AS PacienteNombre, 
+                    CONCAT(M.Nombre, ' ', M.Apellido) AS MedicoNombre, 
+                    E.Nombre AS EspecialidadNombre,
+                    T.Motivo,
+                    T.Estado
+                FROM Turnos T
+                LEFT JOIN Pacientes P ON T.IdPaciente = P.IdPaciente
+                LEFT JOIN Medicos M ON T.IdMedico = M.IdMedico
+                LEFT JOIN Especialidades E ON T.IdEspecialidad = E.IdEspecialidad
+            ";
+
+
+                if (!string.IsNullOrEmpty(filtro))
+                {
+                    string filtroLike = "'%" + filtro + "%'";
+                    query += " WHERE P.Dni LIKE " + filtroLike +
+                             " OR CONCAT(P.Nombre, ' ', P.Apellido) LIKE " + filtroLike +
+                             " OR CONCAT(M.Nombre, ' ', M.Apellido) LIKE " + filtroLike;
+                }
 
                 datos.SetearConsulta(query);
                 datos.EjecutarLectura();
 
                 DataTable dt = new DataTable();
                 dt.Load(datos.Lector);
-                return dt;
+                return dt;
             }
             catch (Exception ex)
             {
-
-                throw new Exception("Error al listar pacientes: " + ex.Message);
+                throw new Exception("Error al listar turnos: " + ex.Message);
             }
             finally
             {
                 datos.CerrarConexion();
             }
         }
-
         public Turno BuscarPorDNI(string dni)
-        {
-            AccesoDatos datos = new AccesoDatos();
-            PacienteNegocio pacNegocio = new PacienteNegocio();
-            MedicoNegocio medicoNegocio = new MedicoNegocio();
-            EspeciladadNegocio especialidadNegocio = new EspeciladadNegocio();
-            try
             {
-                datos.SetearConsulta("SELECT T.* FROM Turnos as T WHERE DNI = @Dni");
-                datos.SetearParametros("@Dni", dni);
-                datos.EjecutarLectura();
+                AccesoDatos datos = new AccesoDatos();
+                PacienteNegocio pacNegocio = new PacienteNegocio();
+                MedicoNegocio medicoNegocio = new MedicoNegocio();
+                
 
-                if (datos.Lector.Read())
+                try
                 {
-                    Turno turno = new Turno();
-                    turno.IdTurno = (int)datos.Lector["IdTurno"];
-                    turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
-                    turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
-                    turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
-                    turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
-                    turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
-                    turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
-                    turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
-                    turno.Paciente = pacNegocio.BuscarPorId((int)datos.Lector["IdPaciente"]);
-                    //turno.Medico = medicoNegocio.BuscarPorId((int)datos.Lector["IdMedico"]);
-                    turno.Especialidad = especialidadNegocio.ObtenerEspecialidad((int)datos.Lector["IdEspecialidad"]);
-                    turno.Motivo = (string)datos.Lector["Motivo"];
-                    turno.Estado = (bool)datos.Lector["Estado"];
-                    return turno;
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
+                    
+                    datos.SetearConsulta(@"
+                    SELECT T.* FROM Turnos AS T
+                    INNER JOIN Pacientes AS P ON T.IdPaciente = P.IdPaciente
+                    WHERE P.Dni = @Dni
+                ");
+                    datos.SetearParametros("@Dni", dni);
+                    datos.EjecutarLectura();
 
-                throw new Exception("Error al buscar Turno " + ex.Message);
+                    if (datos.Lector.Read())
+                    {
+                        Turno turno = new Turno();
+                        turno.IdTurno = (int)datos.Lector["IdTurno"];
+                        turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
+                        turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                        turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                        turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
+                        turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
+                        turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
+                        turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
+                                            
+                        turno.IdPaciente = (int)datos.Lector["IdPaciente"];
+                        turno.IdMedico = (int)datos.Lector["IdMedico"];
+
+                        turno.Paciente = pacNegocio.BuscarPorId(turno.IdPaciente);
+                        turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
+
+                        
+                        turno.Motivo = (string)datos.Lector["Motivo"];
+                        turno.Estado = (bool)datos.Lector["Estado"];
+                        return turno;
+                    }
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al buscar Turno por DNI: " + ex.Message);
+                }
+                finally
+                {
+                    datos.CerrarConexion();
+                }
             }
-            finally
-            {
-                datos.CerrarConexion();
-            }
-        }
 
         public Turno BuscarPorId(int id)
-        {
-            AccesoDatos datos = new AccesoDatos();
-            PacienteNegocio pacNegocio = new PacienteNegocio();
-            MedicoNegocio medicoNegocio = new MedicoNegocio();
-            EspeciladadNegocio especialidadNegocio = new EspeciladadNegocio();
-            try
             {
-                datos.SetearConsulta("SELECT T.* FROM Turnos as T WHERE ID = @ID");
-                datos.SetearParametros("@Dni", id);
-                datos.EjecutarLectura();
-
-                if (datos.Lector.Read())
+                AccesoDatos datos = new AccesoDatos();
+                PacienteNegocio pacNegocio = new PacienteNegocio();
+                MedicoNegocio medicoNegocio = new MedicoNegocio();
+              
+                try
                 {
-                    Turno turno = new Turno();
-                    turno.IdTurno = (int)datos.Lector["IdTurno"];
-                    turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
-                    turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
-                    turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
-                    turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
-                    turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
-                    turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
-                    turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
-                    turno.Paciente = pacNegocio.BuscarPorId((int)datos.Lector["IdPaciente"]);
-                    //turno.Medico = medicoNegocio.BuscarPorId((int)datos.Lector["IdMedico"]);
-                    turno.Especialidad = especialidadNegocio.ObtenerEspecialidad((int)datos.Lector["IdEspecialidad"]);
-                    turno.Motivo = (string)datos.Lector["Motivo"];
-                    turno.Estado = (bool)datos.Lector["Estado"];
-                    return turno;
+                    
+                    datos.SetearConsulta("SELECT T.* FROM Turnos as T WHERE IdTurno = @IdTurno");
+                    datos.SetearParametros("@IdTurno", id);
+                    datos.EjecutarLectura();
+
+                    if (datos.Lector.Read())
+                    {
+                        Turno turno = new Turno();
+                        turno.IdTurno = (int)datos.Lector["IdTurno"];
+                        turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
+                        turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                        turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                        turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
+                        turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
+                        turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
+                        turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
+
+                        turno.IdPaciente = (int)datos.Lector["IdPaciente"];
+                        turno.IdMedico = (int)datos.Lector["IdMedico"];
+
+                        turno.Paciente = pacNegocio.BuscarPorId(turno.IdPaciente);
+                        turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
+
+                        turno.Motivo = (string)datos.Lector["Motivo"];
+                        turno.Estado = (bool)datos.Lector["Estado"];
+                        return turno;
+                    }
+                    return null;
                 }
-                return null;
+                catch (Exception ex)
+                {
+                    throw new Exception("Error al buscar Turno por ID: " + ex.Message);
+                }
+                finally
+                {
+                    datos.CerrarConexion();
+                }
             }
-            catch (Exception ex)
-            {
-
-                throw new Exception("Error al buscar Turno " + ex.Message);
-            }
-            finally
-            {
-                datos.CerrarConexion();
-            }
-        }
-
+             
         public void Agregar(Turno nuevoTurno)
         {
-            //HITO 3 IMPLEMENTACION PRINCIPAL 
+           
             throw new NotImplementedException();
         }
 
         public void ModificarFecha(Turno turnoModificado)
         {
-            //HITO 3 IMPLEMENTACION PRINCIPAL 
+            
             throw new NotImplementedException();
         }
 
         public void Cancelar(int id)
+        {
+           AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                
+                datos.SetearConsulta("UPDATE Turnos SET Estado = 2 WHERE IdTurno = @IdTurno"); 
+                datos.SetearParametros("@IdTurno", id);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al cancelar el turno: " + ex.Message);
+            }
+            
+        }
+        public void Reactivar(int id) 
         {
             AccesoDatos datos = new AccesoDatos();
             try
@@ -150,15 +198,8 @@ namespace Negocio
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al cancelar el turno: " + ex.Message);
-            }
-            finally
-            {
-                datos.CerrarConexion();
+                throw new Exception("Error al reactivar el turno: " + ex.Message);
             }
         }
-
-
-
     }
 }

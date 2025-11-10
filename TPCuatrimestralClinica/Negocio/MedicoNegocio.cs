@@ -41,10 +41,7 @@ namespace Negocio
                 WHERE m.Estado = 1
             ORDER BY m.Apellido, m.Nombre, e.Nombre");
 
-=======
-            WHERE m.Activo = 1 
-            ORDER BY m.IdMedico DESC, m.Apellido ASC, m.Nombre ASC");
->>>>>>> matias
+
 
                 accesoDatos.EjecutarLectura();
 
@@ -449,6 +446,13 @@ namespace Negocio
             return medico;
 
 
+        }
+
+        public Medico BuscarMedicoPorIdSimple(int idMedico)
+        {
+            // Llama a tu método existente, pero descarta la lista de IDs
+            List<int> idsDescartados;
+            return BuscarMedicoPorId(idMedico, out idsDescartados);
         }
     }
 }

@@ -12,11 +12,31 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                string query = "SELECT IdPaciente, Dni, Apellido, Nombre, Email, Telefono FROM Pacientes ";
+                string query = @"
+            SELECT 
+                IdPaciente, Dni, Apellido, Nombre, Email, Telefono, Estado
+            FROM Pacientes";
+
                 if (!string.IsNullOrEmpty(filtro))
                 {
-                    query += "WHERE Dni LIKE @Filtro OR Apellido LIKE @Filtro OR Nombre LIKE @Filtro ";
-                    datos.SetearParametros("@Filtro", "%" + filtro + "%");
+                    // --- INICIO DE LA NUEVA LÓGICA DE BÚSQUEDA ---
+
+                    // Si hay un filtro, buscamos:
+                    // 1. Pacientes ACTIVOS (Estado=1) que coincidan (parcial) con DNI, Apellido o Nombre.
+                    // 2. Pacientes INACTIVOS (Estado=0) que coincidan (exacto) SÓLO con el DNI.
+
+                    query += " WHERE (Estado = 1 AND (Dni LIKE @FiltroLike OR Apellido LIKE @FiltroLike OR Nombre LIKE @FiltroLike))" +
+                             "    OR (Estado = 0 AND Dni = @FiltroExacto)";
+
+                    datos.SetearParametros("@FiltroLike", "%" + filtro + "%"); // Búsqueda parcial para activos
+                    datos.SetearParametros("@FiltroExacto", filtro);        // Búsqueda exacta para DNI inactivo
+
+                    // --- FIN DE LA NUEVA LÓGICA ---
+                }
+                else
+                {
+                    // Si NO hay filtro (carga inicial), solo mostramos los pacientes activos
+                    query += " WHERE Estado = 1";
                 }
 
                 datos.SetearConsulta(query);
@@ -35,6 +55,9 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+
+
+
         public Paciente BuscarPorDni(string dni)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -172,25 +195,33 @@ namespace Negocio
             }
         }
 
-        public void Eliminar(int id)
+        public void EliminarLogico(int id)
         {
             AccesoDatos datos = new AccesoDatos();
             try
-            {
-                datos.SetearConsulta("DELETE FROM Pacientes WHERE IdPaciente = @IdPaciente");
+            {                
+                datos.SetearConsulta("UPDATE Pacientes SET Estado = 0 WHERE IdPaciente = @IdPaciente");
                 datos.SetearParametros("@IdPaciente", id);
                 datos.EjecutarAccion();
             }
             catch (Exception ex)
             {
-                if (ex is SqlException sqlEx && sqlEx.Number == 547)
-                {
-                    throw new Exception("No se puede eliminar el paciente porque tiene turnos asociados.");
-                }
-                else
-                {
-                    throw new Exception("Error al eliminar paciente: " + ex.Message);
-                }
+                throw new Exception("Error al dar de baja lógica al paciente: " + ex.Message);
+            }
+        }
+
+        public void ReactivarLogico(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("UPDATE Pacientes SET Estado = 1 WHERE IdPaciente = @IdPaciente");
+                datos.SetearParametros("@IdPaciente", id);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al reactivar el paciente: " + ex.Message);
             }
         }
 

@@ -18,10 +18,8 @@ namespace Negocio
             List<Usuario> lista = new List<Usuario>();
             AccesoDatos accesoDatos = new AccesoDatos();
 
-
             try
             {
-
                 accesoDatos.SetearConsulta(@"
             SELECT 
                 u.IdUsuario,
@@ -29,22 +27,19 @@ namespace Negocio
                 u.Clave,
                 u.TipoUusario,
                 u.Activo,
-                u.IdMedico,
+                um.IdMedico,
                 m.Nombre AS NombreMedico,
                 m.Apellido,
                 m.Matricula
             FROM UsuariosApp u
-            inner JOIN Medicos m ON m.IdMedico = u.IdMedico
-         
+            LEFT JOIN UsuariosAppxMedico um ON um.IdUsuario = u.IdUsuario
+            LEFT JOIN Medicos m ON m.IdMedico = um.IdMedico
             ORDER BY u.IdUsuario DESC");
-
 
                 accesoDatos.EjecutarLectura();
 
                 while (accesoDatos.Lector.Read())
                 {
-
-
                     Usuario aux = new Usuario();
 
                     aux.IdUsuario = (int)accesoDatos.Lector["IdUsuario"];
@@ -53,9 +48,11 @@ namespace Negocio
                     aux.TipoUsuario = (TipoUsuario)(int)accesoDatos.Lector["TipoUusario"];
                     aux.Activo = (bool)accesoDatos.Lector["Activo"];
 
-
+                   
                     if (accesoDatos.Lector["IdMedico"] != DBNull.Value)
                     {
+                        aux.IdMedicoAsociado = (int)accesoDatos.Lector["IdMedico"];
+
                         aux.Medico = new Medico();
                         aux.Medico.IdMedico = (int)accesoDatos.Lector["IdMedico"];
                         aux.Medico.Nombre = accesoDatos.Lector["NombreMedico"].ToString();
@@ -63,28 +60,17 @@ namespace Negocio
                         aux.Medico.Matricula = accesoDatos.Lector["Matricula"].ToString();
                     }
 
-
                     lista.Add(aux);
                 }
 
-
-
-
-
                 return lista;
-
             }
-
-             
-
             catch (Exception ex)
             {
-
                 throw ex;
             }
             finally
             {
-
                 accesoDatos.CerrarConexion();
             }
 
@@ -144,35 +130,56 @@ namespace Negocio
 
             try
             {
+
                 datos.SetearConsulta(
-                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUusario, IdMedico) " +
-                    "VALUES (@NombreUsuario, @Clave, @TipoUsuario, @IdMedico)"
+                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUusario) " +
+                    "VALUES (@NombreUsuario, @Clave, @TipoUsuario); " +
+                    "SELECT SCOPE_IDENTITY();"
                 );
 
                 datos.SetearParametros("@NombreUsuario", usuario.NombreUsuario);
                 datos.SetearParametros("@Clave", usuario.Password);
                 datos.SetearParametros("@TipoUsuario", (int)usuario.TipoUsuario);
 
-                if (usuario.IdMedicoAsociado > 0)
-                    datos.SetearParametros("@IdMedico", usuario.IdMedicoAsociado);
-                else
-                    datos.SetearParametros("@IdMedico", DBNull.Value);
 
-                datos.EjecutarAccion();
+                int idUsuarioNuevo = Convert.ToInt32(datos.EjecutarEscalar());
+                datos.CerrarConexion();
+
+
+                if (usuario.IdMedicoAsociado > 0)
+                {
+                    AccesoDatos datosRelacion = new AccesoDatos();
+                    try
+                    {
+                        datosRelacion.SetearConsulta(
+                            "INSERT INTO UsuariosAppxMedico (IdUsuario, IdMedico) " +
+                            "VALUES (@IdUsuario, @IdMedico)"
+                        );
+
+                        datosRelacion.SetearParametros("@IdUsuario", idUsuarioNuevo);
+                        datosRelacion.SetearParametros("@IdMedico", usuario.IdMedicoAsociado);
+
+                        datosRelacion.EjecutarAccion();
+                    }
+                    finally
+                    {
+                        datosRelacion.CerrarConexion();
+                    }
+                }
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-            finally
-            {
-                datos.CerrarConexion();
-            }
-
-
-
-
+            datos.CerrarConexion();
         }
+    
+
+
+
+
+
+
 
         public void CambiarEstadoUsuario(int idUsuario, bool activar)
         {

@@ -38,15 +38,11 @@ namespace Negocio
             LEFT JOIN Especialidades   e          ON e.IdEspecialidad = me.IdEspecialidad
 
 
-                WHERE m.Estado = 1
+                WHERE m.Activo = 1
             ORDER BY m.Apellido, m.Nombre, e.Nombre");
 
 
-<<<<<<< HEAD
-            
 
-=======
->>>>>>> origin/main
 
                 accesoDatos.EjecutarLectura();
 

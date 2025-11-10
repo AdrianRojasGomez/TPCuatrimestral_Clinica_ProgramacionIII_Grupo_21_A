@@ -745,7 +745,6 @@ namespace WebApplicationClinica.Medicos
 
         protected void btnCrearUsuario_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/CrearUsuario.aspx");
         }
 
         protected void gvMedicos_RowCommand1(object sender, GridViewCommandEventArgs e)
@@ -808,6 +807,12 @@ namespace WebApplicationClinica.Medicos
                 txtHoraInicio.Text = turnoSeleccionado.HoraInicio.ToString(@"hh\:mm");
                 txtHoraFin.Text = turnoSeleccionado.HoraFin.ToString(@"hh\:mm");
             }
+        }
+
+        protected void btnAltaUsuario_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Login y Usuarios/CrearUsuario.aspx");
+
         }
     }
 }

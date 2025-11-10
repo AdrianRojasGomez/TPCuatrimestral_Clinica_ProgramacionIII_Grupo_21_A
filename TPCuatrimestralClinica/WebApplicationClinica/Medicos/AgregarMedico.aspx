@@ -14,6 +14,8 @@
 
 
             <asp:Button ID="btnMostrar" runat="server" Text="Cargar nuevo medico" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnMostrar_Click" />
+            <asp:Button ID="btnAltaUsuario" runat="server" Text="Alta Usuario Medico" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnAltaUsuario_Click" />
+
             <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold" />
         </div>
 

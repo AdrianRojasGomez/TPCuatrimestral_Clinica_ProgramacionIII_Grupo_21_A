@@ -50,27 +50,37 @@ namespace WebApplicationClinica
 
                 usuario.Medico = null;
 
-
                 int idMedico;
-                if (usuario.TipoUsuario == TipoUsuario.Medico &&
-                    Session["idMedicoCreado"] != null &&
-                    int.TryParse(Session["idMedicoCreado"].ToString(), out idMedico))
+                bool esMedico = usuario.TipoUsuario == TipoUsuario.Medico;
+
+                if (esMedico)
                 {
+                    if (Session["idMedicoCreado"] == null ||
+                        !int.TryParse(Session["idMedicoCreado"].ToString(), out idMedico))
+                    {
+                        lblMensaje.Text = "⚠️ Para crear un usuario de tipo Médico primero debe dar de alta el médico.";
+                        lblMensaje.CssClass = "text-danger fw-semibold";
+                        return;
+                    }
+
+                 
                     usuario.Medico = new Medico();
                     usuario.Medico.IdMedico = idMedico;
                     usuario.IdMedicoAsociado = idMedico;
 
+                    UsuarioNegocio negocio = new UsuarioNegocio();
+                    negocio.GuardarUsuario(usuario);
+
+                    Session["idMedicoCreado"] = null;
+
+                    lblMensaje.Text = "✅ Usuario creado correctamente.";
+                    lblMensaje.CssClass = "text-success fw-semibold";
+                    CargarGrillaUsuario();
+
+                    TxtNombreUsuario.Text = string.Empty;
+                    TxtPassword.Text = string.Empty;
+                    ddlTipoUsuario.SelectedIndex = 0;
                 }
-
-                UsuarioNegocio negocio = new UsuarioNegocio();
-                negocio.GuardarUsuario(usuario);
-
-                lblMensaje.Text = "✅ Usuario creado correctamente.";
-                lblMensaje.CssClass = "text-success fw-semibold";
-
-                TxtNombreUsuario.Text = string.Empty;
-                TxtPassword.Text = string.Empty;
-                ddlTipoUsuario.SelectedIndex = 0;
             }
             catch
             {
@@ -128,7 +138,7 @@ namespace WebApplicationClinica
 
             btn.Visible = false;
 
-            Button btnGuardar = (Button)fila.FindControl("btnActivarUsuario");
+            Button btnGuardar = (Button)fila.FindControl("btnGuardarInactivacion");
             Button btnCncelar2 = (Button)fila.FindControl("btnCncelar2");
             if (btnGuardar != null)
                 btnGuardar.Visible = true;
@@ -186,6 +196,7 @@ namespace WebApplicationClinica
             negocio.CambiarEstadoUsuario(idUsuario, false);
             lblActivoCorrectamente.Visible = false;
             lblInactivoCorecto.Visible = true;
+            
             btnVolver.Visible = true;
 
 

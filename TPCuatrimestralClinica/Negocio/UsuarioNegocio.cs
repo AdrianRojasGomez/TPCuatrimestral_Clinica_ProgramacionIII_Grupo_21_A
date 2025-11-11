@@ -98,7 +98,7 @@ namespace Negocio
                 {
 
                     usuario.IdUsuario = (int)accesoDatos.Lector["IdUsuario"];
-                    usuario.TipoUsuario = (int)(accesoDatos.Lector["TipoUusario"]) == 1 ? TipoUsuario.Admin : (int)(accesoDatos.Lector["TipoUusario"]) == 2 ? TipoUsuario.Medico : TipoUsuario.Recepcion;
+                    usuario.TipoUsuario = (int)(accesoDatos.Lector["TipoUusario"]) == 1 ? TipoUsuario.Admin : TipoUsuario.Recepcion;
 
 
                     return true;
@@ -119,6 +119,73 @@ namespace Negocio
                 accesoDatos.CerrarConexion();
 
             }
+
+        }
+
+        public bool loguearmedico(Usuario usuario) 
+        {
+
+
+            AccesoDatos accesoDatos = new AccesoDatos();
+
+            try
+            {
+                accesoDatos.SetearConsulta(@"
+        SELECT u.IdUsuario, 
+               u.TipoUusario,
+               um.IdMedico   -- 👈 IMPORTANTE
+        FROM UsuariosApp u
+        INNER JOIN UsuariosAppxMedico um ON u.IdUsuario = um.IdUsuario
+        WHERE u.NombreUsuario = @user 
+          AND u.Clave = @pass 
+          AND u.TipoUusario = 2   -- 2 = Médico
+          AND u.Activo = 1");
+
+                accesoDatos.SetearParametros("@user", usuario.NombreUsuario);
+                accesoDatos.SetearParametros("@pass", usuario.Password);
+                accesoDatos.EjecutarLectura();
+
+
+
+
+                if (accesoDatos.Lector.Read())
+                {
+                    usuario.IdUsuario = (int)accesoDatos.Lector["IdUsuario"];
+                    usuario.TipoUsuario = TipoUsuario.Medico;
+
+                    
+                    usuario.IdMedicoAsociado = (int)accesoDatos.Lector["IdMedico"];
+
+                
+
+                    return true;
+                }
+
+
+
+
+
+
+
+
+                return false;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            finally
+            {
+
+                accesoDatos.CerrarConexion();
+
+            }
+
+
+
+
 
         }
 

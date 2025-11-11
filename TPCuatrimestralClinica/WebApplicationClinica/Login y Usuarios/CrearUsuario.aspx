@@ -1,4 +1,9 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="CrearUsuario.aspx.cs" Inherits="WebApplicationClinica.WebForm2" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Clinica.Master"
+    AutoEventWireup="true"
+    MaintainScrollPositionOnPostback="true"
+    CodeBehind="CrearUsuario.aspx.cs"
+    Inherits="WebApplicationClinica.WebForm2" %>
+
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -41,7 +46,7 @@
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white">
             <strong>Buscar Usuario</strong>
-            
+
         </div>
 
         <div class="card-body">
@@ -49,11 +54,11 @@
                 <div class="col-md-6">
                     <asp:TextBox ID="txtFiltradoUsario" runat="server" CssClass="form-control rounded-end" placeholder="Buscar por Usuario"
                         OnTextChanged="txtFiltradoUsario_TextChanged" AutoPostBack="true" />
-                    <asp:Label ID="lblInactivoCorecto" runat="server"  CssClass="alert alert-danger fw-semibold rounded-pill px-4 py-2 shadow-sm d-inline-block mt-3" Text=" 🛑 Usuario Inactivo" />
+                    <asp:Label ID="lblInactivoCorecto" runat="server" CssClass="alert alert-danger fw-semibold rounded-pill px-4 py-2 shadow-sm d-inline-block mt-3" Text=" 🛑 Usuario Inactivo" />
                     <asp:Label ID="lblActivoCorrectamente" runat="server" CssClass="alert alert-success fw-semibold rounded-pill px-4 py-2 shadow-sm d-inline-block mt-3" Text="✅ Usuario Activo" />
 
                     <asp:Button ID="btnVolver" runat="server" CssClass="btn btn-outline-primary rounded-pill px-4 py-2 fw-semibold shadow-sm mt-3" Text="↩️ Volver" OnClick="btnVolver_Click" />
-               </div>
+                </div>
             </div>
         </div>
     </div>
@@ -97,26 +102,28 @@
 
                     <asp:TemplateField HeaderText="Acciones">
                         <ItemTemplate>
-                            <asp:Button ID="btnActivar" runat="server" Text="✅ Activar" CssClass="btn btn-sm btn-outline-success mx-1" 
+                            <asp:Button ID="btnActivar" runat="server" Text="✅ Activar" CssClass="btn btn-sm btn-outline-success mx-1"
                                 OnClick="btnActivar_Click1"
                                 Visible='<%# !(bool)Eval("Activo") %>'
                                 CommandArgument='<%# Eval("IdUsuario") %>' />
 
-                            <asp:Button ID="btnActivarUsuario" runat="server" Text="💾 Guardar Cambios" CssClass="btn btn-sm btn-outline-primary mx-1" 
+                            <asp:Button ID="btnActivarUsuario" runat="server" Text="💾 Guardar Cambios" CssClass="btn btn-sm btn-outline-primary mx-1"
                                 OnClick="btnActivarUsuario_Click" CommandName="Update" />
 
 
-                            <asp:Button ID="btnCancelar" runat="server" Text="↩️ Cancelar" CssClass="btn btn-sm btn-outline-primary mx-1" 
+                            <asp:Button ID="btnCancelar" runat="server" Text="↩️ Cancelar" CssClass="btn btn-sm btn-outline-primary mx-1"
                                 OnClick="btnCancelar_Click" Visible="false" />
 
 
 
                             <asp:Button ID="btnInactivar" runat="server" Text="🗑️ Inactivar" OnClick="btnInactivar_Click"
                                 Visible='<%# (bool)Eval("Activo") %>' CommandArgument='<%# Eval("IdUsuario") %>' />
+
                             <asp:Button ID="btnGuardarInactivacion" runat="server" Text="💾 Guardar Cambios"
                                 CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnGuardarInactivacion_Click"
                                 CommandName="Update" />
-                            <asp:Button ID="btnCncelar2" runat="server" CssClass="btn btn-sm btn-outline-primary mx-1" 
+
+                            <asp:Button ID="btnCncelar2" runat="server" CssClass="btn btn-sm btn-outline-primary mx-1"
                                 Text="↩️ Cancelar" OnClick="btnCncelar2_Click" Visible="false" />
 
 
@@ -144,7 +151,7 @@
         </div>
     </div>
 
-        <script type="text/javascript">
+    <script type="text/javascript">
         var __filterTimer = null;
         function liveFilter(uniqueId) {
             if (__filterTimer) clearTimeout(__filterTimer);
@@ -152,7 +159,7 @@
                 __doPostBack(uniqueId, '');
             }, 300);
         }
-        </script>
+    </script>
 
 
 </asp:Content>

@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Negocio
 {
-    public class TurnoTrabajoNegocio
+    public class MedicoPorGuardiaNegocio
     {
 
-        public List<TurnoTrabajo> Listar()
+        public List<MedicoPorGuardia> Listar()
         {
-            List<TurnoTrabajo> lista = new List<TurnoTrabajo>();
+            List<MedicoPorGuardia> lista = new List<MedicoPorGuardia>();
             AccesoDatos d = new AccesoDatos();
             try
             {
@@ -30,7 +30,7 @@ namespace Negocio
 
                 while (d.Lector.Read())
                 {
-                    var t = new TurnoTrabajo();
+                    var t = new MedicoPorGuardia();
                     t.IdTurnoTrabajo = (int)d.Lector["IdTurnoTrabajo"];
                     t.Nombre = (string)d.Lector["Nombre"];
                     t.HoraInicio = (TimeSpan)d.Lector["HoraInicio"];
@@ -48,7 +48,7 @@ namespace Negocio
 
 
 
-        public TurnoTrabajo Obtener(int id)
+        public MedicoPorGuardia Obtener(int id)
         {
             AccesoDatos d = new AccesoDatos();
             try
@@ -59,7 +59,7 @@ namespace Negocio
 
                 if (d.Lector.Read())
                 {
-                    return new TurnoTrabajo
+                    return new MedicoPorGuardia
                     {
                         IdTurnoTrabajo = (int)d.Lector["IdTurnoTrabajo"],
                         Nombre = (string)d.Lector["Nombre"],
@@ -73,7 +73,7 @@ namespace Negocio
             finally { d.CerrarConexion(); }
         }
 
-        public void Agregar(TurnoTrabajo turno)
+        public void Agregar(MedicoPorGuardia turno)
         {
             AccesoDatos d = new AccesoDatos();
             try
@@ -88,7 +88,7 @@ namespace Negocio
             finally { d.CerrarConexion(); }
         }
 
-        public void Modificar(TurnoTrabajo turno)
+        public void Modificar(MedicoPorGuardia turno)
         {
             AccesoDatos d = new AccesoDatos();
             try

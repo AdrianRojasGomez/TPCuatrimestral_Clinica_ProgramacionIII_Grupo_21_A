@@ -59,7 +59,7 @@ namespace Negocio
                         aux.Apellido = (string)accesoDatos.Lector["Apellido"];
                         aux.Matricula = (string)accesoDatos.Lector["Matricula"];
 
-                        aux.turnoTrabajos = new List<TurnoTrabajo>();
+                        aux.turnoTrabajos = new List<MedicoPorGuardia>();
                         aux.Especialidades = new List<Especialidad>();
                         aux.TurnoTrabajo = null;
 
@@ -77,7 +77,7 @@ namespace Negocio
 
                         if (!yaExisteTurno)
                         {
-                            var turno = new TurnoTrabajo
+                            var turno = new MedicoPorGuardia
                             {
                                 IdTurnoTrabajo = idTurno,
                                 Nombre = accesoDatos.Lector["TurnoNombre"].ToString(),
@@ -321,7 +321,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("UPDATE Medicos SET Estado = 0 WHERE IdMedico = @Id");
+                datos.SetearConsulta("UPDATE Medicos SET Activo = 0 WHERE IdMedico = @Id");
                 datos.SetearParametros("@Id", id);
                 datos.EjecutarAccion();
             }
@@ -368,7 +368,7 @@ namespace Negocio
                         medico.Apellido = datosMedico.Lector["Apellido"].ToString();
                         medico.Matricula = datosMedico.Lector["Matricula"].ToString();
 
-                        medico.turnoTrabajos = new List<TurnoTrabajo>();
+                        medico.turnoTrabajos = new List<MedicoPorGuardia>();
                         medico.Especialidades = new List<Especialidad>();
                         medico.TurnoTrabajo = null; 
                     }
@@ -376,7 +376,7 @@ namespace Negocio
                   
                     if (!(datosMedico.Lector["IdGuardia"] is DBNull))
                     {
-                        TurnoTrabajo turno = new TurnoTrabajo();
+                        MedicoPorGuardia turno = new MedicoPorGuardia();
                         turno.IdTurnoTrabajo = (int)datosMedico.Lector["IdGuardia"];
                         turno.Nombre = datosMedico.Lector["NombreGuardia"].ToString();
                         turno.DiaSemana = (string)datosMedico.Lector["DiaSemana"];

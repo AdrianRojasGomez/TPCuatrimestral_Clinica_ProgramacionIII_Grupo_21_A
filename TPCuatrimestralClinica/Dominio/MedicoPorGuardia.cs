@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dominio
 {
-    public class TurnoTrabajo
+    public class MedicoPorGuardia
     {
         public int IdTurnoTrabajo { get; set; }
         public string Nombre { get; set; }

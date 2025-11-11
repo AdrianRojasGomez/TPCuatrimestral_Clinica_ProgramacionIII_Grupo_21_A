@@ -48,7 +48,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RolUsuario.cs" />
     <Compile Include="Turno.cs" />
-    <Compile Include="TurnoTrabajo.cs" />
+    <Compile Include="MedicoPorGuardia.cs" />
     <Compile Include="Usuario.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

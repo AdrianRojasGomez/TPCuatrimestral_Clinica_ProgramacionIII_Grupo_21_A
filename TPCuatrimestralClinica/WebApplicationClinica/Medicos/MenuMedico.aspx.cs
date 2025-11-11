@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Dominio;
+using Negocio;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Negocio;
 
 namespace WebApplicationClinica.Medicos
 {
@@ -11,7 +14,29 @@ namespace WebApplicationClinica.Medicos
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                if (Session["idMedico"] == null)
+                {
+                    
+                    Response.Redirect("~/Login.aspx");
+                    return;
+                }
 
+                int idMedico = (int)Session["idMedico"];
+                MedicoNegocio medicoNegocio = new MedicoNegocio();
+                Medico medico = medicoNegocio.BuscarMedicoPorIdSimple(idMedico);
+
+                if (medico != null)
+                {
+                    lblNombreDoctor.Text = "Dr. " + medico.Nombre + " " + medico.Apellido;
+                    lblEspecialidad.Text = medico.Especialidades != null && medico.Especialidades.Count > 0
+                        ? medico.Especialidades[0].Nombre
+                        : "Sin especialidad";
+                }
+
+
+            }
         }
 
         protected void txtNombreDoctor_TextChanged(object sender, EventArgs e)

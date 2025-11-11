@@ -62,54 +62,47 @@ namespace WebApplicationClinica
             }
             try
             {
-
-
                 usuario.NombreUsuario = TxtUsuario.Text;
                 usuario.Password = TxtPassword.Text;
 
+                
+                if (usuarioNegocio.loguearmedico(usuario))
+                {
+                    usuario.Password = null;
+
+                    Session["usuario"] = usuario;
+                    Session["idMedico"] = usuario.IdMedicoAsociado; 
+
+                    Response.Redirect("~/Medicos/MenuMedico.aspx");
+                    return;
+                }
+
+              
                 if (usuarioNegocio.Loguear(usuario))
                 {
                     usuario.Password = null;
-                    Session.Add("usuario", usuario);
-                   
+                    Session["usuario"] = usuario;
 
-                    if (usuario.TipoUsuario == TipoUsuario.Medico)
+                    if (usuario.TipoUsuario == TipoUsuario.Admin)
                     {
-
-                        Response.Redirect("Medicos/MenuMedico.aspx");
-
+                        Response.Redirect("~/MainMenu.aspx");
                     }
-                    else if (usuario.TipoUsuario == TipoUsuario.Admin)
+                    else if (usuario.TipoUsuario == TipoUsuario.Recepcion)
                     {
-
-                        Response.Redirect("MainMenu.aspx");
-
+                                      
                     }
 
-                    else if (usuario.TipoUsuario == TipoUsuario.Recepcion) 
-                    { 
-                         
-                        
-                    
-                    } 
-                  
-
-
-                }
-                else
-                {
-
-                    Response.Redirect("Error.aspx");
+                    return;
                 }
 
-
-
-
+              
+                LblCargar.Text = "Usuario o contraseña incorrectos.";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                throw ex;
+               // Response.Redirect("~/Error.aspx");
 
-                throw;
             }
         }
     }

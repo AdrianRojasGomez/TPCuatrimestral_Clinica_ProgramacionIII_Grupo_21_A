@@ -12,7 +12,7 @@
         <div class="d-flex align-items-center justify-content-between mb-3">
             <h2 class="h4 mb-0">Panel del Médico</h2>
             <div class="d-flex gap-2">
-                <asp:Label ID="lblNombreDoctor" runat="server" CssClass="badge text-bg-primary" Text="Dr. Matías Gómez" />
+                <asp:Label ID="lblNombreDoctor" runat="server" CssClass="badge text-bg-primary"  />
                 <asp:Label ID="lblNombreConsultorio" runat="server" CssClass="badge text-bg-secondary" Text="Consultorio 3" />
                 <asp:Label ID="lblEspecialidad" runat="server" CssClass="badge text-bg-success" Text="Clínica Médica" />
 

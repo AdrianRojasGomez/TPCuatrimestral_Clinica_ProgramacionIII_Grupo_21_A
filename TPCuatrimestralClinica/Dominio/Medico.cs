@@ -13,15 +13,15 @@ namespace Dominio
         public string Apellido { get; set; }
         public string Matricula { get; set; }
 
-        public TurnoTrabajo TurnoTrabajo { get; set; }
-        public List<TurnoTrabajo> turnoTrabajos { get; set; }
+        public MedicoPorGuardia TurnoTrabajo { get; set; }
+        public List<MedicoPorGuardia> turnoTrabajos { get; set; }
         public List<Especialidad> Especialidades { get; set; }
       
               
 
         public Medico()
         {
-             turnoTrabajos = new List<TurnoTrabajo>();
+             turnoTrabajos = new List<MedicoPorGuardia>();
 
             Especialidades = new List<Especialidad>();
         }

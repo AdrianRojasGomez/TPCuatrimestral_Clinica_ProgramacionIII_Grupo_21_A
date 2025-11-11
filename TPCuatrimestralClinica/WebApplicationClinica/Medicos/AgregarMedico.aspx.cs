@@ -30,9 +30,9 @@ namespace WebApplicationClinica.Medicos
                 {
 
 
-                    TurnoTrabajoNegocio turnoTrabajo = new TurnoTrabajoNegocio();
+                    MedicoPorGuardiaNegocio turnoTrabajo = new MedicoPorGuardiaNegocio();
                     EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
-                    List<TurnoTrabajo> listaturnotrabajo = turnoTrabajo.Listar();
+                    List<MedicoPorGuardia> listaturnotrabajo = turnoTrabajo.Listar();
                     List<Especialidad> listaespecialidad = especiladadNegocio.Listar();
 
                     ddllistTurnoTrabajo.DataSource = listaturnotrabajo;
@@ -202,16 +202,18 @@ namespace WebApplicationClinica.Medicos
                 medico.Nombre = nombre;
                 medico.Apellido = apellido;
                 medico.Matricula = matricula;
+                
 
-                medico.turnoTrabajos = new List<TurnoTrabajo>();
+                medico.turnoTrabajos = new List<MedicoPorGuardia>();
 
                 foreach (var diaItem in diasSeleccionados)
                 {
-                    TurnoTrabajo turno = new TurnoTrabajo();
+                    MedicoPorGuardia turno = new MedicoPorGuardia();
                     turno.IdTurnoTrabajo = int.Parse(idTurno);   
                     turno.DiaSemana = diaItem.Value;              
                     turno.HoraInicio = horaInicio;
                     turno.HoraFin = horaFin;
+                    
 
                     medico.turnoTrabajos.Add(turno);
                 }
@@ -437,12 +439,12 @@ namespace WebApplicationClinica.Medicos
                 medico.Apellido = txtApellidoEdit.Text.Trim();
                 medico.Matricula = txtMatriculaEdit.Text.Trim();
 
-                medico.turnoTrabajos = new List<TurnoTrabajo>();
+                medico.turnoTrabajos = new List<MedicoPorGuardia>();
 
                 
                 foreach (var diaItem in diasSeleccionados)
                 {
-                    TurnoTrabajo turno = new TurnoTrabajo();
+                    MedicoPorGuardia turno = new MedicoPorGuardia();
                     turno.IdTurnoTrabajo = int.Parse(ddlTurnoEdit.SelectedValue); 
                     turno.Nombre = ddlTurnoEdit.SelectedItem.Text;
                     turno.HoraInicio = horaInicio;
@@ -663,7 +665,7 @@ namespace WebApplicationClinica.Medicos
                     DropDownList ddlTurnoEdit = (DropDownList)e.Row.FindControl("ddlTurnoEdit");
                     if (ddlTurnoEdit != null)
                     {
-                        TurnoTrabajoNegocio turnoNegocio = new TurnoTrabajoNegocio();
+                        MedicoPorGuardiaNegocio turnoNegocio = new MedicoPorGuardiaNegocio();
                         var turnos = turnoNegocio.Listar();
 
                         ddlTurnoEdit.DataSource = turnos;
@@ -794,11 +796,11 @@ namespace WebApplicationClinica.Medicos
             int idTurno = int.Parse(idTurnoStr);
 
             // Traigo todos los turnos desde la BD
-            TurnoTrabajoNegocio turnoNegocio = new TurnoTrabajoNegocio();
-            List<TurnoTrabajo> listaTurnos = turnoNegocio.Listar();
+            MedicoPorGuardiaNegocio turnoNegocio = new MedicoPorGuardiaNegocio();
+            List<MedicoPorGuardia> listaTurnos = turnoNegocio.Listar();
 
             // Busco el que corresponde al ID elegido
-            TurnoTrabajo turnoSeleccionado = listaTurnos
+            MedicoPorGuardia turnoSeleccionado = listaTurnos
                 .FirstOrDefault(t => t.IdTurnoTrabajo == idTurno);
 
             if (turnoSeleccionado != null)

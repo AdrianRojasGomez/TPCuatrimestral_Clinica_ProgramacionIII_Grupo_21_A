@@ -3,13 +3,25 @@
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
+    <style>
+        .dias-semana input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .dias-semana label {
+            margin-right: 20px;
+            display: inline-block;
+        }
+    </style>
+
     <!-- ===================== CONTENEDOR PRINCIPAL ===================== -->
     <div class="container py-4">
         <!-- ===================== ENCABEZADO ===================== -->
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
-                <h2 class="mb-1">Gestión de Médicos</h2>
-                <p class="text-muted mb-0">Alta de médicos y asignación de turno + especialidades</p>
+                <h2 class="mb-1 text-success fw-bold">Gestión de Médicos</h2>
+                <p class="text-success mb-0 opacity-75">Alta de médicos y asignación de turno + especialidades</p>
+
             </div>
 
 
@@ -33,33 +45,33 @@
 
 
                             <div class="col-md-4">
-                                <label for="txtNombreHtml" class="form-label">Nombre</label>
+                                <label for="txtNombreHtml" class="form-label text-danger fw-semibold">Nombre</label>
 
                                 <asp:TextBox ID="txtNombreMedico" runat="server" CssClass="form-control" OnTextChanged="txtNombreMedico_TextChanged" />
                             </div>
 
 
                             <div class="col-md-4">
-                                <label for="txtApellidoHtml" class="form-label">Apellido</label>
+                                <label for="txtApellidoHtml" class="form-label text-danger fw-semibold">Apellido</label>
 
                                 <asp:TextBox ID="txtApellidoMedico" runat="server" CssClass="form-control" OnTextChanged="txtApellidoMedico_TextChanged" />
                             </div>
 
                             <div class="col-md-4">
-                                <label for="txtMatriculaHtml" class="form-label">Matrícula</label>
+                                <label for="txtMatriculaHtml" class="form-label text-danger fw-semibold">Matrícula</label>
 
                                 <asp:TextBox ID="txtMatriculaMedico" runat="server" CssClass="form-control" OnTextChanged="txtMatriculaMedico_TextChanged" />
                             </div>
 
 
                             <div class="col-md-4">
-                                <label for="ddlTurnoHtml" class="form-label">Turno de trabajo</label>
+                                <label for="ddlTurnoHtml" class="form-label text-danger fw-semibold">Turno de trabajo</label>
                                 <asp:DropDownList ID="ddllistTurnoTrabajo" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddllistTurnoTrabajo_SelectedIndexChanged"></asp:DropDownList>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4" style="margin-left: 100px;">
                                 <label class="form-label">Días de la semana</label>
-                                <asp:CheckBoxList ID="cblDiasSemanaNuevo" runat="server" CssClass="form-check"
-                                    RepeatDirection="Vertical">
+                                <asp:CheckBoxList ID="cblDiasSemanaNuevo" runat="server" CssClass="dias-semana"
+                                    RepeatDirection="Horizontal">
                                     <asp:ListItem Text="Lunes" Value="Lunes" />
                                     <asp:ListItem Text="Martes" Value="Martes" />
                                     <asp:ListItem Text="Miércoles" Value="Miércoles" />
@@ -71,22 +83,33 @@
                             </div>
 
                             <div class="col-md-8">
-                                <label class="form-label d-block">Especialidades</label>
+                                <label class="form-label text-danger fw-semibold">Especialidades</label>
                                 <asp:CheckBoxList ID="cblEspecialidades" runat="server" CssClass="form-check"
                                     RepeatDirection="Vertical">
                                 </asp:CheckBoxList>
                             </div>
-                            <div class="col-md-4">
-                                <label class="form-label">Hora Inicio</label>
-                                <asp:TextBox ID="txtHoraInicio" runat="server" TextMode="Time" CssClass="form-control" />
+
+
+                            <div class="col-md-4 d-flex flex-column">
+                                <div class="mb-3">
+                                    <label class="form-label text-danger fw-semibold">Hora Inicio</label>
+                                    <asp:TextBox ID="txtHoraInicio" runat="server" TextMode="Time" CssClass="form-control" />
+
+                                </div>
+                                <div>
+
+
+                                    <label class="form-label text-danger fw-semibold">Hora Fin</label>
+                                    <asp:TextBox ID="txtHoraFin" runat="server" TextMode="Time" CssClass="form-control" />
+
+                                </div>
+
+
 
                             </div>
 
-                            <div class="col-md-4">
-                                <label class="form-label">Hora Fin</label>
-                                <asp:TextBox ID="txtHoraFin" runat="server" TextMode="Time" CssClass="form-control" />
 
-                            </div>
+
 
                         </div>
                     </div>
@@ -173,7 +196,7 @@
         <!-- ===================== LISTADO DE MÉDICOS ===================== -->
         <div class="card shadow-sm">
             <div class="card-header bg-light">
-                <strong>Resultados de la búsqueda</strong>
+                <strong class="text-success fw-semibold fs-5">Resultados de la búsqueda</strong>
             </div>
 
             <div class="card-body p-0">
@@ -233,9 +256,8 @@
                         <asp:TemplateField HeaderText="Turno">
                             <ItemTemplate><%# Eval ("TurnoTrabajo.Nombre") %> </ItemTemplate>
                             <EditItemTemplate>
-                                <asp:DropDownList ID="ddlTurnoEdit" runat="server" CssClass="form-select" DataTextField="Nombre" DataValueField="IdTurnoTrabajo" 
-                                     AutoPostBack="true"  OnSelectedIndexChanged="ddlTurnoEdit_SelectedIndexChanged">
-                               
+                                <asp:DropDownList ID="ddlTurnoEdit" runat="server" CssClass="form-select" DataTextField="Nombre" DataValueField="IdTurnoTrabajo"
+                                    AutoPostBack="true" OnSelectedIndexChanged="ddlTurnoEdit_SelectedIndexChanged">
                                 </asp:DropDownList>
                             </EditItemTemplate>
                         </asp:TemplateField>
@@ -248,9 +270,9 @@
 
 
                             <EditItemTemplate>
-                                    <asp:CheckBoxList ID="cblDiasSemanaEdit" runat="server" CssClass="form-check" RepeatDirection="Vertical">
+                                <asp:CheckBoxList ID="cblDiasSemanaEdit" runat="server" CssClass="form-check" RepeatDirection="Vertical">
 
-                                
+
                                     <asp:ListItem Text="Lunes" Value="Lunes" />
                                     <asp:ListItem Text="Martes" Value="Martes" />
                                     <asp:ListItem Text="Miércoles" Value="Miércoles" />
@@ -258,7 +280,7 @@
                                     <asp:ListItem Text="Viernes" Value="Viernes" />
                                     <asp:ListItem Text="Sábado" Value="Sábado" />
                                     <asp:ListItem Text="Domingo" Value="Domingo" />
-                                     </asp:CheckBoxList>
+                                </asp:CheckBoxList>
                             </EditItemTemplate>
                         </asp:TemplateField>
 
@@ -301,7 +323,7 @@
                                 </asp:Repeater>
                             </ItemTemplate>
                             <EditItemTemplate>
-                                <asp:CheckBoxList ID="cblEspEdit" runat="server" DataTextField="Nombre" DataValueField="IdEspecialidad" 
+                                <asp:CheckBoxList ID="cblEspEdit" runat="server" DataTextField="Nombre" DataValueField="IdEspecialidad"
                                     RepeatDirection="Horizontal" RepeatColumns="5" CssClass="form-check form-check-inline" />
 
                             </EditItemTemplate>
@@ -369,13 +391,13 @@
 
     <script type="text/javascript">
         var __filterTimer = null;
-        function liveFilter(uniqueId) {
-            if (__filterTimer) clearTimeout(__filterTimer);
-            __filterTimer = setTimeout(function () {
-                __doPostBack(uniqueId, '');
-            }, 300);
-        }
-    </script>
+                 function liveFilter(uniqueId) {
+                     if (__filterTimer) clearTimeout(__filterTimer);
+                     __filterTimer = setTimeout(function () {
+                         __doPostBack(uniqueId, '');
+                     }, 300);
+                 }
+    </script >
 
 
 

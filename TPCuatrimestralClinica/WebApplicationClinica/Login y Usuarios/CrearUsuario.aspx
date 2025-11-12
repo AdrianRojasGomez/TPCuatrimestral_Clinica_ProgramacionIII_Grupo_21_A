@@ -10,7 +10,7 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="container py-4">
-        <h2 class="mb-4">Crear nuevo usuario</h2>
+        <h2 class="mb-1 text-success fw-bold">Crear nuevo usuario</h2>
 
         <div class="card shadow-sm p-4">
             <div class="mb-3">
@@ -54,17 +54,21 @@
                 <div class="col-md-6">
                     <asp:TextBox ID="txtFiltradoUsario" runat="server" CssClass="form-control rounded-end" placeholder="Buscar por Usuario"
                         OnTextChanged="txtFiltradoUsario_TextChanged" AutoPostBack="true" />
-                    <asp:Label ID="lblInactivoCorecto" runat="server" CssClass="alert alert-danger fw-semibold rounded-pill px-4 py-2 shadow-sm d-inline-block mt-3" Text=" 🛑 Usuario Inactivo" />
-                    <asp:Label ID="lblActivoCorrectamente" runat="server" CssClass="alert alert-success fw-semibold rounded-pill px-4 py-2 shadow-sm d-inline-block mt-3" Text="✅ Usuario Activo" />
 
-                    <asp:Button ID="btnVolver" runat="server" CssClass="btn btn-outline-primary rounded-pill px-4 py-2 fw-semibold shadow-sm mt-3" Text="↩️ Volver" OnClick="btnVolver_Click" />
+                    <div class="d-flex align-items-center gap-3 mt-3">
+                    <asp:Label ID="lblInactivoCorecto" runat="server"  CssClass="alert alert-danger fw-semibold rounded-pill px-4 py-2 shadow-sm mb-0" Text=" 🛑 Usuario Inactivo" />
+                    <asp:Label ID="lblActivoCorrectamente" runat="server"  CssClass="alert alert-danger fw-semibold rounded-pill px-4 py-2 shadow-sm mb-0" Text="✅ Usuario Activo" />
+
+                    <asp:Button ID="btnVolver" runat="server"  CssClass="alert alert-danger fw-semibold rounded-pill px-4 py-2 shadow-sm mb-0" Text="↩️ Volver" OnClick="btnVolver_Click" />
+                     </div>
+
                 </div>
             </div>
         </div>
     </div>
     <div class="card shadow-sm">
         <div class="card-header bg-light">
-            <strong>Resultados de la búsqueda</strong>
+            <strong class="mb-1 text-success fw-bold">Resultados de la búsqueda</strong>
         </div>
 
         <div class="card-body p-0">

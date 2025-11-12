@@ -787,7 +787,7 @@ namespace WebApplicationClinica.Medicos
 
             if (string.IsNullOrEmpty(idTurnoStr) || idTurnoStr == "0")
             {
-                // Si no hay turno seleccionado, limpio las horas del PANEL
+               
                 txtHoraInicio.Text = "";
                 txtHoraFin.Text = "";
                 return;
@@ -795,17 +795,17 @@ namespace WebApplicationClinica.Medicos
 
             int idTurno = int.Parse(idTurnoStr);
 
-            // Traigo todos los turnos desde la BD
+           
             MedicoPorGuardiaNegocio turnoNegocio = new MedicoPorGuardiaNegocio();
             List<MedicoPorGuardia> listaTurnos = turnoNegocio.Listar();
 
-            // Busco el que corresponde al ID elegido
+            
             MedicoPorGuardia turnoSeleccionado = listaTurnos
                 .FirstOrDefault(t => t.IdTurnoTrabajo == idTurno);
 
             if (turnoSeleccionado != null)
             {
-                // Lleno SOLO los TextBox del PANEL
+             
                 txtHoraInicio.Text = turnoSeleccionado.HoraInicio.ToString(@"hh\:mm");
                 txtHoraFin.Text = turnoSeleccionado.HoraFin.ToString(@"hh\:mm");
             }

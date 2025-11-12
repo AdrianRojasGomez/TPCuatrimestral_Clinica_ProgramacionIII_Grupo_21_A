@@ -80,6 +80,9 @@ namespace WebApplicationClinica
                     TxtNombreUsuario.Text = string.Empty;
                     TxtPassword.Text = string.Empty;
                     ddlTipoUsuario.SelectedIndex = 0;
+
+                    
+                    Response.Redirect("~/Login y Usuarios/Login.aspx");
                 }
             }
             catch
@@ -267,6 +270,7 @@ namespace WebApplicationClinica
         {
             TxtNombreUsuario.Text = "";
             TxtPassword.Text = "";
+            lblMensaje.Visible=false;
         }
 
         protected void btnVolver_Click(object sender, EventArgs e)

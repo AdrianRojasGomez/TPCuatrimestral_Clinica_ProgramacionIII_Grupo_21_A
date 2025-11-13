@@ -19,23 +19,14 @@ namespace Negocio
 
                 if (!string.IsNullOrEmpty(filtro))
                 {
-                    // --- INICIO DE LA NUEVA LÓGICA DE BÚSQUEDA ---
-
-                    // Si hay un filtro, buscamos:
-                    // 1. Pacientes ACTIVOS (Estado=1) que coincidan (parcial) con DNI, Apellido o Nombre.
-                    // 2. Pacientes INACTIVOS (Estado=0) que coincidan (exacto) SÓLO con el DNI.
-
                     query += " WHERE (Estado = 1 AND (Dni LIKE @FiltroLike OR Apellido LIKE @FiltroLike OR Nombre LIKE @FiltroLike))" +
                              "    OR (Estado = 0 AND Dni = @FiltroExacto)";
 
-                    datos.SetearParametros("@FiltroLike", "%" + filtro + "%"); // Búsqueda parcial para activos
-                    datos.SetearParametros("@FiltroExacto", filtro);        // Búsqueda exacta para DNI inactivo
-
-                    // --- FIN DE LA NUEVA LÓGICA ---
+                    datos.SetearParametros("@FiltroLike", "%" + filtro + "%"); 
+                    datos.SetearParametros("@FiltroExacto", filtro); 
                 }
                 else
                 {
-                    // Si NO hay filtro (carga inicial), solo mostramos los pacientes activos
                     query += " WHERE Estado = 1";
                 }
 
@@ -55,8 +46,6 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
-
-
 
         public Paciente BuscarPorDni(string dni)
         {

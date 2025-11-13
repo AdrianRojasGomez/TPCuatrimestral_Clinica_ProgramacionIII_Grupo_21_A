@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient; // <-- AÑADIDO (para SqlException)
+using System.Data.SqlClient; 
 using System.Linq;
 using System.Net;
 using System.Text;
@@ -159,12 +159,6 @@ namespace Negocio
                 }
             }
              
-        public void Agregar(Turno nuevoTurno)
-        {
-           
-            throw new NotImplementedException();
-        }
-
         public void ModificarFecha(Turno turnoModificado)
         {
             
@@ -175,8 +169,7 @@ namespace Negocio
         {
            AccesoDatos datos = new AccesoDatos();
             try
-            {
-                
+            {                
                 datos.SetearConsulta("UPDATE Turnos SET Estado = 2 WHERE IdTurno = @IdTurno"); 
                 datos.SetearParametros("@IdTurno", id);
                 datos.EjecutarAccion();
@@ -187,6 +180,7 @@ namespace Negocio
             }
             
         }
+
         public void Reactivar(int id) 
         {
             AccesoDatos datos = new AccesoDatos();

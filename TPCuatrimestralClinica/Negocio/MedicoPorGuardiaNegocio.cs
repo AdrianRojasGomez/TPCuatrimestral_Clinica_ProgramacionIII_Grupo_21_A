@@ -48,7 +48,9 @@ namespace Negocio
 
 
 
+
         public MedicoPorGuardia Obtener(int id)
+
         {
             AccesoDatos d = new AccesoDatos();
             try

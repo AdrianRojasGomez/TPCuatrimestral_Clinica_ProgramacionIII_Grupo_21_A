@@ -12,10 +12,10 @@ namespace WebApplicationClinica
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["usuario"] == null)
+            /*if (Session["usuario"] == null)
             {
                 Response.Redirect("~/Login.aspx");
-                return;
+               return;
             }
 
 
@@ -45,7 +45,7 @@ namespace WebApplicationClinica
 
                 return;
             
-            }
+            }*/
 
 
                 Response.Cache.SetCacheability(HttpCacheability.NoCache);

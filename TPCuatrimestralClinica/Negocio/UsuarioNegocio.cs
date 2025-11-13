@@ -80,7 +80,6 @@ namespace Negocio
 
         }
 
-
         public bool Loguear(Usuario usuario)
         {
 

@@ -9,7 +9,7 @@ CREATE TABLE UsuariosApp (
     IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
     NombreUsuario VARCHAR(50) NOT NULL,
     Clave VARCHAR(50) NOT NULL,
-    TipoUsuario INT NOT NULL, -- Nota: El nombre original 'TipoUusario' se mantiene
+    TipoUsuario INT NOT NULL, 
     Estado BIT NOT NULL
 );
 GO
@@ -124,7 +124,7 @@ PRINT '--- Guardias (Horarios) Creadas ---';
 SELECT * FROM Guardias;
 GO
 
--- 5. TABLAS DE RELACIÓN (Linking Tables) CON VALIDACIÓN DE FOREIGN KEY
+-- 5. TABLAS DE RELACIÓN 
 
 CREATE TABLE MedicosPorEspecialidad(
     IdMedico INT NOT NULL,
@@ -171,7 +171,7 @@ PRINT '--- Relación Medicos-Guardia Creada ---';
 SELECT * FROM MedicosPorGuardia;
 GO
 
--- 6. TABLA DE TURNOS (Con FOREIGN KEYS y datos de ejemplo)
+-- 6. TABLA DE TURNOS 
 
 CREATE TABLE Turnos(
     IdTurno  INT IDENTITY(1,1) PRIMARY KEY,

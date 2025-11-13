@@ -709,8 +709,40 @@ namespace WebApplicationClinica.Medicos
                             }
                         }
                     }
+                    CheckBoxList cblDiasSemanaEdit = (CheckBoxList)e.Row.FindControl("cblDiasSemanaEdit");
+                    if (cblDiasSemanaEdit != null)
+                    {
+                        // 1) Cargar los días SIEMPRE en este orden
+                        cblDiasSemanaEdit.Items.Clear();
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Lunes", "Lunes"));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Martes", "Martes"));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Miércoles", "Miercoles"));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Jueves", "Jueves"));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Viernes", "Viernes"));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Sábado", "Sabado"));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Domingo", "Domingo"));
 
-                
+                        // 2) Tildar los días que YA tiene el médico
+                        if (medico.turnoTrabajos != null && medico.turnoTrabajos.Count > 0)
+                        {
+                            foreach (var turno in medico.turnoTrabajos)
+                            {
+                                ListItem diaItem = cblDiasSemanaEdit.Items.FindByValue(turno.DiaSemana);
+                                if (diaItem != null)
+                                    diaItem.Selected = true;
+                            }
+                        }
+                        else if (medico.TurnoTrabajo != null)
+                        {
+                            // Caso viejo: solo un turno/día
+                            ListItem diaItem = cblDiasSemanaEdit.Items.FindByValue(medico.TurnoTrabajo.DiaSemana);
+                            if (diaItem != null)
+                                diaItem.Selected = true;
+                        }
+                    }
+
+
+
                     TextBox txtHoraInicioEdit = (TextBox)e.Row.FindControl("txtHoraInicioEdit");
                     TextBox txtHoraFinEdit = (TextBox)e.Row.FindControl("txtHoraFinEdit");
 
@@ -777,7 +809,37 @@ namespace WebApplicationClinica.Medicos
 
         protected void ddlTurnoEdit_SelectedIndexChanged(object sender, EventArgs e)
         {
-          
+            DropDownList ddlTurnoEdit = (DropDownList)sender;
+            GridViewRow fila = (GridViewRow)ddlTurnoEdit.NamingContainer;
+
+            TextBox txtHoraInicioEdit = (TextBox)fila.FindControl("txtHoraInicioEdit");
+            TextBox txtHoraFinEdit = (TextBox)fila.FindControl("txtHoraFinEdit");
+
+            string idTurnoStr = ddlTurnoEdit.SelectedValue;
+
+            if (string.IsNullOrEmpty(idTurnoStr) || idTurnoStr == "0")
+            {
+                if (txtHoraInicioEdit != null) txtHoraInicioEdit.Text = "";
+                if (txtHoraFinEdit != null) txtHoraFinEdit.Text = "";
+                return;
+            }
+
+            int idTurno = int.Parse(idTurnoStr);
+
+            MedicoPorGuardiaNegocio turnoNegocio = new MedicoPorGuardiaNegocio();
+            List<MedicoPorGuardia> listaTurnos = turnoNegocio.Listar();
+
+            MedicoPorGuardia turnoSeleccionado = listaTurnos
+                .FirstOrDefault(t => t.IdTurnoTrabajo == idTurno);
+
+            if (turnoSeleccionado != null)
+            {
+                if (txtHoraInicioEdit != null)
+                    txtHoraInicioEdit.Text = turnoSeleccionado.HoraInicio.ToString(@"hh\:mm");
+
+                if (txtHoraFinEdit != null)
+                    txtHoraFinEdit.Text = turnoSeleccionado.HoraFin.ToString(@"hh\:mm");
+            }
         }
 
         protected void ddllistTurnoTrabajo_SelectedIndexChanged(object sender, EventArgs e)

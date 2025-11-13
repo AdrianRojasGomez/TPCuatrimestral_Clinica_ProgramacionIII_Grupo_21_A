@@ -69,6 +69,7 @@
     <Content Include="content\img\Medicos.png" />
     <Content Include="content\img\Pacientes.png" />
     <Content Include="content\img\Turnos.png" />
+    <Content Include="content\SQLScripts\cambios_matias.sql" />
     <Content Include="content\SQLScripts\Creation Clinica_DB.sql" />
     <Content Include="Medicos\MenuMedico.aspx" />
     <Content Include="Medicos\AgregarMedico.aspx" />

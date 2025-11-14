@@ -22,19 +22,20 @@ namespace WebApplicationClinica
             if (Login.PuedeVerTurnos(Session) == TipoUsuario.Recepcion)
             {
 
-                btnCrearTurno.Visible = true;
-
-                BtnCrear.Visible = false;
+               
+               btnAgregarMedico.Visible = false;
+                btnModificarMedico.Visible= false;
+               btnListarMedico.Visible= false;
+                btnBajaMedico.Visible= false;   
+                
 
             }
 
             else if (Login.PuedeVerTurnos(Session) == TipoUsuario.Medico)
             {
-                btnCrearTurno.Visible = false;
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
 
-                BtnCrear.Visible = false;
-
-                BtnAltaPaciente.Visible = false;
+                return;
 
 
             }

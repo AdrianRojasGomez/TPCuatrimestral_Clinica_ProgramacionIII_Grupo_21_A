@@ -14,7 +14,7 @@ namespace WebApplicationClinica
         {
             if (Session["usuario"] == null)
             {
-                Response.Redirect("~/Login.aspx");
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
                 return;
             }
 
@@ -41,7 +41,7 @@ namespace WebApplicationClinica
             else if (Login.PuedeVerTurnos(Session) == TipoUsuario.SinDefinir) {
 
 
-                Response.Redirect("Login.aspx");
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
 
                 return;
             
@@ -59,6 +59,21 @@ namespace WebApplicationClinica
         }
 
         protected void btnAgregarMedico_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Medicos/AgregarMedico.aspx");
+        }
+
+        protected void btnModificarMedico_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Medicos/AgregarMedico.aspx");
+        }
+
+        protected void btnListarMedico_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Medicos/AgregarMedico.aspx");
+        }
+
+        protected void btnBajaMedico_Click(object sender, EventArgs e)
         {
             Response.Redirect("Medicos/AgregarMedico.aspx");
         }

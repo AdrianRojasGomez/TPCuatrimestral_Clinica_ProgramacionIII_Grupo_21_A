@@ -331,3 +331,28 @@ GO
 IF NOT EXISTS (SELECT 1 FROM Especialidades WHERE Nombre = 'Oftalmología')
   INSERT INTO Especialidades (Nombre) VALUES ('Oftalmología');
 GO
+
+
+/* ==========================================================
+   CAMBIO: Eliminamos la columna IdMedico y su Foreign Key
+   en la tabla UsuariosApp.
+   ----------------------------------------------------------
+   ¿Por qué lo hicimos?
+   - Antes UsuariosApp tenía un campo IdMedico y una FK hacia
+     la tabla Medicos.
+   - Eso mezclaba datos de LOGIN (usuario, clave, tipo) con
+     datos específicos de médicos, lo cual no corresponde.
+   - Ahora la relación Usuario ↔ Médico se maneja a través
+     de la tabla intermedia UsuariosAppxMedico, que es la forma
+     correcta de relacionar usuarios con médicos.
+   - Este cambio deja la tabla UsuariosApp más limpia,
+     genérica y escalable.
+   ========================================================== */
+
+-- 1️⃣ Eliminamos la Foreign Key que vinculaba UsuariosApp con Medicos
+ALTER TABLE UsuariosApp
+DROP CONSTRAINT FK_UsuariosApp_Medico;
+
+-- 2️⃣ Eliminamos la columna IdMedico de UsuariosApp porque ya no se usa
+ALTER TABLE UsuariosApp
+DROP COLUMN IdMedico;

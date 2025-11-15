@@ -42,6 +42,42 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.HyperLink btnCrearTurno;
 
         /// <summary>
+        /// Control litErrorTurnos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litErrorTurnos;
+
+        /// <summary>
+        /// Control pnlTurnosDashboard.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlTurnosDashboard;
+
+        /// <summary>
+        /// Control gvTurnosProximos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvTurnosProximos;
+
+        /// <summary>
+        /// Control pnlNoTurnos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlNoTurnos;
+
+        /// <summary>
         /// Control btnAgregarMedico.
         /// </summary>
         /// <remarks>

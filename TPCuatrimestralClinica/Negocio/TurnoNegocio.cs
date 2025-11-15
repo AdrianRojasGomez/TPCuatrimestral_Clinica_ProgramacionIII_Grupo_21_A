@@ -60,7 +60,48 @@ namespace Negocio
             }
         }
 
+        public DataTable ListarTurnosDashboard()
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                string query = @"
+            SELECT 
+                T.IdTurno, 
+                T.FechaInicio, 
+                T.HoraInicio, 
+                P.Dni AS PacienteDNI,
+                CONCAT(P.Nombre, ' ', P.Apellido) AS PacienteNombre, 
+                CONCAT(M.Nombre, ' ', M.Apellido) AS MedicoNombre, 
+                E.Nombre AS EspecialidadNombre,
+                T.Motivo,
+                T.Estado
+            FROM Turnos T
+            LEFT JOIN Pacientes P ON T.IdPaciente = P.IdPaciente
+            LEFT JOIN Medicos M ON T.IdMedico = M.IdMedico
+            LEFT JOIN Especialidades E ON T.IdEspecialidad = E.IdEspecialidad
+            WHERE 
+                T.FechaInicio >= CAST(GETDATE() AS DATE) 
+                AND T.Estado != 2  -- No mostrar turnos cancelados (Estado = 2)
+            ORDER BY
+                T.FechaInicio, T.HoraInicio";
 
+                datos.SetearConsulta(query);
+                datos.EjecutarLectura();
+
+                DataTable dt = new DataTable();
+                dt.Load(datos.Lector);
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al listar turnos del dashboard: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
         public Turno BuscarPorDNI(string dni)
             {
                 AccesoDatos datos = new AccesoDatos();

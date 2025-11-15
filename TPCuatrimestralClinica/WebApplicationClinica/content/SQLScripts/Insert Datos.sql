@@ -113,3 +113,80 @@ GO
 PRINT '--- Turnos Creados ---';
 SELECT * FROM Turnos;
 GO
+
+
+INSERT INTO Pacientes (Dni, Apellido, Nombre, FechaNacimiento, Email, Telefono, Direccion, Estado)
+VALUES
+('40111222', 'Sosa', 'Miguel Angel', '1998-11-20', 'miguel.sosa@email.com', '11-5555-1111', 'Calle 1, Nro 11', 1),
+('41222333', 'Gomez', 'Sofia', '1999-01-05', 'sofia.gomez@email.com', '11-5555-2222', 'Av. 2, Nro 22', 1),
+('42333444', 'Diaz', 'Martin', '2000-02-10', 'martin.diaz@email.com', '11-5555-3333', 'Pasaje 3, Nro 33', 1),
+('43444555', 'Fernandez', 'Valentina', '2001-03-15', 'valen.fer@email.com', '11-5555-4444', 'Ruta 4, Km 44', 1),
+('44555666', 'Torres', 'Lucas', '2002-04-20', 'lucas.torres@email.com', '11-5555-5555', 'Calle 5, Nro 55', 1),
+('45666777', 'Romero', 'Julieta', '1995-05-25', 'juli.romero@email.com', '11-5555-6666', 'Av. 6, Nro 66', 1),
+('46777888', 'Acosta', 'Daniel', '1990-06-30', 'daniel.acosta@email.com', '11-5555-7777', 'Pasaje 7, Nro 77', 1),
+('47888999', 'Medina', 'Camila', '1988-07-01', 'cami.medina@email.com', '11-5555-8888', 'Ruta 8, Km 88', 1),
+('48999000', 'Silva', 'Nicolas', '1992-08-02', 'nico.silva@email.com', '11-5555-9999', 'Calle 9, Nro 99', 1),
+('49000111', 'Benitez', 'Rocio', '1993-09-03', 'rocio.benitez@email.com', '11-5555-0000', 'Av. 10, Nro 100', 1);
+GO
+
+SELECT * FROM Pacientes;
+GO
+
+PRINT '--- Limpiando Turnos anteriores ---';
+DELETE FROM Turnos;
+GO
+
+PRINT '--- Creando 30 Turnos Nuevos ---';
+GO
+
+INSERT INTO Turnos (NumeroTurno, FechaInicio, FechaFin, HoraInicio, HoraFin, ObservacionesSolicitud, ObservacionesDiagnostico, IdMedico, IdPaciente, IdEspecialidad, Motivo, Estado)
+VALUES
+
+-- TURNOS FUTUROS 
+
+('1', DATEADD(day, 1, CAST(GETDATE() AS DATE)), DATEADD(day, 1, CAST(GETDATE() AS DATE)), '09:00:00', '09:30:00', 'Chequeo general', NULL, 1, 1, 1, 'Control', 0), -- M1-Cardio
+('2', DATEADD(day, 1, CAST(GETDATE() AS DATE)), DATEADD(day, 1, CAST(GETDATE() AS DATE)), '11:00:00', '11:30:00', 'Control pediátrico', NULL, 3, 4, 3, 'Control', 0), -- M3-Pedia
+('3', DATEADD(day, 2, CAST(GETDATE() AS DATE)), DATEADD(day, 2, CAST(GETDATE() AS DATE)), '15:00:00', '15:30:00', 'Consulta por erupción', NULL, 2, 2, 2, 'Consulta', 0), -- M2-Derma
+('4', DATEADD(day, 3, CAST(GETDATE() AS DATE)), DATEADD(day, 3, CAST(GETDATE() AS DATE)), '10:00:00', '10:30:00', 'Control de lunar', NULL, 2, 5, 2, 'Consulta', 0), -- M2-Derma
+('5', DATEADD(day, 3, CAST(GETDATE() AS DATE)), DATEADD(day, 3, CAST(GETDATE() AS DATE)), '11:30:00', '12:00:00', 'Dolor de espalda', NULL, 4, 6, 4, 'Urgencia', 0), -- M4-Trauma
+('6', DATEADD(day, 4, CAST(GETDATE() AS DATE)), DATEADD(day, 4, CAST(GETDATE() AS DATE)), '08:30:00', '09:00:00', 'Apto físico', NULL, 1, 7, 1, 'Control', 0), -- M1-Cardio
+('7', DATEADD(day, 5, CAST(GETDATE() AS DATE)), DATEADD(day, 5, CAST(GETDATE() AS DATE)), '14:00:00', '14:30:00', 'Vacunación', NULL, 3, 8, 3, 'Control', 0), -- M3-Pedia
+('8', DATEADD(day, 5, CAST(GETDATE() AS DATE)), DATEADD(day, 5, CAST(GETDATE() AS DATE)), '16:00:00', '16:30:00', 'Tobillo hinchado', NULL, 1, 9, 4, 'Consulta', 0), -- M1-Trauma
+('9', DATEADD(day, 6, CAST(GETDATE() AS DATE)), DATEADD(day, 6, CAST(GETDATE() AS DATE)), '10:00:00', '10:30:00', 'Acné', NULL, 2, 10, 2, 'Consulta', 0), -- M2-Derma
+-- (Cancelados por el paciente)
+('10', DATEADD(day, 2, CAST(GETDATE() AS DATE)), DATEADD(day, 2, CAST(GETDATE() AS DATE)), '10:30:00', '11:00:00', 'Dolor de muñeca', NULL, 4, 11, 4, 'Consulta', 2), -- M4-Trauma
+('11', DATEADD(day, 4, CAST(GETDATE() AS DATE)), DATEADD(day, 4, CAST(GETDATE() AS DATE)), '15:30:00', '16:00:00', 'Presión alta', NULL, 1, 12, 1, 'Control', 2), -- M1-Cardio
+('12', DATEADD(day, 7, CAST(GETDATE() AS DATE)), DATEADD(day, 7, CAST(GETDATE() AS DATE)), '09:30:00', '10:00:00', 'Control niño sano', NULL, 3, 1, 3, 'Control', 2), -- M3-Pedia
+
+
+ --(Para el Dashboard)
+
+('13', DATEADD(day, 0, CAST(GETDATE() AS DATE)), DATEADD(day, 0, CAST(GETDATE() AS DATE)), '09:00:00', '09:30:00', 'Electrocardiograma', NULL, 1, 13, 1, 'Estudio', 0), -- M1-Cardio (Pendiente)
+('14', DATEADD(day, 0, CAST(GETDATE() AS DATE)), DATEADD(day, 0, CAST(GETDATE() AS DATE)), '10:00:00', '10:30:00', 'Fiebre niño', 'Se receta paracetamol', 3, 14, 3, 'Urgencia', 1), -- M3-Pedia (Completado)
+('15', DATEADD(day, 0, CAST(GETDATE() AS DATE)), DATEADD(day, 0, CAST(GETDATE() AS DATE)), '15:00:00', '15:30:00', 'Consulta dermatológica', NULL, 2, 15, 2, 'Consulta', 0), -- M2-Derma (Pendiente)
+('16', DATEADD(day, 0, CAST(GETDATE() AS DATE)), DATEADD(day, 0, CAST(GETDATE() AS DATE)), '16:00:00', '16:30:00', 'Radiografía de tórax', 'Se deriva a especialista', 1, 3, 1, 'Estudio', 1), -- M1-Cardio (Completado)
+
+
+-- TURNOS PASADOS (14)
+
+
+('17', DATEADD(day, -5, CAST(GETDATE() AS DATE)), DATEADD(day, -5, CAST(GETDATE() AS DATE)), '10:30:00', '11:00:00', 'Dolor de rodilla', 'Reposo y antiinflamatorios', 4, 3, 4, 'Urgencia', 1), -- M4-Trauma
+('18', DATEADD(day, -1, CAST(GETDATE() AS DATE)), DATEADD(day, -1, CAST(GETDATE() AS DATE)), '09:00:00', '09:30:00', 'Chequeo general', 'Paciente saludable', 1, 1, 1, 'Control', 1), -- M1-Cardio
+('19', DATEADD(day, -2, CAST(GETDATE() AS DATE)), DATEADD(day, -2, CAST(GETDATE() AS DATE)), '15:00:00', '15:30:00', 'Consulta por erupción', 'Alergia leve, se medica', 2, 2, 2, 'Consulta', 1), -- M2-Derma
+('20', DATEADD(day, -3, CAST(GETDATE() AS DATE)), DATEADD(day, -3, CAST(GETDATE() AS DATE)), '11:00:00', '11:30:00', 'Control pediátrico', 'Esquema de vacunación completo', 3, 4, 3, 'Control', 1), -- M3-Pedia
+('21', DATEADD(day, -7, CAST(GETDATE() AS DATE)), DATEADD(day, -7, CAST(GETDATE() AS DATE)), '10:00:00', '10:30:00', 'Control de lunar', 'Sin anormalías', 2, 5, 2, 'Consulta', 1), -- M2-Derma
+('22', DATEADD(day, -8, CAST(GETDATE() AS DATE)), DATEADD(day, -8, CAST(GETDATE() AS DATE)), '11:30:00', '12:00:00', 'Dolor de espalda', 'Contractura. Kinesiología', 4, 6, 4, 'Urgencia', 1), -- M4-Trauma
+('23', DATEADD(day, -10, CAST(GETDATE() AS DATE)), DATEADD(day, -10, CAST(GETDATE() AS DATE)), '08:30:00', '09:00:00', 'Apto físico', 'Aprobado', 1, 7, 1, 'Control', 1), -- M1-Cardio
+('24', DATEADD(day, -12, CAST(GETDATE() AS DATE)), DATEADD(day, -12, CAST(GETDATE() AS DATE)), '14:00:00', '14:30:00', 'Vacunación', 'Se aplican vacunas de calendario', 3, 8, 3, 'Control', 1), -- M3-Pedia
+('25', DATEADD(day, -15, CAST(GETDATE() AS DATE)), DATEADD(day, -15, CAST(GETDATE() AS DATE)), '16:00:00', '16:30:00', 'Tobillo hinchado', 'Esguince leve', 1, 9, 4, 'Consulta', 1), -- M1-Trauma
+('26', DATEADD(day, -20, CAST(GETDATE() AS DATE)), DATEADD(day, -20, CAST(GETDATE() AS DATE)), '10:00:00', '10:30:00', 'Acné', 'Tratamiento tópico', 2, 10, 2, 'Consulta', 1), -- M2-Derma
+
+('27', DATEADD(day, -1, CAST(GETDATE() AS DATE)), DATEADD(day, -1, CAST(GETDATE() AS DATE)), '10:30:00', '11:00:00', 'Dolor de muñeca', 'Paciente no se presentó', 4, 11, 4, 'Consulta', 2), -- M4-Trauma
+('28', DATEADD(day, -2, CAST(GETDATE() AS DATE)), DATEADD(day, -2, CAST(GETDATE() AS DATE)), '15:30:00', '16:00:00', 'Presión alta', 'Paciente cancela por viaje', 1, 12, 1, 'Control', 2), -- M1-Cardio
+('29', DATEADD(day, -4, CAST(GETDATE() AS DATE)), DATEADD(day, -4, CAST(GETDATE() AS DATE)), '09:30:00', '10:00:00', 'Control niño sano', 'Paciente cancela', 3, 1, 3, 'Control', 2), -- M3-Pedia
+('30', DATEADD(day, -6, CAST(GETDATE() AS DATE)), DATEADD(day, -6, CAST(GETDATE() AS DATE)), '17:00:00', '17:30:00', 'Verrugas', 'Paciente no asiste', 2, 5, 2, 'Consulta', 2); -- M2-Derma
+GO
+
+PRINT '--- 30 Turnos Creados ---';
+SELECT * FROM Turnos;
+GO

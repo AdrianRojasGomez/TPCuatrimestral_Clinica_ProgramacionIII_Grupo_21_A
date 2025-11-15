@@ -1,6 +1,16 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="MainMenu.aspx.cs" Inherits="WebApplicationClinica.MainMenu" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+     <style>
+     .table th > a {
+         color: #212529 !important; 
+         text-decoration: none;
+     }
+
+     .table th > a:hover {
+         color: #000 !important;
+     }
+ </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
@@ -75,28 +85,70 @@
         </div>
     </div>
 
-    <div class="container-fluid py-5">
-        <%--        Aca vamos a hacer un DATAGRID con los turnos proximos, podemos ponerlos color coded dependiendo de lo proximo que esten,
-        o podemos intercalar colores para mejorar la visibilidad--%>
-        <div class="px-3">
-            <h2 class="card-title mb-2">Turnos Proximos</h2>
+   <div class="container-fluid py-5">
+    <div class="px-3 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+        <h2 class="card-title mb-2">Turnos Próximos</h2>
+        <div class="ms-md-auto">
+            <asp:HyperLink ID="btnCrearTurno"
+                runat="server"
+                NavigateUrl="~/Turnos/CrearTurno.aspx" 
+                CssClass="btn btn-primary">
+                Crear turno
+            </asp:HyperLink>
         </div>
-        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 p-3">
-            <div class="text-soft alert alert-primary">
-                No hay turnos disponibles por ahora.
-            </div>
-            <div class="ms-md-auto">
-                <asp:HyperLink ID="btnCrearTurno"
-                    runat="server"
-                    NavigateUrl="~/turnos/CrearTurno.aspx"
-                    CssClass="btn btn-primary">
-        Crear turno
-                </asp:HyperLink>
-            </div>
-        </div>
+    </div>
 
+    <div class="p-3">
+        <%-- 1. AÑADE ESTE LITERAL PARA EL MENSAJE DE ERROR --%>
+        <asp:Literal ID="litErrorTurnos" runat="server" Visible="false" />
+                
+       <%-- Panel para mostrar la grilla si hay turnos --%>
+        <asp:Panel ID="pnlTurnosDashboard" runat="server" Visible="false" class="table-responsive">
+            <asp:GridView ID="gvTurnosProximos" runat="server" AutoGenerateColumns="False"
+                CssClass="table table-hover table-striped table-bordered"
+                AllowPaging="true" PageSize="5" OnPageIndexChanging="gvTurnosProximos_PageIndexChanging"
+                AllowSorting="true" OnSorting="gvTurnosProximos_Sorting" OnRowCreated="gvTurnosProximos_RowCreated">
+                <Columns>
+                    <asp:BoundField DataField="FechaInicio" HeaderText="Fecha"
+                        SortExpression="FechaInicio" DataFormatString="{0:dd/MM/yyyy}" />
+                    
+                    <asp:TemplateField HeaderText="Hora" SortExpression="HoraInicio">
+                        <ItemTemplate>
+                            <asp:Label runat="server" Text='<%# Eval("HoraInicio", "{0:hh\\:mm}") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    
+                    <asp:BoundField DataField="PacienteNombre" HeaderText="Paciente"
+                        SortExpression="PacienteNombre" />
+                    
+                    <asp:BoundField DataField="MedicoNombre" HeaderText="Médico"
+                        SortExpression="MedicoNombre" />
+                    
+                    <asp:BoundField DataField="EspecialidadNombre" HeaderText="Especialidad"
+                        SortExpression="EspecialidadNombre" />
+                    
+                    <asp:TemplateField HeaderText="Estado" SortExpression="Estado">
+                        <ItemTemplate>
+                            <asp:Label runat="server"
+                                Text='<%# (int)Eval("Estado") == 0 ? "Pendiente" : (int)Eval("Estado") == 1 ? "Completado" : "Cancelado" %>'
+                                CssClass='<%# (int)Eval("Estado") == 0 ? "badge bg-warning text-dark" : (int)Eval("Estado") == 1 ? "badge bg-success" : "badge bg-danger" %>' />
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                </Columns>
+                <HeaderStyle BackColor="#007bff" ForeColor="White" Font-Bold="True" />
+                <RowStyle BackColor="#f8f9fa" />
+                <AlternatingRowStyle BackColor="White" />
+                <PagerStyle CssClass="pagination-sm" HorizontalAlign="Right" />
+            </asp:GridView>
+        </asp:Panel>
+
+            <%-- Panel para mostrar si NO hay turnos --%>
+          <asp:Panel ID="pnlNoTurnos" runat="server" Visible="false">
+              <%-- ... tu mensaje de "no hay turnos" ... --%>
+          </asp:Panel>
 
     </div>
+</div>
 
     <div class="container-fluid bg-light py-5 shadow-sm ">
         <div class="px-3">

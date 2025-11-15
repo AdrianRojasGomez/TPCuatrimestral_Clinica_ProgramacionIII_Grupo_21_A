@@ -199,21 +199,24 @@
                             <div class="col py-1">
                            
                     <asp:Button ID="btnAgregarMedico" runat="server" CssClass="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center" Text="Agregar Medico" OnClick="btnAgregarMedico_Click"  />
+                           
+                            </div>
+                            <div class="col py-1">
+                                <a href="<%: ResolveUrl("~/Turnos/Modificar.aspx") %>">
                                 
-                            </div>
-                            <div class="col py-1">
-                                <a href="<%: ResolveUrl("~/Turnos/Modificar.aspx") %>"
-                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Modificar datos de un Medico
+                                    <asp:Button  ID="btnModificarMedico" runat="server" class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center" Text="Modificar datos de un Medico" OnClick="btnModificarMedico_Click" />
+
                                 </a>
                             </div>
                             <div class="col py-1">
-                                <a href="<%: ResolveUrl("~/Turnos/Cancelar.aspx") %>"
-                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Listar Medicos Disponibles
+                                <a href="<%: ResolveUrl("~/Turnos/Cancelar.aspx") %>">
+                              
+                                    <asp:Button ID="btnListarMedico" runat="server"   class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center" Text="Listar Medicos Disponibles" OnClick="btnListarMedico_Click" />
                                 </a>
                             </div>
                             <div class="col py-1">
-                                <a href="<%: ResolveUrl("~/Turnos/Buscar.aspx") %>"
-                                    class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center">Baja a un Medico
+                                <a href="<%: ResolveUrl("~/Turnos/Buscar.aspx") %>">
+                                    <asp:Button ID="btnBajaMedico" runat="server" class="btn btn-outline-primary w-100 py-3 fw-semibold d-flex align-items-center justify-content-center" Text="Baja a un Medico" OnClick="btnBajaMedico_Click" />
                                 </a>
                             </div>
                         </div>

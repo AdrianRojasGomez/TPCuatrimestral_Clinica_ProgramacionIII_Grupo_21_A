@@ -13,7 +13,22 @@ namespace WebApplicationClinica
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["usuario"] == null)
+            {
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
+                return;
+            }
 
+
+            var tipo = Login.PuedeVerTurnos(Session);
+
+
+            if (tipo != TipoUsuario.Admin)
+            {
+
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
+                return;
+            }
 
             if (!IsPostBack)
             {

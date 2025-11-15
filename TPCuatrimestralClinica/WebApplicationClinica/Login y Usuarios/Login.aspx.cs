@@ -89,7 +89,7 @@ namespace WebApplicationClinica
                     }
                     else if (usuario.TipoUsuario == TipoUsuario.Recepcion)
                     {
-                                      
+                        Response.Redirect("~/MainMenu.aspx");
                     }
 
                     return;

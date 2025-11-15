@@ -222,68 +222,137 @@ GO
 
 PRINT '*** SCRIPT COMPLETADO CON ÉXITO ***';
 
-select *from Guardias
+/* CAMBIOS DE MATIAS...
+    ==========================================================
+   CAMBIO 1: Agregar columna "Activo" a la tabla Médicos
+   ------------------------------------------------------
+   ¿Qué hace?
+   - Agrega un campo booleano (BIT) llamado "Activo" a Medicos.
 
-
-
-select *from Medicos
-select *from UsuariosApp
-select *from UsuariosAppxMedico
-
+   ¿Para qué sirve?
+   - Para hacer "baja lógica" de médicos.
+   - En vez de borrar un médico, le ponemos Activo = 0.
+   - Permite mantener el historial sin perder datos.
+   ========================================================== */
 ALTER TABLE Medicos
 ADD Activo BIT NOT NULL DEFAULT 1;
 GO
+
+
+/* ==========================================================
+   CAMBIO 2: Agregar columna "DiaSemana" a MedicosPorGuardia
+   y cambiar la clave primaria
+   ------------------------------------------------------
+   ¿Qué hace?
+   - Agrega la columna DiaSemana (número de día de la semana).
+   - Cambia la PK para que ahora sea (IdMedico, IdGuardia, DiaSemana).
+
+   ¿Para qué sirve?
+   - Antes: solo podía existir UNA fila por (IdMedico, IdGuardia).
+   - Ahora: el mismo médico puede tener la misma guardia 
+     en distintos días de la semana.
+   - Ejemplo:
+       (IdMedico = 1, IdGuardia = 1, DiaSemana = 1) -> Lunes
+       (IdMedico = 1, IdGuardia = 1, DiaSemana = 3) -> Miércoles
+   ========================================================== */
+
+-- 2.1 Agregamos la columna DiaSemana (1 a 7, por ejemplo)
+ALTER TABLE MedicosPorGuardia
+ADD DiaSemana TINYINT NOT NULL DEFAULT 1;
+GO
+
+-- 2.2 Eliminamos la clave primaria anterior (IdMedico, IdGuardia)
 ALTER TABLE MedicosPorGuardia
 DROP CONSTRAINT PK_MedicoPorGuardia;
 GO
 
+-- 2.3 Creamos la nueva PK incluyendo DiaSemana
 ALTER TABLE MedicosPorGuardia
 ADD CONSTRAINT PK_MedicoPorGuardia
 PRIMARY KEY (IdMedico, IdGuardia, DiaSemana);
 GO
 
 
+/* ==========================================================
+   CAMBIO 3: Limpiar duplicados en tabla Guardias
+   ------------------------------------------------------
+   ¿Qué hace?
+   - Borra filas repetidas de la tabla Guardias, 
+     dejando solo una fila por cada Nombre de guardia.
 
--- GUARDIAS: horarios correctos + sin duplicados + UNIQUE
-------------------------------------------------------------
--- Corrige horarios oficiales
-UPDATE Guardias SET HoraInicio='06:00:00', HoraFin='14:00:00' WHERE Nombre='Mañana';
-UPDATE Guardias SET HoraInicio='14:00:00', HoraFin='22:00:00' WHERE Nombre='Tarde';
-UPDATE Guardias SET HoraInicio='22:00:00', HoraFin='06:00:00' WHERE Nombre='Noche';
-
--- Dejar 1 fila por Nombre (conserva menor Id)
+   ¿Para qué sirve?
+   - Evitar que existan varias guardias con el mismo nombre.
+   - Asegura que cada tipo de guardia (Mañana, Tarde, Noche)
+     quede una sola vez.
+   ========================================================== */
 DELETE FROM Guardias
 WHERE IdGuardia NOT IN (
-  SELECT MIN(IdGuardia) FROM Guardias GROUP BY Nombre
+  SELECT MIN(IdGuardia) 
+  FROM Guardias 
+  GROUP BY Nombre
 );
--- Dejar 1 fila por Nombre (conserva menor Id)
+GO
+
+
+/* ==========================================================
+   CAMBIO 4: Limpiar duplicados y agregar especialidades
+   en tabla Especialidades
+   ------------------------------------------------------
+   ¿Qué hace?
+   - Elimina especialidades duplicadas (deja una por Nombre).
+   - Agrega Neurología, Ginecología y Oftalmología si no existen.
+
+   ¿Para qué sirve?
+   - Ordenar el catálogo de especialidades.
+   - Asegurar que tengamos ciertas especialidades básicas
+     sin generar duplicados.
+   ========================================================== */
+
+-- 4.1 Eliminar posibles duplicados, manteniendo el Id más chico
 DELETE FROM Especialidades
 WHERE IdEspecialidad NOT IN (
-  SELECT MIN(IdEspecialidad) FROM Especialidades GROUP BY Nombre
+  SELECT MIN(IdEspecialidad) 
+  FROM Especialidades 
+  GROUP BY Nombre
 );
+GO
 
--- Agregar 3 nuevas si faltan
-IF NOT EXISTS (SELECT 1 FROM Especialidades WHERE Nombre='Neurología')
+-- 4.2 Agregar Neurología si no existe
+IF NOT EXISTS (SELECT 1 FROM Especialidades WHERE Nombre = 'Neurología')
   INSERT INTO Especialidades (Nombre) VALUES ('Neurología');
+GO
 
-IF NOT EXISTS (SELECT 1 FROM Especialidades WHERE Nombre='Ginecología')
+-- 4.3 Agregar Ginecología si no existe
+IF NOT EXISTS (SELECT 1 FROM Especialidades WHERE Nombre = 'Ginecología')
   INSERT INTO Especialidades (Nombre) VALUES ('Ginecología');
+GO
 
-IF NOT EXISTS (SELECT 1 FROM Especialidades WHERE Nombre='Oftalmología')
+-- 4.4 Agregar Oftalmología si no existe
+IF NOT EXISTS (SELECT 1 FROM Especialidades WHERE Nombre = 'Oftalmología')
   INSERT INTO Especialidades (Nombre) VALUES ('Oftalmología');
-
--- 1️⃣ Agregar columna "Activo" a la tabla Médicos
-ALTER TABLE Medicos
-ADD Activo BIT NOT NULL DEFAULT 1;
 GO
 
--- 2️⃣ Eliminar la clave primaria actual de MedicosPorGuardia
-ALTER TABLE MedicosPorGuardia
-DROP CONSTRAINT PK_MedicoPorGuardia;
-GO
 
--- 3️⃣ Crear nueva clave primaria compuesta (IdMedico, IdGuardia, DiaSemana)
-ALTER TABLE MedicosPorGuardia
-ADD CONSTRAINT PK_MedicoPorGuardia
-PRIMARY KEY (IdMedico, IdGuardia, DiaSemana);
-GO
+/* ==========================================================
+   CAMBIO: Eliminamos la columna IdMedico y su Foreign Key
+   en la tabla UsuariosApp.
+   ----------------------------------------------------------
+   ¿Por qué lo hicimos?
+   - Antes UsuariosApp tenía un campo IdMedico y una FK hacia
+     la tabla Medicos.
+   - Eso mezclaba datos de LOGIN (usuario, clave, tipo) con
+     datos específicos de médicos, lo cual no corresponde.
+   - Ahora la relación Usuario ↔ Médico se maneja a través
+     de la tabla intermedia UsuariosAppxMedico, que es la forma
+     correcta de relacionar usuarios con médicos.
+   - Este cambio deja la tabla UsuariosApp más limpia,
+     genérica y escalable.
+   ========================================================== */
+
+-- 1️⃣ Eliminamos la Foreign Key que vinculaba UsuariosApp con Medicos
+ALTER TABLE UsuariosApp
+DROP CONSTRAINT FK_UsuariosApp_Medico;
+
+-- 2️⃣ Eliminamos la columna IdMedico de UsuariosApp porque ya no se usa
+ALTER TABLE UsuariosApp
+DROP COLUMN IdMedico;

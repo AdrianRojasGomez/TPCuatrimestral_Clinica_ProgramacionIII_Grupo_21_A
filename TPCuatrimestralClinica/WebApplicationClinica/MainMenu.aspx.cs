@@ -14,34 +14,35 @@ namespace WebApplicationClinica
         {
             /*if (Session["usuario"] == null)
             {
-                Response.Redirect("~/Login.aspx");
-               return;
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
+                return;
             }
 
 
             if (Login.PuedeVerTurnos(Session) == TipoUsuario.Recepcion)
             {
 
-                btnCrearTurno.Visible = true;
-
-                BtnCrear.Visible = false;
+               
+               btnAgregarMedico.Visible = false;
+                btnModificarMedico.Visible= false;
+               btnListarMedico.Visible= false;
+                btnBajaMedico.Visible= false;   
+                
 
             }
 
             else if (Login.PuedeVerTurnos(Session) == TipoUsuario.Medico)
             {
-                btnCrearTurno.Visible = false;
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
 
-                BtnCrear.Visible = false;
-
-                BtnAltaPaciente.Visible = false;
+                return;
 
 
             }
             else if (Login.PuedeVerTurnos(Session) == TipoUsuario.SinDefinir) {
 
 
-                Response.Redirect("Login.aspx");
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
 
                 return;
             
@@ -59,6 +60,21 @@ namespace WebApplicationClinica
         }
 
         protected void btnAgregarMedico_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Medicos/AgregarMedico.aspx");
+        }
+
+        protected void btnModificarMedico_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Medicos/AgregarMedico.aspx");
+        }
+
+        protected void btnListarMedico_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("Medicos/AgregarMedico.aspx");
+        }
+
+        protected void btnBajaMedico_Click(object sender, EventArgs e)
         {
             Response.Redirect("Medicos/AgregarMedico.aspx");
         }

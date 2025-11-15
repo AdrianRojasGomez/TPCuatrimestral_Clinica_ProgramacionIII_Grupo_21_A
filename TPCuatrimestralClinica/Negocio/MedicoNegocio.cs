@@ -10,7 +10,6 @@ namespace Negocio
     public class MedicoNegocio
     {
 
-
         public List<Medico> ListarMedicos()
         {
             var dict = new Dictionary<int, Medico>();
@@ -451,7 +450,6 @@ namespace Negocio
 
         public Medico BuscarMedicoPorIdSimple(int idMedico)
         {
-            // Llama a tu método existente, pero descarta la lista de IDs
             List<int> idsDescartados;
             return BuscarMedicoPorId(idMedico, out idsDescartados);
         }

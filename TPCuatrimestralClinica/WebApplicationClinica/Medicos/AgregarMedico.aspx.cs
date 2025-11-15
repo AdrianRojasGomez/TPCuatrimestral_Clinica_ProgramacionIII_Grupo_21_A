@@ -19,23 +19,23 @@ namespace WebApplicationClinica.Medicos
         protected void Page_Load(object sender, EventArgs e)
         {
 
-            if (Session["usuario"] == null)
-            {
-                Response.Redirect("~/Login y Usuarios/Login.aspx");
-                return;
-            }
+        //    if (Session["usuario"] == null)
+        //    {
+        //        Response.Redirect("~Login%20y%20Usuarios/Login.aspx");
+        //        return;
+        //    }
 
            
-            var tipo = Login.PuedeVerTurnos(Session);
+        //    var tipo = Login.PuedeVerTurnos(Session);
 
             
-            if (tipo != TipoUsuario.Admin)
-            {
+        //    if (tipo != TipoUsuario.Admin)
+        //    {
             
-                Response.Redirect("~/Login y Usuarios/Login.aspx");  
-                return;
-            }
-            panelGrillaMedico.Visible = false;
+        //        Response.Redirect("~Login%20y%20Usuarios/Login.aspx");  
+        //        return;
+        //    }
+        //    panelGrillaMedico.Visible = false;
 
 
 

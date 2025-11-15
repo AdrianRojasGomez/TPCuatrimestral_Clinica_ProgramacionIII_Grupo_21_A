@@ -1,26 +1,6 @@
-CREATE DATABASE CLINICA_DB
-COLLATE SQL_Latin1_General_CP1_CS_AS;   
-GO
 
 USE CLINICA_DB;
 GO
-
-CREATE TABLE UsuariosApp (
-    IdUsuario INT IDENTITY(1,1) PRIMARY KEY,
-    NombreUsuario VARCHAR(50) NOT NULL,
-    Clave VARCHAR(50) NOT NULL,
-    TipoUsuario INT NOT NULL, 
-    Estado BIT NOT NULL
-);
-GO
-
-CREATE TABLE UsuarioAppPorMedico (
-    IdUsuario INT NOT NULL,
-    IdMedico INT NOT NULL,
-    Observacion VARCHAR(50) NULL
-    --CONSTRAINS DE FK
-    --constrain2 
-)
 
 -- Datos para UsuariosApp
 INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUsuario, Estado)
@@ -34,21 +14,6 @@ GO
 
 PRINT '--- UsuariosApp Creados ---';
 SELECT * FROM UsuariosApp;
-GO
-
--- 3. TABLA DE PACIENTES (Como la tenías)
-CREATE TABLE Pacientes (
-    IdPaciente INT PRIMARY KEY IDENTITY(1,1), 
-    Dni VARCHAR(10) NOT NULL,
-    Apellido NVARCHAR(100) NOT NULL,
-    Nombre NVARCHAR(100) NOT NULL,
-    FechaNacimiento DATE NULL,                 
-    Email NVARCHAR(100) NULL,
-    Telefono VARCHAR(20) NULL,
-    Direccion NVARCHAR(255) NULL,
-    Estado bit NOT NULL,
-    CONSTRAINT UQ_Pacientes_Dni UNIQUE (Dni)
-);
 GO
 
 -- Datos para Pacientes (5 pedidos)
@@ -65,13 +30,6 @@ PRINT '--- Pacientes Creados ---';
 SELECT * FROM Pacientes;
 GO
 
--- 4. TABLAS MAESTRAS (Especialidades, Medicos, Guardias)
-CREATE TABLE Especialidades(
-    IdEspecialidad INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre NVARCHAR(100) NOT NULL
-);
-GO
-
 INSERT INTO Especialidades (Nombre)
 VALUES
 ('Cardiología'),   -- ID 1
@@ -84,16 +42,7 @@ PRINT '--- Especialidades Creadas ---';
 SELECT * FROM Especialidades;
 GO
 
-CREATE TABLE Medicos(
-    IdMedico INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre NVARCHAR(100)  NOT NULL,
-    Apellido NVARCHAR(100)  NOT NULL,
-    Matricula VARCHAR(50) NOT NULL,
-    Estado BIT NOT NULL
-);
-GO
-
-INSERT INTO Medicos (Nombre, Apellido, Matricula, Estado)
+INSERT INTO Medicos (Nombre, Apellido, Matricula, Activo)
 VALUES
 ('Martín', 'Gonzalez', 'MN-1001',1),  -- ID 1
 ('Lucía', 'Fernandez', 'MN-1002',1), -- ID 2
@@ -105,13 +54,6 @@ PRINT '--- Medicos Creados ---';
 SELECT * FROM Medicos;
 GO
 
-CREATE TABLE Guardias(
-    IdGuardia INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre NVARCHAR(50) NOT NULL,
-    HoraInicio TIME NOT NULL,
-    HoraFin TIME NOT NULL
-);
-GO
 
 INSERT INTO Guardias (Nombre, HoraInicio, HoraFin)
 VALUES
@@ -122,18 +64,6 @@ GO
 
 PRINT '--- Guardias (Horarios) Creadas ---';
 SELECT * FROM Guardias;
-GO
-
--- 5. TABLAS DE RELACIÓN 
-
-CREATE TABLE MedicosPorEspecialidad(
-    IdMedico INT NOT NULL,
-    IdEspecialidad INT NOT NULL,
-    CONSTRAINT PK_MedicoPorEspecialidad PRIMARY KEY (IdMedico, IdEspecialidad),
-    -- * VALIDACIÓN: Agregadas FOREIGN KEYS *
-    CONSTRAINT FK_MPE_Medico FOREIGN KEY (IdMedico) REFERENCES Medicos(IdMedico),
-    CONSTRAINT FK_MPE_Especialidad FOREIGN KEY (IdEspecialidad) REFERENCES Especialidades(IdEspecialidad)
-);
 GO
 
 INSERT INTO MedicosPorEspecialidad (IdMedico, IdEspecialidad)
@@ -149,15 +79,6 @@ PRINT '--- Relación Medicos-Especialidad Creada ---';
 SELECT * FROM MedicosPorEspecialidad;
 GO
 
-CREATE TABLE MedicosPorGuardia(
-    IdMedico INT NOT NULL,
-    IdGuardia INT NOT NULL,
-    CONSTRAINT PK_MedicoPorGuardia PRIMARY KEY (IdMedico, IdGuardia),
-    -- * VALIDACIÓN: Agregadas FOREIGN KEYS *
-    CONSTRAINT FK_MPG_Medico FOREIGN KEY (IdMedico) REFERENCES Medicos(IdMedico),
-    CONSTRAINT FK_MPG_Guardia FOREIGN KEY (IdGuardia) REFERENCES Guardias(IdGuardia)
-);
-GO
 
 INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia)
 VALUES
@@ -171,29 +92,6 @@ PRINT '--- Relación Medicos-Guardia Creada ---';
 SELECT * FROM MedicosPorGuardia;
 GO
 
--- 6. TABLA DE TURNOS 
-
-CREATE TABLE Turnos(
-    IdTurno  INT IDENTITY(1,1) PRIMARY KEY,
-    NumeroTurno VARCHAR(50) NOT NULL, 
-    FechaInicio DATE NOT NULL,
-    FechaFin DATE NOT NULL, 
-    HoraInicio TIME NOT NULL,
-    HoraFin TIME NOT NULL,
-    ObservacionesSolicitud NVARCHAR(500) NULL,
-    ObservacionesDiagnostico NVARCHAR(500) NULL,
-    IdMedico INT NOT NULL,
-    IdPaciente INT NOT NULL,
-    IdEspecialidad INT NOT NULL, --NUEVO
-    Motivo VARCHAR(50) NOT NULL,
-    Estado BIT NOT NULL, 
-    
-    -- * VALIDACIÓN: Agregadas FOREIGN KEYS *
-    CONSTRAINT FK_Turnos_Medico FOREIGN KEY (IdMedico) REFERENCES Medicos(IdMedico),
-    CONSTRAINT FK_Turnos_Paciente FOREIGN KEY (IdPaciente) REFERENCES Pacientes(IdPaciente),
-    CONSTRAINT FK_Turnos_Especialidad FOREIGN KEY (IdEspecialidad) REFERENCES Especialidades(IdEspecialidad) --NUEVO
-);
-GO
 
 -- Datos para Turnos
 -- Uso GETDATE() para que las fechas sean actuales (mañana, pasado mañana, etc.)
@@ -215,5 +113,3 @@ GO
 PRINT '--- Turnos Creados ---';
 SELECT * FROM Turnos;
 GO
-
-PRINT '* SCRIPT COMPLETADO CON ÉXITO *';

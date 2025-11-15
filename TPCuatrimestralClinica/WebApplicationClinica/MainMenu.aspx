@@ -23,10 +23,10 @@
                         <!-- Botón de acción rapida -->
                         <asp:HyperLink ID="BtnCrear"
                             runat="server"
-                            NavigateUrl="~/Turnos/CrearTurno.aspx"
+                            NavigateUrl="~/Turnos/GestionTurno.aspx"
                             CssClass="btn btn-primary mt-auto"
-                            aria-label="Crear nuevo turno">
-                            Crear turno
+                            aria-label="Gestion turnos">
+                            Gestion Turnos
                         </asp:HyperLink>
                     </div>
                 </div>
@@ -63,9 +63,9 @@
                         <p class="card-text text-soft mb-4">
                             Gestiona la informacion de los Medicos disponibles, sus especialidades y turnos de trabajo.
                         </p>
-                        <%--Esteban podemos sombrear este boton para que se noten los 2 distintos links mas rapido? Listo--%>
-                        <a href="<%: ResolveUrl("~/Pacientes/Nuevo.aspx") %>"
-                            class="btn btn-primary mt-auto shadow" aria-label="Buscar Medico">Buscar Medicos en el sistema
+                        
+                        <a href="<%: ResolveUrl("~/Medicos/AgregarMedico.aspx") %>"
+                            class="btn btn-primary mt-auto shadow" aria-label="Buscar Medico">Gestion Medicos 
                         </a>
                     </div>
                 </div>

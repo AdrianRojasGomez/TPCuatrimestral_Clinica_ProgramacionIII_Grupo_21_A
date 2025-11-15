@@ -25,8 +25,8 @@ namespace Negocio
                 u.IdUsuario,
                 u.NombreUsuario,
                 u.Clave,
-                u.TipoUusario,
-                u.Activo,
+                u.TipoUsuario,
+                u.Estado,
                 um.IdMedico,
                 m.Nombre AS NombreMedico,
                 m.Apellido,
@@ -45,8 +45,8 @@ namespace Negocio
                     aux.IdUsuario = (int)accesoDatos.Lector["IdUsuario"];
                     aux.NombreUsuario = (string)accesoDatos.Lector["NombreUsuario"];
                     aux.Password = (string)accesoDatos.Lector["Clave"];
-                    aux.TipoUsuario = (TipoUsuario)(int)accesoDatos.Lector["TipoUusario"];
-                    aux.Activo = (bool)accesoDatos.Lector["Activo"];
+                    aux.TipoUsuario = (TipoUsuario)(int)accesoDatos.Lector["TipoUsuario"];
+                    aux.Activo = (bool)accesoDatos.Lector["Estado"];
 
                    
                     if (accesoDatos.Lector["IdMedico"] != DBNull.Value)
@@ -87,7 +87,7 @@ namespace Negocio
 
             try
             {
-                accesoDatos.SetearConsulta("select IdUsuario,TipoUusario from UsuariosApp where  NombreUsuario = @user and Clave = @pass");
+                accesoDatos.SetearConsulta("select IdUsuario,TipoUsuario from UsuariosApp where  NombreUsuario = @user and Clave = @pass");
 
                 accesoDatos.SetearParametros("@user", usuario.NombreUsuario);
                 accesoDatos.SetearParametros("@pass", usuario.Password);
@@ -97,7 +97,7 @@ namespace Negocio
                 {
 
                     usuario.IdUsuario = (int)accesoDatos.Lector["IdUsuario"];
-                    usuario.TipoUsuario = (int)(accesoDatos.Lector["TipoUusario"]) == 1 ? TipoUsuario.Admin : TipoUsuario.Recepcion;
+                    usuario.TipoUsuario = (int)(accesoDatos.Lector["TipoUsuario"]) == 1 ? TipoUsuario.Admin : TipoUsuario.Recepcion;
 
 
                     return true;
@@ -131,14 +131,14 @@ namespace Negocio
             {
                 accesoDatos.SetearConsulta(@"
         SELECT u.IdUsuario, 
-               u.TipoUusario,
-               um.IdMedico   -- 👈 IMPORTANTE
+               u.TipoUsuario,
+               um.IdMedico   
         FROM UsuariosApp u
         INNER JOIN UsuariosAppxMedico um ON u.IdUsuario = um.IdUsuario
         WHERE u.NombreUsuario = @user 
           AND u.Clave = @pass 
-          AND u.TipoUusario = 2   -- 2 = Médico
-          AND u.Activo = 1");
+          AND u.TipoUsuario = 2 
+          AND u.Estado = 1");
 
                 accesoDatos.SetearParametros("@user", usuario.NombreUsuario);
                 accesoDatos.SetearParametros("@pass", usuario.Password);
@@ -198,7 +198,7 @@ namespace Negocio
             {
 
                 datos.SetearConsulta(
-                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUusario) " +
+                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUsuario) " +
                     "VALUES (@NombreUsuario, @Clave, @TipoUsuario); " +
                     "SELECT SCOPE_IDENTITY();"
                 );
@@ -252,8 +252,8 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("UPDATE UsuariosApp SET Activo = @Activo WHERE IdUsuario = @IdUsuario");
-                datos.SetearParametros("@Activo", activar);
+                datos.SetearConsulta("UPDATE UsuariosApp SET Estado = @Estado WHERE IdUsuario = @IdUsuario");
+                datos.SetearParametros("@Estado", activar);
                 datos.SetearParametros("@IdUsuario", idUsuario);
                 datos.EjecutarAccion();
             }

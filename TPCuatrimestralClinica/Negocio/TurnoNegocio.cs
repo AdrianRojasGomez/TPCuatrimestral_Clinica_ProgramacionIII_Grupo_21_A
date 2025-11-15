@@ -59,6 +59,8 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+
+
         public Turno BuscarPorDNI(string dni)
             {
                 AccesoDatos datos = new AccesoDatos();

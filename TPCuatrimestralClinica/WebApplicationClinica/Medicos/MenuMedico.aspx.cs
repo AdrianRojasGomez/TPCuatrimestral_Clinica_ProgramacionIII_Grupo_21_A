@@ -19,15 +19,14 @@ namespace WebApplicationClinica.Medicos
                 if (Session["idMedico"] == null)
                 {
                     
-                    Response.Redirect("~/Login.aspx");
+                    Response.Redirect("~/Login%20y%20Usuarios/Login.aspx");
                     return;
                 }
 
                 int idMedico = (int)Session["idMedico"];
                 MedicoNegocio medicoNegocio = new MedicoNegocio();
                 Medico medico = medicoNegocio.BuscarMedicoPorIdSimple(idMedico);
-
-                if (medico != null)
+                                if (medico != null)
                 {
                     lblNombreDoctor.Text = "Dr. " + medico.Nombre + " " + medico.Apellido;
                     lblEspecialidad.Text = medico.Especialidades != null && medico.Especialidades.Count > 0

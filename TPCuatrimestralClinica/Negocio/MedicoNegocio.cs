@@ -18,28 +18,39 @@ namespace Negocio
             try
             {
                 accesoDatos.SetearConsulta(@"
-            SELECT 
-                m.IdMedico,
-                m.Nombre,
-                m.Apellido,
-                m.Matricula,
-                t.IdGuardia AS IdTurnoTrabajo,
-                t.Nombre    AS TurnoNombre,
-                t.HoraInicio,
-                t.HoraFin,
-                mt.DiaSemana,               
-                e.IdEspecialidad,
-                e.Nombre    AS EspecialidadNombre
-            FROM Medicos m
-            LEFT JOIN MedicosPorGuardia mt        ON mt.IdMedico   = m.IdMedico
-            LEFT JOIN Guardias         t          ON t.IdGuardia   = mt.IdGuardia
-            LEFT JOIN MedicosPorEspecialidad me   ON me.IdMedico   = m.IdMedico
-            LEFT JOIN Especialidades   e          ON e.IdEspecialidad = me.IdEspecialidad
+    SELECT 
+        m.IdMedico,
+        m.Nombre,
+        m.Apellido,
+        m.Matricula,
+        t.IdGuardia AS IdTurnoTrabajo,
+        t.Nombre    AS TurnoNombre,
+        t.HoraInicio,
+        t.HoraFin,
+        mt.DiaSemana,               
+        e.IdEspecialidad,
+        e.Nombre    AS EspecialidadNombre,
 
+        -- ⚠️ NUEVO: info de usuario
+        CASE 
+            WHEN um.IdUsuario IS NULL THEN 0 
+            ELSE 1 
+        END AS TieneUsuario,
 
-                WHERE m.Activo = 1
-            ORDER BY m.Apellido, m.Nombre, e.Nombre");
+        CASE 
+            WHEN um.IdUsuario IS NOT NULL AND u.Estado = 1 THEN 1
+            ELSE 0
+        END AS UsuarioActivo
 
+    FROM Medicos m
+    LEFT JOIN MedicosPorGuardia      mt ON mt.IdMedico      = m.IdMedico
+    LEFT JOIN Guardias               t  ON t.IdGuardia      = mt.IdGuardia
+    LEFT JOIN MedicosPorEspecialidad me ON me.IdMedico      = m.IdMedico
+    LEFT JOIN Especialidades         e  ON e.IdEspecialidad = me.IdEspecialidad
+    LEFT JOIN UsuariosAppxMedico     um ON um.IdMedico      = m.IdMedico
+    LEFT JOIN UsuariosApp            u  ON u.IdUsuario      = um.IdUsuario
+    WHERE m.Activo = 1
+    ORDER BY m.Apellido, m.Nombre, e.Nombre");
 
 
 
@@ -57,6 +68,8 @@ namespace Negocio
                         aux.Nombre = (string)accesoDatos.Lector["Nombre"];
                         aux.Apellido = (string)accesoDatos.Lector["Apellido"];
                         aux.Matricula = (string)accesoDatos.Lector["Matricula"];
+                        aux.TieneUsuario = Convert.ToBoolean(accesoDatos.Lector["TieneUsuario"]);
+                        aux.UsuarioActivo = Convert.ToBoolean(accesoDatos.Lector["UsuarioActivo"]);
 
                         aux.turnoTrabajos = new List<MedicoPorGuardia>();
                         aux.Especialidades = new List<Especialidad>();
@@ -384,7 +397,9 @@ namespace Negocio
                         MedicoPorGuardia turno = new MedicoPorGuardia();
                         turno.IdTurnoTrabajo = (int)datosMedico.Lector["IdGuardia"];
                         turno.Nombre = datosMedico.Lector["NombreGuardia"].ToString();
-                        turno.DiaSemana = (string)datosMedico.Lector["DiaSemana"];
+                        byte diaNumero = (byte)datosMedico.Lector["DiaSemana"];
+                        string diaSemana = ConvertirDiaSemanaTexto(diaNumero);
+                        turno.DiaSemana = diaSemana;
 
                         if (!(datosMedico.Lector["HoraInicio"] is DBNull))
                             turno.HoraInicio = (TimeSpan)datosMedico.Lector["HoraInicio"];

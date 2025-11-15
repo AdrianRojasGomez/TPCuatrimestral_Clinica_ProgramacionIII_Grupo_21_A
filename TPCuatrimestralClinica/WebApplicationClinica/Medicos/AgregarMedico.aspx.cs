@@ -822,7 +822,36 @@ namespace WebApplicationClinica.Medicos
 
                 btnVolver.Visible = false;
             }
+            if (e.CommandName == "CrearUsuario")
+            {
+
+                int idMedico = Convert.ToInt32(e.CommandArgument);
+
+                Session["idMedicoCreado"] = idMedico;
+
+                Response.Redirect("~/Login y Usuarios/CrearUsuario.aspx");
+            }
+
+            if (e.CommandName == "ActivarUsuarioDesdeMedico")
+            {
+                int idMedico = Convert.ToInt32(e.CommandArgument);
+
+                UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                int idUsuario = usuarioNegocio.ObtenerIdUsuarioPorMedico(idMedico);
+
+                if (idUsuario > 0)
+                {
+                    usuarioNegocio.CambiarEstadoUsuario(idUsuario, true);
+
+
+                    CargarGrillaMedicos();
+
+
+                }
+               
+            }
         }
+        
 
         protected void ddlTurnoEdit_SelectedIndexChanged(object sender, EventArgs e)
         {

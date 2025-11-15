@@ -198,8 +198,8 @@ namespace Negocio
             {
 
                 datos.SetearConsulta(
-                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUsuario) " +
-                    "VALUES (@NombreUsuario, @Clave, @TipoUsuario); " +
+                    "INSERT INTO UsuariosApp (NombreUsuario, Clave, TipoUsuario, Estado) " +
+                    "VALUES (@NombreUsuario, @Clave, @TipoUsuario, 1); " +
                     "SELECT SCOPE_IDENTITY();"
                 );
 
@@ -262,7 +262,30 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+        public int ObtenerIdUsuarioPorMedico(int idMedico)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta(
+                    "SELECT TOP 1 IdUsuario " +
+                    "FROM UsuariosAppxMedico " +
+                    "WHERE IdMedico = @IdMedico"
+                );
 
+                datos.SetearParametros("@IdMedico", idMedico);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                    return (int)datos.Lector["IdUsuario"];
+
+                return 0;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
 
 
 

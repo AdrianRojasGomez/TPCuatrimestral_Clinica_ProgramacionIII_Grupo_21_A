@@ -10,7 +10,14 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
     <div class="container py-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="mb-1 text-success fw-bold">Crear nuevo usuario</h2>
+              <asp:Button ID="Button1" runat="server" 
+            Text="↩️ Volver a Médicos"
+            CssClass="btn btn-secondary" OnClick="Button1_Click" /> 
+
+          </div>
+      
 
         <div class="card shadow-sm p-4">
             <div class="mb-3">

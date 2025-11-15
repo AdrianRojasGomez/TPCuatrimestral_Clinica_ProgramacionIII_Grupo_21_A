@@ -16,8 +16,10 @@ namespace Dominio
         public MedicoPorGuardia TurnoTrabajo { get; set; }
         public List<MedicoPorGuardia> turnoTrabajos { get; set; }
         public List<Especialidad> Especialidades { get; set; }
-      
-              
+        public bool  TieneUsuario { get; set; }
+        public bool UsuarioActivo { get; set; }
+
+
 
         public Medico()
         {

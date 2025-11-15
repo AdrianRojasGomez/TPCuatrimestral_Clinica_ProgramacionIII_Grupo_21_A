@@ -26,7 +26,6 @@
 
 
             <asp:Button ID="btnMostrar" runat="server" Text="Cargar nuevo medico" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnMostrar_Click" />
-            <asp:Button ID="btnAltaUsuario" runat="server" Text="Alta Usuario Medico" CssClass="btn btn-sm btn-outline-primary mx-1" OnClick="btnAltaUsuario_Click" />
 
             <asp:Label ID="lblError" runat="server" CssClass="text-danger fw-bold" />
         </div>
@@ -346,7 +345,19 @@
                                 <asp:Button ID="btnCancelar" runat="server" Text="↩️ Cancelar Edicion"
                                     CssClass="btn btn-sm btn-outline-primary mx-1" CommandName="Cancel" />
 
+                                 
+                                <asp:Button ID="btnCrearUsuario" runat="server" Text="➕👤 Crear Usuario"   CssClass="btn btn-sm btn-outline-success mx-1" 
+                                    CommandName="CrearUsuario"    
+                                    CommandArgument='<%# Eval("IdMedico") %>'
+                                          Visible='<%# !(bool)Eval("TieneUsuario") %>' />
 
+
+                                <asp:Button ID="btnActivarUsuarioDesdeMedico" runat="server" Text="🔓 Activar Usuario"
+                                      CssClass="btn btn-sm btn-outline-warning mx-1"
+                                             CommandName="ActivarUsuarioDesdeMedico"
+                                       CommandArgument='<%# Eval("IdMedico") %>'
+                                       Visible='<%# (bool)Eval("TieneUsuario") && !(bool)Eval("UsuarioActivo") %>' />
+                              
 
 
 
@@ -391,13 +402,13 @@
 
     <script type="text/javascript">
         var __filterTimer = null;
-                 function liveFilter(uniqueId) {
-                     if (__filterTimer) clearTimeout(__filterTimer);
-                     __filterTimer = setTimeout(function () {
-                         __doPostBack(uniqueId, '');
-                     }, 300);
-                 }
-    </script >
+        function liveFilter(uniqueId) {
+            if (__filterTimer) clearTimeout(__filterTimer);
+            __filterTimer = setTimeout(function () {
+                __doPostBack(uniqueId, '');
+            }, 300);
+        }
+    </script>
 
 
 

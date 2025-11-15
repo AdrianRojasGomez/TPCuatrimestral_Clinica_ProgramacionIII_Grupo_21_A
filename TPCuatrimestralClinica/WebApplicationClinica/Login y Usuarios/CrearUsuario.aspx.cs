@@ -50,7 +50,8 @@ namespace WebApplicationClinica
      string.IsNullOrWhiteSpace(TxtPassword.Text) ||
      string.IsNullOrWhiteSpace(ddlTipoUsuario.SelectedValue))
             {
-                lblMensaje.Text = "⚠️ Complete todos los campos.";
+                lblMensaje.Text = "⚠️ La sesión expiró. Volvé a la pantalla de médicos y elegí el médico otra vez.";
+
                 lblMensaje.CssClass = "text-danger fw-semibold";
                 return;
             }
@@ -67,6 +68,7 @@ namespace WebApplicationClinica
 
                 int idMedico;
                 bool esMedico = usuario.TipoUsuario == TipoUsuario.Medico;
+           
 
                 if (esMedico)
                 {
@@ -99,6 +101,8 @@ namespace WebApplicationClinica
                     
                     Response.Redirect("~/Login y Usuarios/Login.aspx");
                 }
+
+
             }
             catch
             {
@@ -300,6 +304,11 @@ namespace WebApplicationClinica
       
             txtFiltradoUsario.Text = string.Empty;
             txtFiltradoUsario.Focus();
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

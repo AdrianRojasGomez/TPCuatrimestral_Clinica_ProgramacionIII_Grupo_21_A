@@ -69,7 +69,10 @@ namespace Negocio
                     if (accesoDatos.Lector["IdTurnoTrabajo"] != DBNull.Value)
                     {
                         int idTurno = (int)accesoDatos.Lector["IdTurnoTrabajo"];
-                        string diaSemana = (string)accesoDatos.Lector["DiaSemana"];
+                        byte diaNumero = (byte)accesoDatos.Lector["DiaSemana"];
+
+                        
+                        string diaSemana = ConvertirDiaSemanaTexto(diaNumero);
 
                         bool yaExisteTurno = aux.turnoTrabajos.Any(t =>
                             t.IdTurnoTrabajo == idTurno && t.DiaSemana == diaSemana);
@@ -135,13 +138,14 @@ namespace Negocio
             {
 
                 datos.SetearConsulta(
-                    "INSERT INTO Medicos (Nombre, Apellido, Matricula) " +
-                    "VALUES (@Nombre, @Apellido, @Matricula); " +
+                    "INSERT INTO Medicos (Nombre, Apellido, Matricula , Activo) " +
+                    "VALUES (@Nombre, @Apellido, @Matricula,1); " +
                     "SELECT CAST(SCOPE_IDENTITY() AS INT);"
                 );
                 datos.SetearParametros("@Nombre", medico.Nombre);
                 datos.SetearParametros("@Apellido", medico.Apellido);
                 datos.SetearParametros("@Matricula", medico.Matricula);
+                
 
                 idMedicoNuevo = Convert.ToInt32(datos.EjecutarEscalar());
             }
@@ -178,7 +182,8 @@ namespace Negocio
 
                         datosGuardia.SetearParametros("@IdMedico", idMedicoNuevo);
                         datosGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
-                        datosGuardia.SetearParametros("@DiaSemana", turno.DiaSemana);
+                        int diaSemanaNumero = ConvertirDiaSemana(turno.DiaSemana);
+                        datosGuardia.SetearParametros("@DiaSemana", diaSemanaNumero);
 
                         datosGuardia.EjecutarAccion();
                     }
@@ -272,7 +277,8 @@ namespace Negocio
                     VALUES (@IdMedico, @IdGuardia, @DiaSemana)");
                         datosInsGuardia.SetearParametros("@IdMedico", medico.IdMedico);
                         datosInsGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
-                        datosInsGuardia.SetearParametros("@DiaSemana", turno.DiaSemana);
+                        int diaNumero = ConvertirDiaSemana(turno.DiaSemana);
+                        datosInsGuardia.SetearParametros("@DiaSemana", diaNumero);
                         datosInsGuardia.EjecutarAccion();
                     }
                     finally
@@ -335,7 +341,7 @@ namespace Negocio
             Medico medico = null;
             idsEspecialidades = new List<int>();
 
-          ///m
+          
             AccesoDatos datosMedico = new AccesoDatos();
             try
             {
@@ -453,6 +459,39 @@ namespace Negocio
             List<int> idsDescartados;
             return BuscarMedicoPorId(idMedico, out idsDescartados);
         }
+
+        public int ConvertirDiaSemana(string dia)
+        {
+            switch (dia)
+            {
+                case "Lunes": return 1;
+                case "Martes": return 2;
+                case "Miércoles": return 3;
+                case "Jueves": return 4;
+                case "Viernes": return 5;
+                case "Sábado": return 6;
+                case "Domingo": return 7;
+                default: return 1; 
+            }
+        }
+
+        public string ConvertirDiaSemanaTexto(byte dia)
+        {
+            switch (dia)
+            {
+                case 1: return "Lunes";
+                case 2: return "Martes";
+                case 3: return "Miércoles";
+                case 4: return "Jueves";
+                case 5: return "Viernes";
+                case 6: return "Sábado";
+                case 7: return "Domingo";
+                default: return "Lunes";
+            }
+        }
+
+
+
     }
 }
 

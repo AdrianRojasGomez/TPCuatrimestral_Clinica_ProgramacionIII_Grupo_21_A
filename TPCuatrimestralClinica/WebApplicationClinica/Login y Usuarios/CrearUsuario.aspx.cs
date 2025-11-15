@@ -13,7 +13,7 @@ namespace WebApplicationClinica
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Session["usuario"] == null)
+          /*  if (Session["usuario"] == null)
             {
                 Response.Redirect("~/Login y Usuarios/Login.aspx");
                 return;
@@ -28,7 +28,7 @@ namespace WebApplicationClinica
 
                 Response.Redirect("~/Login y Usuarios/Login.aspx");
                 return;
-            }
+            }*/
 
             if (!IsPostBack)
             {

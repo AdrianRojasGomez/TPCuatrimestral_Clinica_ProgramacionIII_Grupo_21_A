@@ -348,6 +348,15 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.DropDownList ddlEspecialidad;
 
         /// <summary>
+        /// EspecialidadMuted control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl EspecialidadMuted;
+
+        /// <summary>
         /// ddlMedicoDisponible control.
         /// </summary>
         /// <remarks>
@@ -357,6 +366,15 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.DropDownList ddlMedicoDisponible;
 
         /// <summary>
+        /// MedicoMuted control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl MedicoMuted;
+
+        /// <summary>
         /// dtFechaTurno control.
         /// </summary>
         /// <remarks>
@@ -364,6 +382,33 @@ namespace WebApplicationClinica
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl dtFechaTurno;
+
+        /// <summary>
+        /// FechaMuted control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl FechaMuted;
+
+        /// <summary>
+        /// ddlHorario control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlHorario;
+
+        /// <summary>
+        /// Small1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Small1;
 
         /// <summary>
         /// txtObservaciones control.

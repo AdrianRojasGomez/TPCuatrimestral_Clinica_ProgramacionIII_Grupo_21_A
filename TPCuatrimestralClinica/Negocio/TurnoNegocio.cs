@@ -102,6 +102,47 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+
+        public List<Turno> ObtenerTodosLosTurnos()
+        {
+            List<Turno> lista = new List<Turno>();
+            AccesoDatos datos = new AccesoDatos();
+            PacienteNegocio pacNegocio = new PacienteNegocio();
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+            try
+            {
+                datos.SetearConsulta("SELECT T.* FROM Turnos as T ORDER BY T.FechaInicio DESC");
+                datos.EjecutarLectura();
+                while (datos.Lector.Read())
+                {
+                    Turno turno = new Turno();
+                    turno.IdTurno = (int)datos.Lector["IdTurno"];
+                    turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
+                    turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                    turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
+                    turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
+                    turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
+                    turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
+                    turno.IdPaciente = (int)datos.Lector["IdPaciente"];
+                    turno.IdMedico = (int)datos.Lector["IdMedico"];
+                    turno.Paciente = pacNegocio.BuscarPorId(turno.IdPaciente);
+                    turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
+                    turno.Motivo = (string)datos.Lector["Motivo"];
+                    turno.Estado = (bool)datos.Lector["Estado"];
+                    lista.Add(turno);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener todos los turnos: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
         public Turno BuscarPorDNI(string dni)
             {
                 AccesoDatos datos = new AccesoDatos();

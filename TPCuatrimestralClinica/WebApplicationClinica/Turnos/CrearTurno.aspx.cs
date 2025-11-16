@@ -9,8 +9,8 @@ namespace WebApplicationClinica
 {
     public partial class CrearTurno : System.Web.UI.Page
     {
-        Especialidad especialidadSeleccionada = new Especialidad();
-        Medico medicoSeleccionado = new Medico();
+
+        
         DateTime fechaSeleccionada = DateTime.MinValue;
 
 
@@ -164,10 +164,12 @@ namespace WebApplicationClinica
             {
                 return;
             }
-
+            Especialidad especialidadSeleccionada = new Especialidad();
             especialidadSeleccionada.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
             especialidadSeleccionada.Nombre = ddlEspecialidad.SelectedItem.Text;
 
+            //Limpiar el ddlMedicoDisponible, evita dupicados
+            ddlMedicoDisponible.Items.Clear();
             //Buscar una lista de Medicos que tengan esa Especialidad
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             List<Medico> medicosConEspecialidad = new List<Medico>();
@@ -187,10 +189,16 @@ namespace WebApplicationClinica
             {
                 return;
             }
-            
+            Medico medicoSeleccionado = new Medico();
             medicoSeleccionado.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
             //Validar las fechas disponibles para ese medico y especialidad
+
+
+
             //Habilitar el dtFechaTurno
+
+
+
         }
 
 

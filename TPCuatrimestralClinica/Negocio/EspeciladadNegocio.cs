@@ -62,7 +62,7 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("INSERT INTO Especialidad (Nombre) VALUES (@n)");
+                d.SetearConsulta("INSERT INTO Especialidades (Nombre) VALUES (@n)");
                 d.SetearParametros("@n", esp.Nombre);
                 d.EjecutarAccion();
             }

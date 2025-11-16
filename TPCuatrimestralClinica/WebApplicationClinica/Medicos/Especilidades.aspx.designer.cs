@@ -24,15 +24,6 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.Panel pnlEspecialidad;
 
         /// <summary>
-        /// Control lblTituloPanel.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTituloPanel;
-
-        /// <summary>
         /// Control TxtNombreEspecialidad.
         /// </summary>
         /// <remarks>
@@ -51,6 +42,15 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.Label lblMensajePanel;
 
         /// <summary>
+        /// Control lblMensajeEspecialidad.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensajeEspecialidad;
+
+        /// <summary>
         /// Control btnGuardarEspecialidad.
         /// </summary>
         /// <remarks>
@@ -67,5 +67,23 @@ namespace WebApplicationClinica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancelar;
+
+        /// <summary>
+        /// Control btnLimpiar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnLimpiar;
+
+        /// <summary>
+        /// Control gvEspecialidades.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvEspecialidades;
     }
 }

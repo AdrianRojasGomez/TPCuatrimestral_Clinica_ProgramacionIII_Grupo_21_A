@@ -143,6 +143,64 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+
+        public int ObtenerUltimoID()
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("SELECT MAX(IdTurno) AS UltimoID FROM Turnos");
+                datos.EjecutarLectura();
+                if (datos.Lector.Read())
+                {
+                    return datos.Lector["UltimoID"] != DBNull.Value ? (int)datos.Lector["UltimoID"] : 0;
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener el último ID de Turno: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public void AgregarTurno(Turno nuevoTurno)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta(@"
+                INSERT INTO Turnos 
+                (NumeroTurno, FechaInicio, FechaFin, HoraInicio, HoraFin, ObservacionesSolicitud, ObservacionesDiagnostico, IdMedico, IdPaciente, IdEspecialidad, Motivo, Estado) 
+                VALUES 
+                (@NumeroTurno, @FechaInicio, @FechaFin, @HoraInicio, @HoraFin, @ObservacionesSolicitud, @ObservacionesDiagnostico, @IdMedico, @IdPaciente, @IdEspecialidad, @Motivo, @Estado)
+                ");
+                datos.SetearParametros("@NumeroTurno", nuevoTurno.NumeroTurno);
+                datos.SetearParametros("@FechaInicio", nuevoTurno.FechaInicio);
+                datos.SetearParametros("@FechaFin", nuevoTurno.FechaFin);
+                datos.SetearParametros("@HoraInicio", nuevoTurno.HoraInicio);
+                datos.SetearParametros("@HoraFin", nuevoTurno.HoraFin);
+                datos.SetearParametros("@ObservacionesSolicitud", nuevoTurno.ObservacionesSolicitud);
+                datos.SetearParametros("@ObservacionesDiagnostico", nuevoTurno.ObservacionesDiagnostico);
+                datos.SetearParametros("@IdMedico", nuevoTurno.IdMedico);
+                datos.SetearParametros("@IdPaciente", nuevoTurno.IdPaciente);
+                datos.SetearParametros("@IdEspecialidad", nuevoTurno.IdEspecialidad);
+                datos.SetearParametros("@Motivo", nuevoTurno.Motivo);
+                datos.SetearParametros("@Estado", nuevoTurno.Estado);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al agregar nuevo Turno: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
         public Turno BuscarPorDNI(string dni)
             {
                 AccesoDatos datos = new AccesoDatos();

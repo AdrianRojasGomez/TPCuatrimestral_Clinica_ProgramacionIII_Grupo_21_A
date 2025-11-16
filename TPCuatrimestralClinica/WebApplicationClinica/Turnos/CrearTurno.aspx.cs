@@ -11,8 +11,6 @@ namespace WebApplicationClinica
     {
 
         
-        DateTime fechaSeleccionada = DateTime.MinValue;
-
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -23,6 +21,7 @@ namespace WebApplicationClinica
                 pnlAgregarPaciente.Visible = false;
                 lblMensajeError.Visible = false;
                 btnIrAgregarPaciente.Visible = false;
+                btnGuardar.Enabled = false;
                 dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
 
                 //Deshabilitar Medico, Fecha y hora hasta seleccionar una Especialidad
@@ -78,6 +77,7 @@ namespace WebApplicationClinica
                     txtEmailPaciente.Text = pacienteEncontrado.Email;
                     txtTelefonoPaciente.Text = pacienteEncontrado.Telefono;
                     ViewState["IdPaciente"] = pacienteEncontrado.IdPaciente;
+                    Session["IdPaciente"] = pacienteEncontrado.IdPaciente;
                 }
                 else
                 {
@@ -142,6 +142,7 @@ namespace WebApplicationClinica
                 txtEmailPaciente.Text = pacienteGuardado.Email;
                 txtTelefonoPaciente.Text = pacienteGuardado.Telefono;
                 ViewState["IdPaciente"] = pacienteGuardado.IdPaciente;
+                Session["IdPaciente"] = pacienteGuardado.IdPaciente;
             }
             catch (Exception ex)
             {
@@ -166,6 +167,12 @@ namespace WebApplicationClinica
             {
                 return;
             }
+
+            if(btnGuardar.Enabled)
+            {
+                btnGuardar.Enabled = false;
+            }
+
             Especialidad especialidadSeleccionada = new Especialidad();
             especialidadSeleccionada.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
             especialidadSeleccionada.Nombre = ddlEspecialidad.SelectedItem.Text;
@@ -185,12 +192,10 @@ namespace WebApplicationClinica
             //Habilitar el dtFechaTurno
             dtFechaTurno.Enabled = true;
 
-            //Validar si solo hay un especialista
             if (medicosConEspecialidad.Count == 1)
             {
                 ddlMedicoDisponible.SelectedIndex = 0;
                 ddlMedicoDisponible_SelectedIndexChanged(sender, e);
-
             }
         }
 
@@ -200,7 +205,12 @@ namespace WebApplicationClinica
             {
                 return;
             }
-            
+
+            if (btnGuardar.Enabled)
+            {
+                btnGuardar.Enabled = false;
+            }
+
             Medico medicoSeleccionado = new Medico();
             medicoSeleccionado.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
             //Validar las fechas no disponibles para ese medico
@@ -209,6 +219,11 @@ namespace WebApplicationClinica
 
         protected void dtFechaTurno_Changed(object sender, EventArgs e)
         {
+            if (btnGuardar.Enabled)
+            {
+                btnGuardar.Enabled = false;
+            }
+
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             DateTime fechaSeleccionada = DateTime.Parse(dtFechaTurno.Text);
             int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
@@ -225,7 +240,7 @@ namespace WebApplicationClinica
         protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
         {
 
-
+            btnGuardar.Enabled = true;
 
         }
 
@@ -237,7 +252,7 @@ namespace WebApplicationClinica
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-           
+           TurnoNegocio turnoNegocio = new TurnoNegocio();
             if (ViewState["IdPaciente"] == null)
             {
                 lblMensajeError.Text = "Debe buscar y encontrar un paciente válido antes de guardar.";
@@ -245,7 +260,33 @@ namespace WebApplicationClinica
                 return;
             }
 
-           
+            try
+            {
+                Turno nuevoTurno = new Turno();
+                nuevoTurno.NumeroTurno = (turnoNegocio.ObtenerUltimoID() + 1).ToString();
+                nuevoTurno.FechaInicio = DateTime.Parse(dtFechaTurno.Text);
+                nuevoTurno.FechaFin = nuevoTurno.FechaInicio;
+                nuevoTurno.HoraInicio = TimeSpan.Parse(ddlHorario.SelectedValue);
+                nuevoTurno.HoraFin = nuevoTurno.HoraInicio + TimeSpan.FromHours(1);
+                nuevoTurno.ObservacionesSolicitud = txtObservaciones.Text;
+                nuevoTurno.ObservacionesDiagnostico = "";
+                nuevoTurno.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+                nuevoTurno.IdPaciente = Session["IdPaciente"] != null ? (int)Session["IdPaciente"] : (int)ViewState["IdPaciente"];
+                nuevoTurno.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
+                nuevoTurno.Motivo = txtMotivo.Text;
+                nuevoTurno.Estado = 1;
+                nuevoTurno.Paciente = null;
+                nuevoTurno.Medico = null;
+
+                turnoNegocio.AgregarTurno(nuevoTurno);
+            }
+            catch (Exception ex)
+            {
+                lblMensajeError.Text = "Error al guardar el turno: " + ex.Message;
+                lblMensajeError.Visible = true;
+            }
+
+
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)

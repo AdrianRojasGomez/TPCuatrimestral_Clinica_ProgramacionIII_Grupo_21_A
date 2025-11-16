@@ -202,21 +202,33 @@
                                 </div>
 
                                 <div class="row mt-4">
-                                    <%--Motivo del turno--%>
                                     <div class="col-12">
                                         <label for="txtMotivo" class="form-label">Motivo</label>
-                                        <asp:TextBox runat="server" ID="TextBox1" ClientIDMode="Static" TextMode="MultiLine" Rows="2"
-                                            CssClass="form-control" placeholder="Notas u observaciones relevantes…"></asp:TextBox>
+                                        <asp:TextBox
+                                            runat="server"
+                                            ID="txtMotivo"
+                                            ClientIDMode="Static"
+                                            TextMode="MultiLine"
+                                            Rows="2"
+                                            CssClass="form-control"
+                                            placeholder="Motivo de la consulta…">
+                                        </asp:TextBox>
                                     </div>
                                 </div>
-                                <%--Observaciones para el turno--%>
+
                                 <div class="row mt-4">
                                     <div class="col-12">
                                         <label for="txtObservaciones" class="form-label">Observaciones</label>
-                                        <asp:TextBox runat="server" ID="txtObservaciones" ClientIDMode="Static" TextMode="MultiLine" Rows="6"
-                                            CssClass="form-control" placeholder="Notas u observaciones relevantes…"></asp:TextBox>
+                                        <asp:TextBox
+                                            runat="server"
+                                            ID="txtObservaciones"
+                                            ClientIDMode="Static"
+                                            TextMode="MultiLine"
+                                            Rows="6"
+                                            CssClass="form-control"
+                                            placeholder="Notas u observaciones relevantes…">
+                                        </asp:TextBox>
                                     </div>
-
                                 </div>
                             </asp:Panel>
                         </div>

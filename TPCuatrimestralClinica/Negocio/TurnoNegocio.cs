@@ -102,6 +102,105 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+
+        public List<Turno> ObtenerTodosLosTurnos()
+        {
+            List<Turno> lista = new List<Turno>();
+            AccesoDatos datos = new AccesoDatos();
+            PacienteNegocio pacNegocio = new PacienteNegocio();
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+            try
+            {
+                datos.SetearConsulta("SELECT T.* FROM Turnos as T ORDER BY T.FechaInicio DESC");
+                datos.EjecutarLectura();
+                while (datos.Lector.Read())
+                {
+                    Turno turno = new Turno();
+                    turno.IdTurno = (int)datos.Lector["IdTurno"];
+                    turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
+                    turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
+                    turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
+                    turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
+                    turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
+                    turno.ObservacionesSolicitud = datos.Lector["ObservacionesSolicitud"] as string;
+                    turno.ObservacionesDiagnostico = datos.Lector["ObservacionesDiagnostico"] as string;
+                    turno.IdPaciente = (int)datos.Lector["IdPaciente"];
+                    turno.IdMedico = (int)datos.Lector["IdMedico"];
+                    turno.Paciente = pacNegocio.BuscarPorId(turno.IdPaciente);
+                    turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
+                    turno.Motivo = datos.Lector["Motivo"] as string;
+                    turno.Estado = (int)datos.Lector["Estado"];
+                    lista.Add(turno);
+                }
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener todos los turnos: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public int ObtenerUltimoID()
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("SELECT MAX(IdTurno) AS UltimoID FROM Turnos");
+                datos.EjecutarLectura();
+                if (datos.Lector.Read())
+                {
+                    return datos.Lector["UltimoID"] != DBNull.Value ? (int)datos.Lector["UltimoID"] : 0;
+                }
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener el último ID de Turno: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public void AgregarTurno(Turno nuevoTurno)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta(@"
+                INSERT INTO Turnos 
+                (NumeroTurno, FechaInicio, FechaFin, HoraInicio, HoraFin, ObservacionesSolicitud, ObservacionesDiagnostico, IdMedico, IdPaciente, IdEspecialidad, Motivo, Estado) 
+                VALUES 
+                (@NumeroTurno, @FechaInicio, @FechaFin, @HoraInicio, @HoraFin, @ObservacionesSolicitud, @ObservacionesDiagnostico, @IdMedico, @IdPaciente, @IdEspecialidad, @Motivo, @Estado)
+                ");
+                datos.SetearParametros("@NumeroTurno", nuevoTurno.NumeroTurno);
+                datos.SetearParametros("@FechaInicio", nuevoTurno.FechaInicio);
+                datos.SetearParametros("@FechaFin", nuevoTurno.FechaFin);
+                datos.SetearParametros("@HoraInicio", nuevoTurno.HoraInicio);
+                datos.SetearParametros("@HoraFin", nuevoTurno.HoraFin);
+                datos.SetearParametros("@ObservacionesSolicitud", nuevoTurno.ObservacionesSolicitud);
+                datos.SetearParametros("@ObservacionesDiagnostico", nuevoTurno.ObservacionesDiagnostico);
+                datos.SetearParametros("@IdMedico", nuevoTurno.IdMedico);
+                datos.SetearParametros("@IdPaciente", nuevoTurno.IdPaciente);
+                datos.SetearParametros("@IdEspecialidad", nuevoTurno.IdEspecialidad);
+                datos.SetearParametros("@Motivo", nuevoTurno.Motivo);
+                datos.SetearParametros("@Estado", nuevoTurno.Estado);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al agregar nuevo Turno: " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
         public Turno BuscarPorDNI(string dni)
             {
                 AccesoDatos datos = new AccesoDatos();
@@ -124,13 +223,13 @@ namespace Negocio
                     {
                         Turno turno = new Turno();
                         turno.IdTurno = (int)datos.Lector["IdTurno"];
-                        turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
+                        turno.NumeroTurno = datos.Lector["NumeroTurno"] as string;
                         turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
                         turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
                         turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
                         turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
-                        turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
-                        turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
+                        turno.ObservacionesSolicitud = datos.Lector["ObservacionesSolicitud"] as string;
+                        turno.ObservacionesDiagnostico = datos.Lector["ObservacionesDiagnostico"] as string;
                                             
                         turno.IdPaciente = (int)datos.Lector["IdPaciente"];
                         turno.IdMedico = (int)datos.Lector["IdMedico"];
@@ -139,8 +238,8 @@ namespace Negocio
                         turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
 
                         
-                        turno.Motivo = (string)datos.Lector["Motivo"];
-                        turno.Estado = (bool)datos.Lector["Estado"];
+                        turno.Motivo = datos.Lector["Motivo"] as string;
+                        turno.Estado = (int)datos.Lector["Estado"];
                         return turno;
                     }
                     return null;
@@ -172,13 +271,13 @@ namespace Negocio
                     {
                         Turno turno = new Turno();
                         turno.IdTurno = (int)datos.Lector["IdTurno"];
-                        turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
+                        turno.NumeroTurno = datos.Lector["NumeroTurno"] as string;
                         turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
                         turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
                         turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
                         turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
-                        turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
-                        turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
+                        turno.ObservacionesSolicitud = datos.Lector["ObservacionesSolicitud"] as string;
+                        turno.ObservacionesDiagnostico = datos.Lector["ObservacionesDiagnostico"] as string;
 
                         turno.IdPaciente = (int)datos.Lector["IdPaciente"];
                         turno.IdMedico = (int)datos.Lector["IdMedico"];
@@ -186,8 +285,8 @@ namespace Negocio
                         turno.Paciente = pacNegocio.BuscarPorId(turno.IdPaciente);
                         turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
 
-                        turno.Motivo = (string)datos.Lector["Motivo"];
-                        turno.Estado = (bool)datos.Lector["Estado"];
+                        turno.Motivo = datos.Lector["Motivo"] as string;
+                        turno.Estado = (int)datos.Lector["Estado"];
                         return turno;
                     }
                     return null;

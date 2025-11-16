@@ -73,7 +73,6 @@
     <Content Include="content\SQLScripts\NewCreation Bd.sql" />
     <Content Include="Medicos\MenuMedico.aspx" />
     <Content Include="Medicos\AgregarMedico.aspx" />
-    <Content Include="Turnos\AtenderTurno.aspx" />
     <Content Include="Turnos\CrearTurno.aspx" />
     <Content Include="Login y Usuarios\Login.aspx" />
     <Content Include="MainMenu.aspx" />
@@ -103,13 +102,6 @@
     </Compile>
     <Compile Include="Medicos\AgregarMedico.aspx.designer.cs">
       <DependentUpon>AgregarMedico.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Turnos\AtenderTurno.aspx.cs">
-      <DependentUpon>AtenderTurno.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Turnos\AtenderTurno.aspx.designer.cs">
-      <DependentUpon>AtenderTurno.aspx</DependentUpon>
     </Compile>
     <Compile Include="Turnos\CrearTurno.aspx.cs">
       <DependentUpon>CrearTurno.aspx</DependentUpon>
@@ -171,15 +163,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Clinica.Master" />
+    <None Include="Web.config" />
     <None Include="packages.config" />
     <Content Include="Turnos\GestionTurno.aspx" />
-    <Content Include="Web.config" />
-    <None Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
-    <None Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

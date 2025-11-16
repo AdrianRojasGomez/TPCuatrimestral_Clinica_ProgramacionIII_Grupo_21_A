@@ -11,6 +11,16 @@ namespace Dominio
         public int IdMedico { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
+
+        //Adri: Agrego propiedad NombreCompleto para mostrar en dropdowns
+        public string NombreCompleto
+        {
+            get
+            {
+                return $"Dr. {Apellido}, {Nombre}";
+            }
+        }
+
         public string Matricula { get; set; }
 
         public MedicoPorGuardia TurnoTrabajo { get; set; }
@@ -18,12 +28,9 @@ namespace Dominio
         public List<Especialidad> Especialidades { get; set; }
         public bool  TieneUsuario { get; set; }
         public bool UsuarioActivo { get; set; }
-
-
-
         public Medico()
         {
-             turnoTrabajos = new List<MedicoPorGuardia>();
+            turnoTrabajos = new List<MedicoPorGuardia>();
 
             Especialidades = new List<Especialidad>();
         }

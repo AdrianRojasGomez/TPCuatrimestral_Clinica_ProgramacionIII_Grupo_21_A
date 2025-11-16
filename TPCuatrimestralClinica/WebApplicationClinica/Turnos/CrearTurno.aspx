@@ -110,32 +110,124 @@
                                 <div class="border-top border border-secondary-subtle opacity-50 my-4"></div>
                                 <label class="form-label"><b>2. Completar Datos del Turno</b></label>
 
-                                <div class="row g-3 align-items-end">
-                                    <div class="col-12 col-md-4">
-                                        <%--Especialidad--%>
-                                        <label for="ddlEspecialidad" class="form-label">Especialidad</label>
-                                        <asp:DropDownList runat="server" ID="ddlEspecialidad" ClientIDMode="Static" CssClass="form-select" AppendDataBoundItems="true">
-                                            <asp:ListItem Value="">Seleccione una especialidad…</asp:ListItem>
-                                        </asp:DropDownList>
+                                <div class="row row-cols-4 g-3 align-items-end">
+                                    <%--Especialidad--%>
+                                    <div class="col-12 col-md-3">
+                                        <div class="card shadow-sm">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-3">Especialidades</h6>
+                                                <asp:DropDownList
+                                                    runat="server"
+                                                    ID="ddlEspecialidad"
+                                                    ClientIDMode="Static"
+                                                    CssClass="form-select"
+                                                    AutoPostBack="true"
+                                                    OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged"
+                                                    AppendDataBoundItems="true">
+                                                    <asp:ListItem Value="">Seleccione una especialidad…</asp:ListItem>
+                                                </asp:DropDownList>
+                                                <small
+                                                    id="EspecialidadMuted"
+                                                    runat="server"
+                                                    class="text-muted d-block mt-2">Comience eligiendo una especialidad.
+                                                </small>
+                                            </div>
+                                        </div>
                                     </div>
                                     <%--Médico--%>
-                                    <div class="col-12 col-md-4">
-                                        <label for="ddlMedicoDisponible" class="form-label">Médico</label>
-                                        <asp:DropDownList runat="server" ID="ddlMedicoDisponible" ClientIDMode="Static" CssClass="form-select" AppendDataBoundItems="true">
-                                            <asp:ListItem Value="">Seleccione un médico…</asp:ListItem>
-                                        </asp:DropDownList>
+                                    <div class="col-12 col-md-3">
+                                        <div class="card shadow-sm">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-3">Medicos</h6>
+                                                <asp:DropDownList
+                                                    runat="server"
+                                                    ID="ddlMedicoDisponible"
+                                                    ClientIDMode="Static"
+                                                    CssClass="form-select"
+                                                    AutoPostBack="true"
+                                                    OnSelectedIndexChanged="ddlMedicoDisponible_SelectedIndexChanged"
+                                                    AppendDataBoundItems="true">
+                                                    <asp:ListItem Value="">Seleccione un médico…</asp:ListItem>
+                                                </asp:DropDownList>
+                                                <small
+                                                    id="MedicoMuted"
+                                                    runat="server"
+                                                    class="text-muted d-block mt-2">Elija antes una especialidad.
+                                                </small>
+                                            </div>
+                                        </div>
                                     </div>
                                     <%--Fecha--%>
-                                    <div class="col-12 col-md-4">
-                                        <label for="dtFechaTurno" class="form-label">Fecha</label>
-                                        <input type="date" id="dtFechaTurno" class="form-control" />
+                                    <div class="col-12 col-md-3">
+                                        <div class="card shadow-sm">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-3">Fechas Disponibles</h6>
+                                                <asp:TextBox
+                                                    ID="dtFechaTurno"
+                                                    runat="server"
+                                                    CssClass="form-control"
+                                                    TextMode="Date"
+                                                    AutoPostBack="true"
+                                                    OnTextChanged="dtFechaTurno_Changed" />
+                                                <small
+                                                    id="FechaMuted"
+                                                    runat="server"
+                                                    class="text-muted d-block mt-2">Elija antes un medico disponible.
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Caja de horarios disponibles -->
+                                    <div class="col-12 col-md-3">
+                                        <div class="card shadow-sm">
+                                            <div class="card-body">
+                                                <h6 class="card-title mb-3">Horarios disponibles</h6>
+
+                                                <asp:DropDownList
+                                                    runat="server"
+                                                    ID="ddlHorario"
+                                                    CssClass="form-select"
+                                                    AutoPostBack="true"
+                                                    OnSelectedIndexChanged="ddlHorario_SelectedIndexChanged">
+                                                    <asp:ListItem Value="">Seleccione un horario…</asp:ListItem>
+                                                </asp:DropDownList>
+                                                <small
+                                                    id="HorarioMuted"
+                                                    runat="server"
+                                                    class="text-muted d-block mt-2">Elija antes una fecha disponible.
+                                                </small>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <label for="txtMotivo" class="form-label">Motivo</label>
+                                        <asp:TextBox
+                                            runat="server"
+                                            ID="txtMotivo"
+                                            ClientIDMode="Static"
+                                            TextMode="MultiLine"
+                                            Rows="2"
+                                            CssClass="form-control"
+                                            placeholder="Motivo de la consulta…">
+                                        </asp:TextBox>
+                                    </div>
+                                </div>
+
                                 <div class="row mt-4">
                                     <div class="col-12">
                                         <label for="txtObservaciones" class="form-label">Observaciones</label>
-                                        <asp:TextBox runat="server" ID="txtObservaciones" ClientIDMode="Static" TextMode="MultiLine" Rows="6"
-                                            CssClass="form-control" placeholder="Notas u observaciones relevantes…"></asp:TextBox>
+                                        <asp:TextBox
+                                            runat="server"
+                                            ID="txtObservaciones"
+                                            ClientIDMode="Static"
+                                            TextMode="MultiLine"
+                                            Rows="6"
+                                            CssClass="form-control"
+                                            placeholder="Notas u observaciones relevantes…">
+                                        </asp:TextBox>
                                     </div>
                                 </div>
                             </asp:Panel>

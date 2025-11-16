@@ -1,6 +1,7 @@
 ﻿using Dominio;
 using Negocio;
 using System;
+using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -8,18 +9,39 @@ namespace WebApplicationClinica
 {
     public partial class CrearTurno : System.Web.UI.Page
     {
+
+        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
+                //Setup Inicial
                 pnlDatosPaciente.Visible = false;
                 pnlAgregarPaciente.Visible = false;
                 lblMensajeError.Visible = false;
                 btnIrAgregarPaciente.Visible = false;
+                btnGuardar.Enabled = false;
+                dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
+
+                //Deshabilitar Medico, Fecha y hora hasta seleccionar una Especialidad
+                ddlMedicoDisponible.Enabled = false;
+                dtFechaTurno.Enabled = false;
+                ddlHorario.Enabled = false;
+
+                //Cargar lista de Especialidades
+                List<Especialidad> especialidades = new List<Especialidad>();
+                EspeciladadNegocio espNegocio = new EspeciladadNegocio();
+                especialidades = espNegocio.Listar();
+                ddlEspecialidad.DataSource = especialidades;
+                ddlEspecialidad.DataTextField = "Nombre";
+                ddlEspecialidad.DataValueField = "IdEspecialidad";
+                ddlEspecialidad.DataBind();
 
             }
         }
 
+        #region Pacientes Dentro De Turno
         protected void btnBuscarPaciente_Click(object sender, EventArgs e)
         {
             pnlDatosPaciente.Visible = false;
@@ -55,6 +77,7 @@ namespace WebApplicationClinica
                     txtEmailPaciente.Text = pacienteEncontrado.Email;
                     txtTelefonoPaciente.Text = pacienteEncontrado.Telefono;
                     ViewState["IdPaciente"] = pacienteEncontrado.IdPaciente;
+                    Session["IdPaciente"] = pacienteEncontrado.IdPaciente;
                 }
                 else
                 {
@@ -119,6 +142,7 @@ namespace WebApplicationClinica
                 txtEmailPaciente.Text = pacienteGuardado.Email;
                 txtTelefonoPaciente.Text = pacienteGuardado.Telefono;
                 ViewState["IdPaciente"] = pacienteGuardado.IdPaciente;
+                Session["IdPaciente"] = pacienteGuardado.IdPaciente;
             }
             catch (Exception ex)
             {
@@ -134,11 +158,101 @@ namespace WebApplicationClinica
             btnIrAgregarPaciente.Visible = true;
         }
 
-       
+        #endregion
+
+        #region Metodos del Turno
+        protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(ddlEspecialidad.SelectedValue))
+            {
+                return;
+            }
+
+            if(btnGuardar.Enabled)
+            {
+                btnGuardar.Enabled = false;
+            }
+
+            Especialidad especialidadSeleccionada = new Especialidad();
+            especialidadSeleccionada.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
+            especialidadSeleccionada.Nombre = ddlEspecialidad.SelectedItem.Text;
+
+            dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
+            ddlMedicoDisponible.Items.Clear();
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+            List<Medico> medicosConEspecialidad = new List<Medico>();
+            medicosConEspecialidad = medicoNegocio.ListarPorEspecialidad(especialidadSeleccionada.IdEspecialidad);
+            //Cargar el ddlMedicoDisponible
+            ddlMedicoDisponible.DataSource = medicosConEspecialidad;
+            ddlMedicoDisponible.DataTextField = "NombreCompleto";
+            ddlMedicoDisponible.DataValueField = "IdMedico";
+            ddlMedicoDisponible.DataBind();
+            //Habilitar el ddlMedicoDisponible
+            ddlMedicoDisponible.Enabled = true;
+            //Habilitar el dtFechaTurno
+            dtFechaTurno.Enabled = true;
+
+            if (medicosConEspecialidad.Count == 1)
+            {
+                ddlMedicoDisponible.SelectedIndex = 0;
+                ddlMedicoDisponible_SelectedIndexChanged(sender, e);
+            }
+        }
+
+        protected void ddlMedicoDisponible_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(ddlMedicoDisponible.SelectedValue))
+            {
+                return;
+            }
+
+            if (btnGuardar.Enabled)
+            {
+                btnGuardar.Enabled = false;
+            }
+
+            Medico medicoSeleccionado = new Medico();
+            medicoSeleccionado.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+            //Validar las fechas no disponibles para ese medico
+            //TODO: Implementar la lógica para ocultar fechas no disponibles en el dtFechaTurno
+        }
+
+        protected void dtFechaTurno_Changed(object sender, EventArgs e)
+        {
+            if (btnGuardar.Enabled)
+            {
+                btnGuardar.Enabled = false;
+            }
+
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+            DateTime fechaSeleccionada = DateTime.Parse(dtFechaTurno.Text);
+            int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+            List<TimeSpan> horariosDisponibles = medicoNegocio.ObtenerHorariosLibres(idMedico, fechaSeleccionada);
+            ddlHorario.Items.Clear();
+            foreach (TimeSpan horario in horariosDisponibles)
+            {
+                ddlHorario.Items.Add(new ListItem(horario.ToString(@"hh\:mm"), horario.ToString()));
+            }
+            ddlHorario.Enabled = true;
+
+        }
+
+        protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+            btnGuardar.Enabled = true;
+
+        }
+
+        #endregion
+
+
+
+
 
         protected void btnGuardar_Click(object sender, EventArgs e)
         {
-           
+           TurnoNegocio turnoNegocio = new TurnoNegocio();
             if (ViewState["IdPaciente"] == null)
             {
                 lblMensajeError.Text = "Debe buscar y encontrar un paciente válido antes de guardar.";
@@ -146,12 +260,40 @@ namespace WebApplicationClinica
                 return;
             }
 
-           
+            try
+            {
+                Turno nuevoTurno = new Turno();
+                nuevoTurno.NumeroTurno = (turnoNegocio.ObtenerUltimoID() + 1).ToString();
+                nuevoTurno.FechaInicio = DateTime.Parse(dtFechaTurno.Text);
+                nuevoTurno.FechaFin = nuevoTurno.FechaInicio;
+                nuevoTurno.HoraInicio = TimeSpan.Parse(ddlHorario.SelectedValue);
+                nuevoTurno.HoraFin = nuevoTurno.HoraInicio + TimeSpan.FromHours(1);
+                nuevoTurno.ObservacionesSolicitud = txtObservaciones.Text;
+                nuevoTurno.ObservacionesDiagnostico = "";
+                nuevoTurno.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+                nuevoTurno.IdPaciente = Session["IdPaciente"] != null ? (int)Session["IdPaciente"] : (int)ViewState["IdPaciente"];
+                nuevoTurno.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
+                nuevoTurno.Motivo = txtMotivo.Text;
+                nuevoTurno.Estado = 1;
+                nuevoTurno.Paciente = null;
+                nuevoTurno.Medico = null;
+
+                turnoNegocio.AgregarTurno(nuevoTurno);
+            }
+            catch (Exception ex)
+            {
+                lblMensajeError.Text = "Error al guardar el turno: " + ex.Message;
+                lblMensajeError.Visible = true;
+            }
+
+
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/Mainmenu.aspx");
         }
+
+
     }
 }

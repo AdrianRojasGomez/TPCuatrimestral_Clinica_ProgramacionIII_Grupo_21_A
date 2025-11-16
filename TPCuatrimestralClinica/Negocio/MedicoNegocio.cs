@@ -569,21 +569,10 @@ namespace Negocio
 
             MedicoPorGuardia guardiaDelDia = null;
 
-            string diaTexto = ObtenerNombreDiaEnEspanol(fecha);
+            TimeSpan inicio = medico.TurnoTrabajo.HoraInicio;
+            TimeSpan fin = medico.TurnoTrabajo.HoraFin;
             foreach (var guardia in medico.turnoTrabajos)
             {
-                if (!string.IsNullOrEmpty(guardia.DiaSemana) && guardia.DiaSemana.Equals(diaTexto, StringComparison.OrdinalIgnoreCase))
-                {
-                    guardiaDelDia = guardia;
-                    break;
-                }
-
-                if (guardiaDelDia == null || guardiaDelDia.Guardia == null)
-                    return resultadoHorario;
-
-                TimeSpan inicio = guardiaDelDia.Guardia.HorarioInicio;
-                TimeSpan fin = guardiaDelDia.Guardia.HorarioFin;
-
                 if (fin > inicio)
                 {
                     var horaActual = inicio;
@@ -612,11 +601,12 @@ namespace Negocio
             return resultadoHorario;
         }
         //Adri: Nuevo metodo para obtener los Horarios Libres de un medico en una fecha en particular
-        public List<TimeSpan> ObtenerHorariosLibres(Medico medico, DateTime fecha)
+        public List<TimeSpan> ObtenerHorariosLibres(int idMedico, DateTime fecha)
         { 
             TurnoNegocio turnoNegocio = new TurnoNegocio();
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
             List<Turno> turnos = turnoNegocio.ObtenerTodosLosTurnos();
-
+            Medico medico = medicoNegocio.BuscarMedicoPorIdSimple(idMedico);
             var horariosTrabajo = ObtenerHorariosDeTrabajoDelMedico(medico.IdMedico, fecha);
             var horariosLibres = new List<TimeSpan>();
 
@@ -627,7 +617,7 @@ namespace Negocio
 
             foreach (var turno in turnos)
             {
-                if (turno.IdMedico == medico.IdMedico && turno.FechaInicio.Date == fecha.Date && turno.Estado)
+                if (turno.IdMedico == medico.IdMedico && turno.FechaInicio.Date == fecha.Date && turno.Estado != 0)
                 {
                     horariosOcupados.Add(turno.HoraInicio);
                 }
@@ -655,9 +645,9 @@ namespace Negocio
             return horariosLibres;
         }
         //Adri: Nuevo metodo para verificar si un medico tiene horarios libres en una fecha en particular
-        public bool MedicoTieneHorariosLibres(Medico medico, DateTime fecha)
+        public bool MedicoTieneHorariosLibres(int idMedico, DateTime fecha)
         {
-            var horariosLibres = ObtenerHorariosLibres(medico, fecha);
+            var horariosLibres = ObtenerHorariosLibres(idMedico, fecha);
             return horariosLibres.Count > 0;
         }
 

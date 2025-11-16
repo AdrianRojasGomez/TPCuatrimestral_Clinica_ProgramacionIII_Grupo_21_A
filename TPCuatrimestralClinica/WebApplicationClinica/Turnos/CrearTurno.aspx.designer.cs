@@ -381,7 +381,7 @@ namespace WebApplicationClinica
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl dtFechaTurno;
+        protected global::System.Web.UI.WebControls.TextBox dtFechaTurno;
 
         /// <summary>
         /// FechaMuted control.
@@ -402,13 +402,22 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.DropDownList ddlHorario;
 
         /// <summary>
-        /// Small1 control.
+        /// HorarioMuted control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl Small1;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl HorarioMuted;
+
+        /// <summary>
+        /// TextBox1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox TextBox1;
 
         /// <summary>
         /// txtObservaciones control.

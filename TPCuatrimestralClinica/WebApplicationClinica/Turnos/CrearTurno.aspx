@@ -162,10 +162,16 @@
                                         <div class="card shadow-sm">
                                             <div class="card-body">
                                                 <h6 class="card-title mb-3">Fechas Disponibles</h6>
-                                                <input type="date" id="dtFechaTurno" class="form-control" runat="server" />
+                                                <asp:TextBox
+                                                    ID="dtFechaTurno"
+                                                    runat="server"
+                                                    CssClass="form-control"
+                                                    TextMode="Date"
+                                                    AutoPostBack="true"
+                                                    OnTextChanged="dtFechaTurno_Changed" />
                                                 <small
                                                     id="FechaMuted"
-                                                    runat ="server"
+                                                    runat="server"
                                                     class="text-muted d-block mt-2">Elija antes un medico disponible.
                                                 </small>
                                             </div>
@@ -177,24 +183,30 @@
                                             <div class="card-body">
                                                 <h6 class="card-title mb-3">Horarios disponibles</h6>
 
-                                                <asp:DropDownList runat="server"
+                                                <asp:DropDownList
+                                                    runat="server"
                                                     ID="ddlHorario"
-                                                    CssClass="form-select">
+                                                    CssClass="form-select"
+                                                    AutoPostBack="true"
+                                                    OnSelectedIndexChanged="ddlHorario_SelectedIndexChanged">
                                                     <asp:ListItem Value="">Seleccione un horario…</asp:ListItem>
-                                                    <asp:ListItem Value="08:00">08:00</asp:ListItem>
-                                                    <asp:ListItem Value="09:00">09:00</asp:ListItem>
-                                                    <asp:ListItem Value="10:00">10:00</asp:ListItem>
-                                                    <asp:ListItem Value="11:00">11:00</asp:ListItem>
-                                                    <asp:ListItem Value="12:00">12:00</asp:ListItem>
-                                                    <asp:ListItem Value="13:00">13:00</asp:ListItem>
                                                 </asp:DropDownList>
                                                 <small
-                                                    id="Small1"
+                                                    id="HorarioMuted"
                                                     runat="server"
                                                     class="text-muted d-block mt-2">Elija antes una fecha disponible.
                                                 </small>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-4">
+                                    <%--Motivo del turno--%>
+                                    <div class="col-12">
+                                        <label for="txtMotivo" class="form-label">Motivo</label>
+                                        <asp:TextBox runat="server" ID="TextBox1" ClientIDMode="Static" TextMode="MultiLine" Rows="2"
+                                            CssClass="form-control" placeholder="Notas u observaciones relevantes…"></asp:TextBox>
                                     </div>
                                 </div>
                                 <%--Observaciones para el turno--%>

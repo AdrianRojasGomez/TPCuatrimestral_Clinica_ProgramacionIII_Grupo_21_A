@@ -21,7 +21,7 @@ namespace Dominio
             public int IdMedico { get; set; }
             public int IdPaciente { get; set; }
             public string Motivo { get; set; }
-            public bool Estado { get; set; }
+            public int Estado { get; set; }
 
             public Paciente Paciente { get; set; }
             public Medico Medico { get; set; }

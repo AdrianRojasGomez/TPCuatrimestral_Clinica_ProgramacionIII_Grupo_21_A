@@ -23,10 +23,12 @@ namespace WebApplicationClinica
                 pnlAgregarPaciente.Visible = false;
                 lblMensajeError.Visible = false;
                 btnIrAgregarPaciente.Visible = false;
+                dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
 
-                //Deshabilitar Medico y Fecha hasta seleccionar una Especialidad
+                //Deshabilitar Medico, Fecha y hora hasta seleccionar una Especialidad
                 ddlMedicoDisponible.Enabled = false;
-                dtFechaTurno.Disabled = true;
+                dtFechaTurno.Enabled = false;
+                ddlHorario.Enabled = false;
 
                 //Cargar lista de Especialidades
                 List<Especialidad> especialidades = new List<Especialidad>();
@@ -168,9 +170,8 @@ namespace WebApplicationClinica
             especialidadSeleccionada.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
             especialidadSeleccionada.Nombre = ddlEspecialidad.SelectedItem.Text;
 
-            //Limpiar el ddlMedicoDisponible, evita dupicados
+            dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
             ddlMedicoDisponible.Items.Clear();
-            //Buscar una lista de Medicos que tengan esa Especialidad
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             List<Medico> medicosConEspecialidad = new List<Medico>();
             medicosConEspecialidad = medicoNegocio.ListarPorEspecialidad(especialidadSeleccionada.IdEspecialidad);
@@ -181,6 +182,16 @@ namespace WebApplicationClinica
             ddlMedicoDisponible.DataBind();
             //Habilitar el ddlMedicoDisponible
             ddlMedicoDisponible.Enabled = true;
+            //Habilitar el dtFechaTurno
+            dtFechaTurno.Enabled = true;
+
+            //Validar si solo hay un especialista
+            if (medicosConEspecialidad.Count == 1)
+            {
+                ddlMedicoDisponible.SelectedIndex = 0;
+                ddlMedicoDisponible_SelectedIndexChanged(sender, e);
+
+            }
         }
 
         protected void ddlMedicoDisponible_SelectedIndexChanged(object sender, EventArgs e)
@@ -189,18 +200,34 @@ namespace WebApplicationClinica
             {
                 return;
             }
+            
             Medico medicoSeleccionado = new Medico();
             medicoSeleccionado.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
-            //Validar las fechas disponibles para ese medico y especialidad
+            //Validar las fechas no disponibles para ese medico
+            //TODO: Implementar la lógica para ocultar fechas no disponibles en el dtFechaTurno
+        }
 
+        protected void dtFechaTurno_Changed(object sender, EventArgs e)
+        {
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+            DateTime fechaSeleccionada = DateTime.Parse(dtFechaTurno.Text);
+            int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+            List<TimeSpan> horariosDisponibles = medicoNegocio.ObtenerHorariosLibres(idMedico, fechaSeleccionada);
+            ddlHorario.Items.Clear();
+            foreach (TimeSpan horario in horariosDisponibles)
+            {
+                ddlHorario.Items.Add(new ListItem(horario.ToString(@"hh\:mm"), horario.ToString()));
+            }
+            ddlHorario.Enabled = true;
 
+        }
 
-            //Habilitar el dtFechaTurno
+        protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
+        {
 
 
 
         }
-
 
         #endregion
 
@@ -225,5 +252,7 @@ namespace WebApplicationClinica
         {
             Response.Redirect("~/Mainmenu.aspx");
         }
+
+
     }
 }

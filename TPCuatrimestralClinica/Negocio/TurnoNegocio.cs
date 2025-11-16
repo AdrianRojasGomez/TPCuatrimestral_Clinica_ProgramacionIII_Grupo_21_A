@@ -122,14 +122,14 @@ namespace Negocio
                     turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
                     turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
                     turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
-                    turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
-                    turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
+                    turno.ObservacionesSolicitud = datos.Lector["ObservacionesSolicitud"] as string;
+                    turno.ObservacionesDiagnostico = datos.Lector["ObservacionesDiagnostico"] as string;
                     turno.IdPaciente = (int)datos.Lector["IdPaciente"];
                     turno.IdMedico = (int)datos.Lector["IdMedico"];
                     turno.Paciente = pacNegocio.BuscarPorId(turno.IdPaciente);
                     turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
-                    turno.Motivo = (string)datos.Lector["Motivo"];
-                    turno.Estado = (bool)datos.Lector["Estado"];
+                    turno.Motivo = datos.Lector["Motivo"] as string;
+                    turno.Estado = (int)datos.Lector["Estado"];
                     lista.Add(turno);
                 }
                 return lista;
@@ -165,13 +165,13 @@ namespace Negocio
                     {
                         Turno turno = new Turno();
                         turno.IdTurno = (int)datos.Lector["IdTurno"];
-                        turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
+                        turno.NumeroTurno = datos.Lector["NumeroTurno"] as string;
                         turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
                         turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
                         turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
                         turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
-                        turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
-                        turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
+                        turno.ObservacionesSolicitud = datos.Lector["ObservacionesSolicitud"] as string;
+                        turno.ObservacionesDiagnostico = datos.Lector["ObservacionesDiagnostico"] as string;
                                             
                         turno.IdPaciente = (int)datos.Lector["IdPaciente"];
                         turno.IdMedico = (int)datos.Lector["IdMedico"];
@@ -180,8 +180,8 @@ namespace Negocio
                         turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
 
                         
-                        turno.Motivo = (string)datos.Lector["Motivo"];
-                        turno.Estado = (bool)datos.Lector["Estado"];
+                        turno.Motivo = datos.Lector["Motivo"] as string;
+                        turno.Estado = (int)datos.Lector["Estado"];
                         return turno;
                     }
                     return null;
@@ -213,13 +213,13 @@ namespace Negocio
                     {
                         Turno turno = new Turno();
                         turno.IdTurno = (int)datos.Lector["IdTurno"];
-                        turno.NumeroTurno = (string)datos.Lector["NumeroTurno"];
+                        turno.NumeroTurno = datos.Lector["NumeroTurno"] as string;
                         turno.FechaInicio = (DateTime)datos.Lector["FechaInicio"];
                         turno.FechaFin = (DateTime)datos.Lector["FechaFin"];
                         turno.HoraInicio = (TimeSpan)datos.Lector["HoraInicio"];
                         turno.HoraFin = (TimeSpan)datos.Lector["HoraFin"];
-                        turno.ObservacionesSolicitud = (string)datos.Lector["ObservacionesSolicitud"];
-                        turno.ObservacionesDiagnostico = (string)datos.Lector["ObservacionesDiagnostico"];
+                        turno.ObservacionesSolicitud = datos.Lector["ObservacionesSolicitud"] as string;
+                        turno.ObservacionesDiagnostico = datos.Lector["ObservacionesDiagnostico"] as string;
 
                         turno.IdPaciente = (int)datos.Lector["IdPaciente"];
                         turno.IdMedico = (int)datos.Lector["IdMedico"];
@@ -227,8 +227,8 @@ namespace Negocio
                         turno.Paciente = pacNegocio.BuscarPorId(turno.IdPaciente);
                         turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
 
-                        turno.Motivo = (string)datos.Lector["Motivo"];
-                        turno.Estado = (bool)datos.Lector["Estado"];
+                        turno.Motivo = datos.Lector["Motivo"] as string;
+                        turno.Estado = (int)datos.Lector["Estado"];
                         return turno;
                     }
                     return null;

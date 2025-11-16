@@ -114,21 +114,35 @@
                                     <div class="col-12 col-md-4">
                                         <%--Especialidad--%>
                                         <label for="ddlEspecialidad" class="form-label">Especialidad</label>
-                                        <asp:DropDownList runat="server" ID="ddlEspecialidad" ClientIDMode="Static" CssClass="form-select" AppendDataBoundItems="true">
+                                        <asp:DropDownList
+                                            runat="server"
+                                            ID="ddlEspecialidad"
+                                            ClientIDMode="Static"
+                                            CssClass="form-select"
+                                            AutoPostBack="true"
+                                            OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged"
+                                            AppendDataBoundItems="true">
                                             <asp:ListItem Value="">Seleccione una especialidad…</asp:ListItem>
                                         </asp:DropDownList>
                                     </div>
                                     <%--Médico--%>
                                     <div class="col-12 col-md-4">
                                         <label for="ddlMedicoDisponible" class="form-label">Médico</label>
-                                        <asp:DropDownList runat="server" ID="ddlMedicoDisponible" ClientIDMode="Static" CssClass="form-select" AppendDataBoundItems="true">
+                                        <asp:DropDownList
+                                            runat="server"
+                                            ID="ddlMedicoDisponible"
+                                            ClientIDMode="Static"
+                                            CssClass="form-select"
+                                            AutoPostBack="true"
+                                            OnSelectedIndexChanged="ddlMedicoDisponible_SelectedIndexChanged"
+                                            AppendDataBoundItems="true">
                                             <asp:ListItem Value="">Seleccione un médico…</asp:ListItem>
                                         </asp:DropDownList>
                                     </div>
                                     <%--Fecha--%>
                                     <div class="col-12 col-md-4">
                                         <label for="dtFechaTurno" class="form-label">Fecha</label>
-                                        <input type="date" id="dtFechaTurno" class="form-control" />
+                                        <input type="date" id="dtFechaTurno" class="form-control" runat="server"/>
                                     </div>
                                 </div>
                                 <div class="row mt-4">

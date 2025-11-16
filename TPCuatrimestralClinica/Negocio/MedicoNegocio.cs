@@ -18,7 +18,7 @@ namespace Negocio
             try
             {
                 accesoDatos.SetearConsulta(@"
-    SELECT 
+        SELECT 
         m.IdMedico,
         m.Nombre,
         m.Apellido,
@@ -359,7 +359,7 @@ namespace Negocio
             try
             {
                 datosMedico.SetearConsulta(@"
-            SELECT M.IdMedico,
+                    SELECT M.IdMedico,
                    M.Nombre,
                    M.Apellido,
                    M.Matricula,
@@ -368,10 +368,10 @@ namespace Negocio
                    G.Nombre     AS NombreGuardia,
                    G.HoraInicio,
                    G.HoraFin
-            FROM Medicos M
-            LEFT JOIN MedicosPorGuardia MG ON MG.IdMedico = M.IdMedico
-            LEFT JOIN Guardias G          ON G.IdGuardia = MG.IdGuardia
-            WHERE M.IdMedico = @IdMedico");
+                FROM Medicos M
+                LEFT JOIN MedicosPorGuardia MG ON MG.IdMedico = M.IdMedico
+                LEFT JOIN Guardias G          ON G.IdGuardia = MG.IdGuardia
+                WHERE M.IdMedico = @IdMedico");
 
                 datosMedico.SetearParametros("@IdMedico", idMedico);
                 datosMedico.EjecutarLectura();
@@ -505,7 +505,41 @@ namespace Negocio
             }
         }
 
+        public List<Medico> ListarPorEspecialidad(int idEspecialidad)
+        {
+            List<Medico> medicos = new List<Medico>();
+            AccesoDatos datos = new AccesoDatos();
 
+            try
+            {
+                datos.SetearConsulta(@" SELECT IdMedico
+                                        FROM MedicosPorEspecialidad
+                                        WHERE IdEspecialidad = @IdEspecialidad;");
+                datos.SetearParametros("@IdEspecialidad", idEspecialidad);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    int idMedico = (int)datos.Lector["IdMedico"];
+                    Medico medico = BuscarMedicoPorIdSimple(idMedico);
+                    if (medico != null)
+                    {
+                        medicos.Add(medico);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+
+            return medicos;
+        }
 
     }
 }

@@ -15,7 +15,7 @@
                             <div class="mb-3 row">
                                 <label for="inputUser" class="col-sm-3 col-form-label text-sm-end">Usuario</label>
                                 <div class="col-sm-6">
-                                 <asp:TextBox ID="TxtUsuario" CssClass="form-control" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="TxtUsuario" CssClass="form-control" runat="server"></asp:TextBox>
 
                                 </div>
                             </div>
@@ -26,13 +26,14 @@
                                 <div class="col-sm-6">
 
                                     <div class="input-group">
-        
+
                                         <asp:TextBox ID="TxtPassword" type="password" CssClass="form-control" runat="server"></asp:TextBox>
-        
+
                                         <button type="button" class="btn btn-outline-secondary" id="btnMostrarPass" onclick="mostrarOcultarPassword()">👁</button>
 
-                                    </div><div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
-    
+                                    </div>
+                                    <div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
+
 
 
                                 </div>
@@ -45,9 +46,11 @@
                                     <div class="d-grid">
 
 
-                                        <asp:Button ID="BtnIngresar" cssclas="btn btn-primary" runat="server" Text="Ingresar" OnClick="BtnIngresar_Click" />
+                                        <asp:Button ID="BtnIngresar" cssclas="btn btn-primary" runat="server"
+                                            Text="Ingresar" OnClick="BtnIngresar_Click" />
 
-                                        <asp:Label ID="LblCargar" runat="server" Text=""  CssClass="alert alert-danger mt-3 text-center fw-semibold shadow-sm"  ></asp:Label>
+                                        <asp:Label ID="LblCargar" runat="server" Text=""
+                                            CssClass="alert alert-danger mt-2 text-center fw-semibold shadow-sm"></asp:Label>
 
                                     </div>
                                 </div>

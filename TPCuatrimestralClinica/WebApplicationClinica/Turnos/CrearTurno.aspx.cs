@@ -324,7 +324,7 @@ namespace WebApplicationClinica
                 nuevoTurno.IdPaciente = Session["IdPaciente"] != null ? (int)Session["IdPaciente"] : (int)ViewState["IdPaciente"];
                 nuevoTurno.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
                 nuevoTurno.Motivo = txtMotivo.Text;
-                nuevoTurno.Estado = 1;
+                nuevoTurno.Estado = 2;
                 nuevoTurno.Paciente = null;
                 nuevoTurno.Medico = null;
 

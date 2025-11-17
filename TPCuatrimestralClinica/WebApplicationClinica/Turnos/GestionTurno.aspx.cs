@@ -27,29 +27,53 @@ namespace WebApplicationClinica
                 TurnoNegocio negocio = new TurnoNegocio();
                 DataTable dt = negocio.Listar(filtro);
 
-                if (dt.Rows.Count > 0)
+                // Fecha límite: 5 días atrás desde hoy
+                DateTime limite = DateTime.Today.AddDays(-3);
+
+                // Creamos una tabla con la misma estructura pero vacía
+                DataTable dtFiltrado = dt.Clone();
+
+                // Recorremos todas las filas y copiamos solo las que queremos mostrar
+                foreach (DataRow fila in dt.Rows)
                 {
-                    DataView dv = dt.DefaultView;
+                    int estado = 0;
+                    DateTime fechaInicio = DateTime.MinValue;
+
+                    if (fila["Estado"] != DBNull.Value)
+                        estado = Convert.ToInt32(fila["Estado"]);
+
+                    if (fila["FechaInicio"] != DBNull.Value)
+                        fechaInicio = Convert.ToDateTime(fila["FechaInicio"]);
+
+                    // Si el turno está COMPLETADO y tiene más de 10 días, NO lo mostramos
+                    if (estado == 1 && fechaInicio < limite)
+                        continue;
+
+                    // En cualquier otro caso, lo copiamos a la nueva tabla
+                    dtFiltrado.Rows.Add(fila.ItemArray);
+                }
+
+                
+                DataView dv = dtFiltrado.DefaultView;
+
+                if (dtFiltrado.Rows.Count > 0)
+                {
                     if (!string.IsNullOrEmpty(this.SortExpression))
                     {
                         dv.Sort = string.Format("{0} {1}", this.SortExpression, this.SortDirection);
                     }
                     else
                     {
-                        dv.Sort = "FechaInicio ASC, HoraInicio ASC";
+                        dv.Sort = "FechaInicio DESC, HoraInicio DESC";
                     }
-                    gvTurnos.DataSource = dv;
                 }
-                else
-                {
-                    gvTurnos.DataSource = dt;
-                }
+
+                gvTurnos.DataSource = dv;
                 gvTurnos.DataBind();
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"ERROR en CargarTurnos: {ex.Message}");
-                
                 MostrarMensaje($"Error al cargar turnos: {ex.Message}", "danger");
             }
         }

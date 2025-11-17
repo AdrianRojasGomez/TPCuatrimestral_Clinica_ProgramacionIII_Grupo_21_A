@@ -9,9 +9,6 @@ namespace WebApplicationClinica
 {
     public partial class CrearTurno : System.Web.UI.Page
     {
-
-        
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -102,13 +99,13 @@ namespace WebApplicationClinica
             pnlAgregarPaciente.Visible = true;
             pnlDatosPaciente.Visible = false;
             lblMensajeError.Visible = false;
-            btnIrAgregarPaciente.Visible = false; 
+            btnIrAgregarPaciente.Visible = false;
             txtNuevoDni.Text = txtDocumento.Text.Trim();
         }
 
         protected void btnGuardarNuevoPaciente_Click(object sender, EventArgs e)
         {
-           
+
             if (!Page.IsValid)
             {
                 return;
@@ -133,8 +130,8 @@ namespace WebApplicationClinica
 
                 Paciente pacienteGuardado = negocio.BuscarPorDni(pac.Dni);
 
-                pnlAgregarPaciente.Visible = false; 
-                pnlDatosPaciente.Visible = true; 
+                pnlAgregarPaciente.Visible = false;
+                pnlDatosPaciente.Visible = true;
                 lblPacienteEstado.CssClass = "badge bg-success";
                 lblPacienteEstado.Text = "Guardado y Seleccionado";
                 txtNombrePaciente.Text = pacienteGuardado.Nombre;
@@ -168,10 +165,11 @@ namespace WebApplicationClinica
                 return;
             }
 
-            if(btnGuardar.Enabled)
+            if (btnGuardar.Enabled)
             {
                 btnGuardar.Enabled = false;
             }
+            RevertirMuted();
 
             Especialidad especialidadSeleccionada = new Especialidad();
             especialidadSeleccionada.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
@@ -182,6 +180,7 @@ namespace WebApplicationClinica
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             List<Medico> medicosConEspecialidad = new List<Medico>();
             medicosConEspecialidad = medicoNegocio.ListarPorEspecialidad(especialidadSeleccionada.IdEspecialidad);
+
             //Cargar el ddlMedicoDisponible
             ddlMedicoDisponible.DataSource = medicosConEspecialidad;
             ddlMedicoDisponible.DataTextField = "NombreCompleto";
@@ -197,6 +196,11 @@ namespace WebApplicationClinica
                 ddlMedicoDisponible.SelectedIndex = 0;
                 ddlMedicoDisponible_SelectedIndexChanged(sender, e);
             }
+            //Modificar el mensaje EspecialidadMuted
+            EspecialidadMuted.InnerHtml = $"Se encontraron {medicosConEspecialidad.Count} médicos con la especialidad de {especialidadSeleccionada.Nombre}.";
+            EspecialidadMuted.Attributes["class"] = "text-success d-block mt-2";
+
+
         }
 
         protected void ddlMedicoDisponible_SelectedIndexChanged(object sender, EventArgs e)
@@ -210,11 +214,17 @@ namespace WebApplicationClinica
             {
                 btnGuardar.Enabled = false;
             }
-
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
             Medico medicoSeleccionado = new Medico();
-            medicoSeleccionado.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+            int aux = int.Parse(ddlMedicoDisponible.SelectedValue);
+            medicoSeleccionado = medicoNegocio.BuscarMedicoPorIdSimple(aux);
+            System.Diagnostics.Debug.WriteLine(medicoSeleccionado.TurnoTrabajo.DiaSemana);
             //Validar las fechas no disponibles para ese medico
             //TODO: Implementar la lógica para ocultar fechas no disponibles en el dtFechaTurno
+
+            //Modificar el mensaje MedicoMuted
+            MedicoMuted.InnerHtml = $"Médico seleccionado: {ddlMedicoDisponible.SelectedItem.Text}.";
+            MedicoMuted.Attributes["class"] = "text-success d-block mt-2";
         }
 
         protected void dtFechaTurno_Changed(object sender, EventArgs e)
@@ -235,6 +245,11 @@ namespace WebApplicationClinica
             }
             ddlHorario.Enabled = true;
 
+            //Modificar el mensaje FechaMuted
+            FechaMuted.InnerHtml = $"Horarios disponibles para el {fechaSeleccionada.ToString("dd/MM/yyyy")}";
+            FechaMuted.Attributes["class"] = "text-success d-block mt-2";
+            HorarioMuted.InnerHtml = "4. Seleccione un horario disponible.";
+
         }
 
         protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
@@ -242,23 +257,58 @@ namespace WebApplicationClinica
 
             btnGuardar.Enabled = true;
 
+            //Validar dias de semana
+            
+
+
+            //Modificar el mensaje HorarioMuted
+            HorarioMuted.InnerHtml = $"Horario seleccionado: {ddlHorario.SelectedItem.Text}.";
+            HorarioMuted.Attributes["class"] = "text-success d-block mt-2";
         }
 
         #endregion
 
+        #region Modals de confirmacion
 
-
-
-
-        protected void btnGuardar_Click(object sender, EventArgs e)
+        private void MostrarModalConfirmacion(string titulo, string cuerpoHtml)
         {
-           TurnoNegocio turnoNegocio = new TurnoNegocio();
-            if (ViewState["IdPaciente"] == null)
-            {
-                lblMensajeError.Text = "Debe buscar y encontrar un paciente válido antes de guardar.";
-                lblMensajeError.Visible = true;
-                return;
-            }
+            lblTituloModal.Text = titulo;
+            litCuerpoModal.Text = cuerpoHtml;
+
+            string script =
+                "var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacion')); " +
+                "myModal.show();";
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                this.GetType(),
+                "MostrarModalConfirmacion",
+                script,
+                true
+            );
+        }
+
+        private void MostrarModalMensajeExito(string titulo, string cuerpoHtml)
+        {
+            lblTituloMensaje.Text = titulo;
+            litCuerpoMensaje.Text = cuerpoHtml;
+
+            string script =
+                "var myModal = new bootstrap.Modal(document.getElementById('modalMensaje')); " +
+                "myModal.show();";
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                this.GetType(),
+                "MostrarModalMensaje",
+                script,
+                true
+            );
+        }
+
+        protected void btnConfirmarModal_Click(object sender, EventArgs e)
+        {
+            TurnoNegocio turnoNegocio = new TurnoNegocio();
 
             try
             {
@@ -286,14 +336,63 @@ namespace WebApplicationClinica
                 lblMensajeError.Visible = true;
             }
 
+            string titulo = "Turno guardado";
+            string cuerpo =
+                "<strong>El turno se guardó correctamente.</strong><br/>" +
+                "Podés consultar tus turnos en la sección correspondiente.";
 
+            MostrarModalMensajeExito(titulo, cuerpo);
+        }
+
+        protected void btnExito_Click(object sender, EventArgs e)
+        {
+            //Response.Redirect("~/Turnos/GestionTurno.aspx");
+        }
+
+        #endregion
+
+        #region Botones footers guardar /cancelar   
+        protected void btnGuardar_Click(object sender, EventArgs e)
+        {
+            if (ViewState["IdPaciente"] == null)
+            {
+                lblMensajeError.Text = "Debe buscar y encontrar un paciente válido antes de guardar.";
+                lblMensajeError.Visible = true;
+                return;
+            }
+
+            string titulo = "Verifique los Datos antes de Confirmar";
+            string cuerpo = $"<strong>DNI</strong>: {txtDocumento.Text.Trim()}<br />" +
+                            $"<strong>Nombre de Paciente</strong>: {txtNombrePaciente.Text} {txtApellidoPaciente.Text}<br />" +
+                            $"<strong>Especialidad</strong>: {ddlEspecialidad.SelectedItem.Text}<br />" +
+                            $"<strong>Doctor asignado</strong>: {ddlMedicoDisponible.SelectedItem.Text}<br />" +
+                            $"<strong>Fecha del Turno</strong>: {dtFechaTurno.Text}<br />" +
+                            $"<strong>Horario del Turno</strong>: {ddlHorario.SelectedItem.Text}<br /><br />" +
+                            $"Desea confirmar el turno?";
+
+            MostrarModalConfirmacion(titulo, cuerpo);
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
             Response.Redirect("~/Mainmenu.aspx");
         }
+        #endregion
 
+        #region Helpers de limpieza
+        private void RevertirMuted()
+        {
+            EspecialidadMuted.InnerHtml = "1. Comience seleccionando una especialidad.";
+            EspecialidadMuted.Attributes["class"] = "text-muted d-block mt-2";
+            MedicoMuted.InnerHtml = "2. Seleccione una especialidad para ver los medicos disponibles.";
+            MedicoMuted.Attributes["class"] = "text-muted d-block mt-2";
+            FechaMuted.InnerHtml = "3. Seleccione un medico para ver las fechas disponibles.";
+            FechaMuted.Attributes["class"] = "text-muted d-block mt-2";
+            HorarioMuted.InnerHtml = "4. Seleccione una fecha para ver los horarios disponibles.";
+            HorarioMuted.Attributes["class"] = "text-muted d-block mt-2";
+        }
+
+        #endregion
 
     }
 }

@@ -129,7 +129,7 @@
                                                 <small
                                                     id="EspecialidadMuted"
                                                     runat="server"
-                                                    class="text-muted d-block mt-2">Comience eligiendo una especialidad.
+                                                    class="text-muted d-block mt-2">1. Comience seleccionando una especialidad.
                                                 </small>
                                             </div>
                                         </div>
@@ -152,7 +152,7 @@
                                                 <small
                                                     id="MedicoMuted"
                                                     runat="server"
-                                                    class="text-muted d-block mt-2">Elija antes una especialidad.
+                                                    class="text-muted d-block mt-2">2. Seleccione una especialidad para ver los medicos disponibles.
                                                 </small>
                                             </div>
                                         </div>
@@ -172,7 +172,7 @@
                                                 <small
                                                     id="FechaMuted"
                                                     runat="server"
-                                                    class="text-muted d-block mt-2">Elija antes un medico disponible.
+                                                    class="text-muted d-block mt-2">3. Seleccione un medico para ver las fechas disponibles.
                                                 </small>
                                             </div>
                                         </div>
@@ -194,7 +194,7 @@
                                                 <small
                                                     id="HorarioMuted"
                                                     runat="server"
-                                                    class="text-muted d-block mt-2">Elija antes una fecha disponible.
+                                                    class="text-muted d-block mt-2">4. Seleccione una fecha para ver los horarios disponibles.
                                                 </small>
                                             </div>
                                         </div>
@@ -247,4 +247,64 @@
             </div>
         </div>
     </main>
+
+    <%--MODALS--%>
+
+    <%--MODAL DE CONFIRMACION--%>
+    <div class="modal fade" id="modalConfirmacion" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <asp:Label ID="lblTituloModal" runat="server" CssClass="modal-title h5"></asp:Label>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <asp:Literal ID="litCuerpoModal" runat="server"></asp:Literal>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancelar
+       
+                    </button>
+
+                    <%--Botón que confirmará en el servidor--%>
+                    <asp:Button ID="btnConfirmarModal" runat="server"
+                        Text="Confirmar"
+                        CssClass="btn btn-primary"
+                        OnClick="btnConfirmarModal_Click" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE MENSAJE DE ÉXITO -->
+    <div class="modal fade" id="modalMensaje" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <asp:Label ID="lblTituloMensaje" runat="server" CssClass="modal-title h5"></asp:Label>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+
+                <div class="modal-body">
+                    <asp:Literal ID="litCuerpoMensaje" runat="server"></asp:Literal>
+                </div>
+
+                <div class="modal-footer">
+                    <asp:Button ID="btnExito" runat="server"
+                        Text="Confirmar"
+                        CssClass="btn btn-primary"
+                        OnClick="btnExito_Click" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
 </asp:Content>

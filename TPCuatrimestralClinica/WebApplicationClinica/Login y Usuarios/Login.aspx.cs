@@ -60,6 +60,7 @@ namespace WebApplicationClinica
          
             if (string.IsNullOrWhiteSpace(TxtUsuario.Text) || string.IsNullOrWhiteSpace(TxtPassword.Text))
             {
+                LblCargar.Visible = true;
                 LblCargar.Text = "Cargue usuario y contraseña, por favor.";
                 return; 
             }
@@ -98,7 +99,7 @@ namespace WebApplicationClinica
                     return;
                 }
 
-              
+                LblCargar.Visible = true;
                 LblCargar.Text = "Usuario o contraseña incorrectos.";
             }
             catch (Exception ex)

@@ -79,46 +79,33 @@ namespace Negocio
 
 
         }
-
         public bool Loguear(Usuario usuario)
         {
-
             AccesoDatos accesoDatos = new AccesoDatos();
-
             try
             {
-                accesoDatos.SetearConsulta("select IdUsuario,TipoUsuario from UsuariosApp where  NombreUsuario = @user and Clave = @pass");
-
+                accesoDatos.SetearConsulta("select IdUsuario, TipoUsuario, NombreUsuario from UsuariosApp where NombreUsuario = @user and Clave = @pass and Estado = 1");
                 accesoDatos.SetearParametros("@user", usuario.NombreUsuario);
                 accesoDatos.SetearParametros("@pass", usuario.Password);
                 accesoDatos.EjecutarLectura();
 
-                while (accesoDatos.Lector.Read())
+                if (accesoDatos.Lector.Read())
                 {
-
                     usuario.IdUsuario = (int)accesoDatos.Lector["IdUsuario"];
-                    usuario.TipoUsuario = (int)(accesoDatos.Lector["TipoUsuario"]) == 1 ? TipoUsuario.Admin : TipoUsuario.Recepcion;
-
+                    usuario.TipoUsuario = (TipoUsuario)(int)accesoDatos.Lector["TipoUsuario"];
 
                     return true;
-
-
                 }
                 return false;
-
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                throw ex;
             }
             finally
             {
-
                 accesoDatos.CerrarConexion();
-
             }
-
         }
 
         public bool loguearmedico(Usuario usuario) 
@@ -160,13 +147,6 @@ namespace Negocio
                     return true;
                 }
 
-
-
-
-
-
-
-
                 return false;
 
             }
@@ -181,10 +161,6 @@ namespace Negocio
                 accesoDatos.CerrarConexion();
 
             }
-
-
-
-
 
         }
 
@@ -240,13 +216,6 @@ namespace Negocio
             datos.CerrarConexion();
         }
     
-
-
-
-
-
-
-
         public void CambiarEstadoUsuario(int idUsuario, bool activar)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -280,6 +249,29 @@ namespace Negocio
                     return (int)datos.Lector["IdUsuario"];
 
                 return 0;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+        public void ActualizarUsuario(Usuario usuario)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("UPDATE UsuariosApp SET NombreUsuario = @user, Clave = @pass, TipoUsuario = @tipo WHERE IdUsuario = @id");
+                datos.SetearParametros("@user", usuario.NombreUsuario);
+                datos.SetearParametros("@pass", usuario.Password);
+                datos.SetearParametros("@tipo", (int)usuario.TipoUsuario);
+                datos.SetearParametros("@id", usuario.IdUsuario);
+
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
             finally
             {

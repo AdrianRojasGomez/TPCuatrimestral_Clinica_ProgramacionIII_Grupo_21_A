@@ -19,12 +19,15 @@ namespace WebApplicationClinica
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
-
-
             
-
-
+            if (!IsPostBack)
+            {
+                var navBar = Master.FindControl("MiBarraNavegacion");
+                if (navBar != null)
+                {
+                    navBar.Visible = false;
+                }
+            }
         }
 
         public static Dominio.TipoUsuario PuedeVerTurnos(HttpSessionState session)

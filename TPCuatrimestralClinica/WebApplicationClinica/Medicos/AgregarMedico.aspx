@@ -62,13 +62,35 @@
                                 <asp:TextBox ID="txtMatriculaMedico" runat="server" CssClass="form-control" OnTextChanged="txtMatriculaMedico_TextChanged" />
                             </div>
 
-
+                            <div class="row align-items-end">
                             <div class="col-md-4">
                                 <label for="ddlTurnoHtml" class="form-label text-danger fw-semibold">Turno de trabajo</label>
-                                <asp:DropDownList ID="ddllistTurnoTrabajo" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddllistTurnoTrabajo_SelectedIndexChanged"></asp:DropDownList>
+                                <asp:DropDownList ID="ddllistTurnoTrabajo" runat="server" CssClass="form-select" AutoPostBack="true" OnSelectedIndexChanged="ddllistTurnoTrabajo_SelectedIndexChanged" Style="width: 250px"></asp:DropDownList >
+                                    </div>
+                              <div class="col-md-2">
+                          
+                                    <label class="form-label text-danger fw-semibold">Hora Inicio</label>
+                                    <asp:TextBox ID="txtHoraInicio" runat="server" TextMode="Time"
+                                        CssClass="form-control" Style="width: 100px"/>
+                                        </div>
+
+                             
+                              
+
+                                  <div class="col-md-2">
+                                    <label class="form-label text-danger fw-semibold">Hora Fin</label>
+                                    <asp:TextBox ID="txtHoraFin" runat="server" TextMode="Time" CssClass="form-control" Style="width: 100px"  />
+
+                                </div>
+
+
+                             </div>
                             </div>
+                           </div>
                             <div class="col-md-4" style="margin-left: 100px;">
-                                <label class="form-label">Días de la semana</label>
+
+                            </div>
+                                <label class="form-label text-danger fw-semibold">Días de la semana</label>
                                 <asp:CheckBoxList ID="cblDiasSemanaNuevo" runat="server" CssClass="dias-semana"
                                     RepeatDirection="Horizontal">
                                     <asp:ListItem Text="Lunes" Value="Lunes" />
@@ -86,25 +108,6 @@
                                 <asp:CheckBoxList ID="cblEspecialidades" runat="server" CssClass="form-check"
                                     RepeatDirection="Vertical">
                                 </asp:CheckBoxList>
-                            </div>
-
-
-                            <div class="col-md-4 d-flex flex-column">
-                                <div class="mb-3">
-                                    <label class="form-label text-danger fw-semibold">Hora Inicio</label>
-                                    <asp:TextBox ID="txtHoraInicio" runat="server" TextMode="Time" CssClass="form-control" />
-
-                                </div>
-                                <div>
-
-
-                                    <label class="form-label text-danger fw-semibold">Hora Fin</label>
-                                    <asp:TextBox ID="txtHoraFin" runat="server" TextMode="Time" CssClass="form-control" />
-
-                                </div>
-
-
-
                             </div>
 
 
@@ -285,7 +288,7 @@
 
 
 
-                        <asp:TemplateField HeaderText="Horario">
+                        <asp:TemplateField HeaderText="Horario"  >
                             <ItemTemplate>
                                 <%# String.Format("{0:hh\\:mm}-{1:hh\\:mm}",
                 Eval("TurnoTrabajo.HoraInicio"), Eval("TurnoTrabajo.HoraFin")) %>
@@ -294,7 +297,7 @@
 
                                 <asp:TextBox ID="txtHoraInicioEdit" runat="server"
                                     CssClass="form-control d-inline-block"
-                                    Style="width: 80px">
+                                    Style="width: 80px" ReadOnly="true">
                                    
 
                                 </asp:TextBox>
@@ -302,7 +305,7 @@
 
                              <asp:TextBox ID="txtHoraFinEdit" runat="server"
                                  CssClass="form-control d-inline-block"
-                                 Style="width: 80px">
+                                 Style="width: 80px" ReadOnly="true">
                                 
 
                              

@@ -53,6 +53,24 @@
         </div>
     </asp:Panel>
 
+              <div class="card shadow-sm mb-4">
+          <div class="card-header bg-primary text-white">
+              <strong>Buscar Especialidad</strong>
+          </div>
+
+          <div class="card-body">
+              <div class="row align-items-center">
+                  <div class="col-md-6">
+                 <asp:TextBox ID="txtFiltroEspecialidad" runat="server" CssClass="form-control rounded-end" placeholder="Buscar por Nombre de  Especialidad" 
+                     OnTextChanged="txtFiltroEspecialidad_TextChanged" AutoPostBack="true"></asp:TextBox>
+
+
+
+                  </div>
+              </div>
+          </div>
+      </div>
+
        <div class="card shadow-sm">
        <div class="card-header bg-light">
            <strong class="text-success fw-semibold fs-5">Resultados de la búsqueda</strong>
@@ -60,25 +78,25 @@
 
        <div class="card-body p-0">
 
-    <asp:GridView ID="gvEspecialidades" runat="server" AutoGenerateColumns="false" 
+    <asp:GridView ID="gvEspecialidades" runat="server" DataKeyNames="IdEspecialidad"  AutoGenerateColumns="false" 
  CssClass="table table-striped" OnRowEditing="gvEspecilidades_RowEditing" OnRowCancelingEdit="gvEspecilidades_RowCancelingEdit"
    OnRowUpdating="gvEspecilidades_RowUpdating" OnRowDeleting="gvEspecilidades_RowDeleting">
 
-      <columns>
-
-               
+    <Columns>
         <asp:BoundField DataField="IdEspecialidad" HeaderText="ID" ReadOnly="True" />
-
-       
         <asp:BoundField DataField="Nombre" HeaderText="Nombre" />
 
-        <asp:CommandField ShowEditButton="True" ShowDeleteButton="True"
-                          EditText="✏️ Editar"
-                          UpdateText="💾 Guardar"
-                          CancelText="↩️ Cancelar"
-                          DeleteText="🗑️ Eliminar" />
+        <asp:CommandField 
+            ShowEditButton="True"
+            ShowDeleteButton="True"
+            EditText="✏️ Editar"
+            UpdateText="💾 Guardar"
+            CancelText="↩️ Cancelar"
+            DeleteText="🗑️ Eliminar" />
+    </Columns>
+            
 
-      </columns> 
+
 
     </asp:GridView>
             </div>

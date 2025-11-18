@@ -80,7 +80,7 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("INSERT INTO TurnoTrabajo (Nombre, HoraInicio, HoraFin,DiaSemana) VALUES (@n, @hi, @hf,ds)");
+                d.SetearConsulta("INSERT INTO TurnoTrabajo (Nombre, HoraInicio, HoraFin,DiaSemana) VALUES (@n, @hi, @hf,@ds)");
                 d.SetearParametros("@n", turno.Nombre);
                 d.SetearParametros("@hi", turno.HoraInicio);
                 d.SetearParametros("@hf", turno.HoraFin);

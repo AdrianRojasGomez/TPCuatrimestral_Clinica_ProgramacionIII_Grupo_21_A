@@ -19,7 +19,7 @@ namespace WebApplicationClinica
             {
                 cargargrillaespecialidaddes();
 
-
+            
             }
 
         }
@@ -52,22 +52,47 @@ namespace WebApplicationClinica
 
         protected void gvEspecilidades_RowEditing(object sender, GridViewEditEventArgs e)
         {
-
+            gvEspecialidades.EditIndex = e.NewEditIndex;
+            cargargrillaespecialidaddes();
         }
 
         protected void gvEspecilidades_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-
+            gvEspecialidades.EditIndex = -1;
+            cargargrillaespecialidaddes();
         }
 
         protected void gvEspecilidades_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
+            int id = (int)gvEspecialidades.DataKeys[e.RowIndex].Value;
+
+            GridViewRow fila = gvEspecialidades.Rows[e.RowIndex];
+            string nombre = ((TextBox)fila.Cells[1].Controls[0]).Text;
+
+            Especialidad esp = new Especialidad();
+            esp.IdEspecialidad = id;
+            esp.Nombre = nombre;
+
+            EspeciladadNegocio neg = new EspeciladadNegocio();
+            neg.ModificarEspecilidad(esp);
+
+            gvEspecialidades.EditIndex = -1;
+            cargargrillaespecialidaddes();
+
+
 
         }
 
         protected void gvEspecilidades_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
+            int id = Convert.ToInt32(gvEspecialidades.DataKeys[e.RowIndex].Value);
 
+            EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
+
+            especiladadNegocio.EliminarEspecilidad(id);
+
+            gvEspecialidades.EditIndex = -1;
+            cargargrillaespecialidaddes();
         }
         public void cargargrillaespecialidaddes()
         {
@@ -154,6 +179,40 @@ namespace WebApplicationClinica
 
 
             
+        }
+
+        protected void txtFiltroEspecialidad_TextChanged(object sender, EventArgs e)
+        {
+            List<Especialidad> lista = (List<Especialidad>)Session["listaespecialidad"];
+            if (lista == null)
+            {
+
+                cargargrillaespecialidaddes();
+                return;
+
+
+            }
+
+            string filtro = txtFiltroEspecialidad.Text.ToUpper();
+
+            List<Especialidad> listafiltrada;
+
+            if (string.IsNullOrWhiteSpace(filtro))
+            {
+                listafiltrada = lista;
+            }
+            else
+            {
+                listafiltrada = lista.FindAll(x =>
+                    x.Nombre != null &&
+                    x.Nombre.ToUpper().Contains(filtro)
+                );
+            }
+
+            gvEspecialidades.DataSource = listafiltrada;
+            gvEspecialidades.DataBind();
+
+            txtFiltroEspecialidad.Focus();
         }
     }
 }

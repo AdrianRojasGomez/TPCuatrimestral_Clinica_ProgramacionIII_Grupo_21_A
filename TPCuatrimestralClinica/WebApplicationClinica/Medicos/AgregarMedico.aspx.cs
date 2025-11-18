@@ -19,23 +19,35 @@ namespace WebApplicationClinica.Medicos
         protected void Page_Load(object sender, EventArgs e)
         {
 
-        //    if (Session["usuario"] == null)
-        //    {
-        //        Response.Redirect("~Login%20y%20Usuarios/Login.aspx");
-        //        return;
-        //    }
+            //    }
+            ///   if (Session["usuario"] == null)
+            //    {
+            //        Response.Redirect("~Login%20y%20Usuarios/Login.aspx");
+            //        return;
 
-           
-        //    var tipo = Login.PuedeVerTurnos(Session);
 
-            
-        //    if (tipo != TipoUsuario.Admin)
-        //    {
-            
-        //        Response.Redirect("~Login%20y%20Usuarios/Login.aspx");  
-        //        return;
-        //    }
-        //    panelGrillaMedico.Visible = false;
+               var tipo = Login.PuedeVerTurnos(Session);
+
+
+            //    if (tipo != TipoUsuario.Admin)
+            //    {
+
+            //        Response.Redirect("~Login%20y%20Usuarios/Login.aspx");  
+            //        return;
+            //    }
+            //    panelGrillaMedico.Visible = false;
+
+            if (tipo == TipoUsuario.Recepcion || tipo == TipoUsuario.Medico)
+            {
+
+                 btnMostrar.Visible = false;
+                btnGuardarMedico.Visible = false;
+                btnBotonLimpiarMedico.Visible = false;
+                btnCancelar.Visible = false;
+
+            }
+
+        
 
 
 
@@ -45,7 +57,8 @@ namespace WebApplicationClinica.Medicos
             {
                 if (!IsPostBack)
                 {
-
+                    txtHoraInicio.Enabled=false;
+                    txtHoraFin.Enabled=false;
 
                     MedicoPorGuardiaNegocio turnoTrabajo = new MedicoPorGuardiaNegocio();
                     EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
@@ -387,6 +400,8 @@ namespace WebApplicationClinica.Medicos
                 CheckBoxList cblEspEdit = (CheckBoxList)fila.FindControl("cblEspEdit");
                 CheckBoxList cblDiasSemanaEdit = (CheckBoxList)fila.FindControl("cblDiasSemanaEdit"); 
 
+             
+
                 // ================= VALIDACIONES =================
 
                 if (string.IsNullOrWhiteSpace(txtNombreEdit.Text) ||
@@ -650,13 +665,46 @@ namespace WebApplicationClinica.Medicos
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-              
+                
                 Button btnEditar = (Button)e.Row.FindControl("btnEditar");
                 Button btnModificar = (Button)e.Row.FindControl("btnModificar");
                 Button btnCancelar = (Button)e.Row.FindControl("btnCancelar");
                 Button btnEliminar = (Button)e.Row.FindControl("btnEliminar");
+                Button btnCrearUsuario = (Button)e.Row.FindControl("btnCrearUsuario");
+                Button btnActivarUsuarioDesdeMedico = (Button)e.Row.FindControl("btnActivarUsuarioDesdeMedico");
+                var tipo = Login.PuedeVerTurnos(Session);
 
                 bool esFilaEdit = (e.Row.RowIndex == gvMedicos.EditIndex);
+
+
+                if (tipo == TipoUsuario.Recepcion)
+                {
+
+                    btnEditar.Enabled = false;
+                    btnCancelar.Enabled = false;
+                    btnEliminar.Enabled = false;
+                    btnModificar.Enabled = false;
+                    btnCrearUsuario.Enabled = false;
+                    btnActivarUsuarioDesdeMedico.Enabled = false;
+                
+
+
+
+                }
+
+                else if(tipo == TipoUsuario.Medico)
+                {
+
+                    btnEditar.Enabled = true;
+                    btnCancelar.Enabled = true;
+                    btnEliminar.Enabled = false;
+                    btnModificar.Enabled = true;
+                    btnCrearUsuario.Enabled = false;
+                    btnActivarUsuarioDesdeMedico.Enabled = false;
+
+
+                }
+
 
                 if (esFilaEdit)
                 {
@@ -673,7 +721,11 @@ namespace WebApplicationClinica.Medicos
                     if (btnEliminar != null) btnEliminar.Visible = true;
                 }
 
-                
+
+
+
+
+
                 if (esFilaEdit)
                 {
                     Medico medico = (Medico)e.Row.DataItem;
@@ -772,6 +824,7 @@ namespace WebApplicationClinica.Medicos
                             txtHoraFinEdit.Text = medico.TurnoTrabajo.HoraFin.ToString(@"hh\:mm");
                     }
                 }
+
             }
         }
 

@@ -2,6 +2,7 @@
 using Negocio;
 using System;
 using System.Data;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -9,14 +10,34 @@ namespace WebApplicationClinica
 {
     public partial class Pacientes : System.Web.UI.Page
     {
+       // private bool esAdmin;
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["usuario"] == null)
+            {
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
+                return;
+            }
+
+            //var tipoUsuario = Login.PuedeVerTurnos(Session);
+
+            //if (tipoUsuario == TipoUsuario.SinDefinir)
+            //{
+            //    Response.Redirect("~/Login y Usuarios/Login.aspx");
+            //    return;
+            //}                      
+          
             if (!IsPostBack)
             {
                 CargarPacientes();
                 divMensaje.Visible = false;
             }
+
+            
         }
+
+           
 
         #region MÉTODOS DE DATOS (LLAMAN A NEGOCIO)
 
@@ -181,7 +202,26 @@ namespace WebApplicationClinica
             CargarPacientes(txtBuscarPaciente.Text.Trim());
             divMensaje.Visible = false;
         }
+        // vista  admin
+        protected void gvPacientes_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
 
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                var tipoUsuario = Login.PuedeVerTurnos(Session);
+                bool esAdmin = (tipoUsuario == TipoUsuario.Admin);
+
+                LinkButton btnEliminar = (LinkButton)e.Row.FindControl("btnEliminar");
+                LinkButton btnReactivar = (LinkButton)e.Row.FindControl("btnReactivar");
+
+                if (!esAdmin)
+                {
+                    if (btnEliminar != null) btnEliminar.Visible = false;
+                    if (btnReactivar != null) btnReactivar.Visible = false;
+                }
+
+            }
+        }
         #endregion
 
         #region EVENTOS DEL GRIDVIEW

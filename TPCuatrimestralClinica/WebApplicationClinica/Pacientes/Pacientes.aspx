@@ -153,7 +153,7 @@
             <div class="table-responsive">
                 <asp:GridView ID="gvPacientes" runat="server" AutoGenerateColumns="False" DataKeyNames="IdPaciente"
                     CssClass="table table-hover table-striped table-bordered" EmptyDataText="No hay pacientes registrados."
-                    OnRowCommand="gvPacientes_RowCommand"
+                    OnRowDataBound="gvPacientes_RowDataBound"  OnRowCommand="gvPacientes_RowCommand"
 
                     AllowPaging="true" PageSize="10" OnPageIndexChanging="gvPacientes_PageIndexChanging"
                     AllowSorting="true" OnSorting="gvPacientes_Sorting" OnRowCreated="gvPacientes_RowCreated">

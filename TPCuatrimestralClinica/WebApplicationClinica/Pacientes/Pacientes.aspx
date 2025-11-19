@@ -174,6 +174,15 @@
                                 ToolTip="Editar Paciente">
                                 <i class="bi bi-pencil-fill"></i> Editar
                             </asp:LinkButton>
+
+                            <asp:LinkButton ID="btnValidarEmail" runat="server"
+                                CommandName="ValidateEmail"
+                                CommandArgument='<%# Eval("IdPaciente") %>'
+                                CssClass="btn btn-sm btn-secondary mx-1"
+                                ToolTip="Enviar Correo de Validación">
+                                <i class="bi bi-envelope-fill"></i> Validar
+                            </asp:LinkButton>
+
         
                             <%-- Botón Eliminar (Lógico) - Visible solo si Estado = 1 (true) --%>
                             <asp:LinkButton ID="btnEliminar" runat="server"

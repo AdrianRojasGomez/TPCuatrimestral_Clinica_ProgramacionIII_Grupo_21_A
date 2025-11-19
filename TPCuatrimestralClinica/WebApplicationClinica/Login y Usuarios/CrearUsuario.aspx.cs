@@ -2,120 +2,172 @@
 using Negocio;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
 namespace WebApplicationClinica
 {
-    public partial class WebForm2 : System.Web.UI.Page
+    public partial class CrearUsuario : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-          /*  if (Session["usuario"] == null)
+            if (Session["usuario"] == null) { Response.Redirect("~/Login y Usuarios/Login.aspx"); return; }
+
+            Usuario usuarioLogueado = (Usuario)Session["usuario"];
+            if (usuarioLogueado.TipoUsuario != TipoUsuario.Admin)
             {
+                Session.Clear();
                 Response.Redirect("~/Login y Usuarios/Login.aspx");
                 return;
             }
-
-
-            var tipo = Login.PuedeVerTurnos(Session);
-
-
-            if (tipo != TipoUsuario.Admin)
-            {
-
-                Response.Redirect("~/Login y Usuarios/Login.aspx");
-                return;
-            }*/
 
             if (!IsPostBack)
             {
-
                 CargarGrillaUsuario();
                 txtFiltradoUsario.Attributes["oninput"] = $"liveFilter('{txtFiltradoUsario.UniqueID}')";
-                lblActivoCorrectamente.Visible = false;
-                lblInactivoCorecto.Visible = false;
-                btnVolver.Visible = false;
-
-
-
             }
         }
 
+        // ACCIÓN: GUARDAR O EDITAR
         protected void btnGuardarUsuario_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrWhiteSpace(TxtNombreUsuario.Text) ||
-     string.IsNullOrWhiteSpace(TxtPassword.Text) ||
-     string.IsNullOrWhiteSpace(ddlTipoUsuario.SelectedValue))
-            {
-                lblMensaje.Text = "⚠️ La sesión expiró. Volvé a la pantalla de médicos y elegí el médico otra vez.";
-
-                lblMensaje.CssClass = "text-danger fw-semibold";
-                return;
-            }
-
             try
             {
-                Usuario usuario = new Usuario();
-                usuario.NombreUsuario = TxtNombreUsuario.Text.Trim();
-                usuario.Password = TxtPassword.Text.Trim();
-                usuario.TipoUsuario = (TipoUsuario)int.Parse(ddlTipoUsuario.SelectedValue);
-
-
-                usuario.Medico = null;
-
-                int idMedico;
-                bool esMedico = usuario.TipoUsuario == TipoUsuario.Medico;
-           
-
-                if (esMedico)
+                if (string.IsNullOrWhiteSpace(TxtNombreUsuario.Text) || string.IsNullOrWhiteSpace(TxtPassword.Text))
                 {
-                    if (Session["idMedicoCreado"] == null ||
-                        !int.TryParse(Session["idMedicoCreado"].ToString(), out idMedico))
-                    {
-                        lblMensaje.Text = "⚠️ Para crear un usuario de tipo Médico primero debe dar de alta el médico.";
-                        lblMensaje.CssClass = "text-danger fw-semibold";
-                        return;
-                    }
-
-                 
-                    usuario.Medico = new Medico();
-                    usuario.Medico.IdMedico = idMedico;
-                    usuario.IdMedicoAsociado = idMedico;
-
-                    UsuarioNegocio negocio = new UsuarioNegocio();
-                    negocio.GuardarUsuario(usuario);
-
-                    Session["idMedicoCreado"] = null;
-
-                    lblMensaje.Text = "✅ Usuario creado correctamente.";
-                    lblMensaje.CssClass = "text-success fw-semibold";
-                    CargarGrillaUsuario();
-
-                    TxtNombreUsuario.Text = string.Empty;
-                    TxtPassword.Text = string.Empty;
-                    ddlTipoUsuario.SelectedIndex = 0;
-
-                    
-                    Response.Redirect("~/Login y Usuarios/Login.aspx");
+                    lblMensaje.Text = "⚠️ Complete usuario y contraseña.";
+                    lblMensaje.CssClass = "text-danger";
+                    return;
                 }
 
+                UsuarioNegocio negocio = new UsuarioNegocio();
+                Usuario usuario = new Usuario();
 
+                usuario.NombreUsuario = TxtNombreUsuario.Text;
+                usuario.Password = TxtPassword.Text;
+                usuario.TipoUsuario = (TipoUsuario)int.Parse(ddlTipoUsuario.SelectedValue);
+
+                
+                if (string.IsNullOrEmpty(hfIdUsuario.Value))
+                {
+                    
+                    // Lógica de Médico
+                    if (usuario.TipoUsuario == TipoUsuario.Medico)
+                    {
+                        if (Session["idMedicoCreado"] != null)
+                        {
+                            usuario.IdMedicoAsociado = int.Parse(Session["idMedicoCreado"].ToString());
+                            negocio.GuardarUsuario(usuario);
+                            Session["idMedicoCreado"] = null;
+                        }
+                        else
+                        {
+                            lblMensaje.Text = "⚠️ Para crear un Médico nuevo, primero debe darlo de alta en la sección Médicos.";
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        
+                        negocio.GuardarUsuario(usuario);
+                    }
+                    lblMensaje.Text = "✅ Usuario Creado.";
+                }
+                else
+                {
+                    // --- ES MODIFICACIÓN ---
+                    usuario.IdUsuario = int.Parse(hfIdUsuario.Value);
+
+                    // Aquí permitimos cambiar nombre, pass y ROL.
+                    // no estamos asignando ID Medico aquí para simplificar.
+                    negocio.ActualizarUsuario(usuario);
+
+                    lblMensaje.Text = "✏️ Usuario Modificado Exitosamente.";
+                }
+
+               
+                LimpiarFormulario();
+                CargarGrillaUsuario();
+                lblMensaje.CssClass = "text-success fw-bold";
             }
-            catch
+            catch (Exception ex)
             {
-                lblMensaje.Text = "❌ Ocurrió un error al crear el usuario.";
-                lblMensaje.CssClass = "text-danger fw-semibold";
+                lblMensaje.Text = "❌ Error: " + ex.Message;
+                lblMensaje.CssClass = "text-danger";
             }
         }
 
-        protected void btnEliminarUsuario_Click(object sender, EventArgs e)
+        //  EDITAR (Desde la Grilla)
+        protected void gvUsuario_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            if (e.CommandName == "Editar")
+            {
+                int idUsuario = Convert.ToInt32(e.CommandArgument);
 
+                
+                List<Usuario> lista = (List<Usuario>)Session["listausuario"];
+                Usuario seleccionado = lista.Find(x => x.IdUsuario == idUsuario);
+
+                if (seleccionado != null)
+                {
+                    
+                    TxtNombreUsuario.Text = seleccionado.NombreUsuario;
+                    TxtPassword.Text = seleccionado.Password;
+                    ddlTipoUsuario.SelectedValue = ((int)seleccionado.TipoUsuario).ToString();
+
+                   
+                    hfIdUsuario.Value = seleccionado.IdUsuario.ToString();
+
+                    btnGuardarUsuario.Text = "Modificar Usuario";
+                    btnGuardarUsuario.CssClass = "btn btn-warning me-3";
+                }
+            }
         }
 
+        // BAJA LÓGICA 
+        protected void btnGuardarInactivacion_Click(object sender, EventArgs e)
+        {
+            
+            Button btn = (Button)sender;
+            GridViewRow fila = (GridViewRow)btn.NamingContainer;
+            int idUsuario = Convert.ToInt32(gvUsuario.DataKeys[fila.RowIndex].Value);
+
+            UsuarioNegocio negocio = new UsuarioNegocio();
+            negocio.CambiarEstadoUsuario(idUsuario, false); 
+
+            CargarGrillaUsuario();
+        }
+
+        // ALTA LÓGICA 
+        protected void btnActivarUsuario_Click(object sender, EventArgs e)
+        {
+            Button btn = (Button)sender;
+            GridViewRow fila = (GridViewRow)btn.NamingContainer;
+            int idUsuario = Convert.ToInt32(gvUsuario.DataKeys[fila.RowIndex].Value);
+
+            UsuarioNegocio negocio = new UsuarioNegocio();
+            negocio.CambiarEstadoUsuario(idUsuario, true); 
+
+            CargarGrillaUsuario();
+        }
+
+        protected void btnLimpiar_Click(object sender, EventArgs e)
+        {
+            LimpiarFormulario();
+        }
+
+        private void LimpiarFormulario()
+        {
+            TxtNombreUsuario.Text = "";
+            TxtPassword.Text = "";
+            ddlTipoUsuario.SelectedIndex = 0;
+            hfIdUsuario.Value = ""; 
+            btnGuardarUsuario.Text = "Guardar Usuario";
+            btnGuardarUsuario.CssClass = "btn btn-primary me-3";
+            lblMensaje.Text = "";
+        }
+
+       
         public void CargarGrillaUsuario()
         {
             UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
@@ -131,184 +183,30 @@ namespace WebApplicationClinica
             CargarGrillaUsuario();
         }
 
-        protected void gvUsuario_RowEditing(object sender, GridViewEditEventArgs e)
-        {
-
-        }
-
-        protected void btnActivar_Click(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            GridViewRow fila = (GridViewRow)btn.NamingContainer;
-
-
-            btn.Visible = false;
-
-
-            Button btnGuardar = (Button)fila.FindControl("btnGuardarInactivacion");
-            if (btnGuardar != null)
-                btnGuardar.Visible = true;
-
-        }
-
-        protected void btnInactivar_Click(object sender, EventArgs e)
-        {
-
-            Button btn = (Button)sender;
-            GridViewRow fila = (GridViewRow)btn.NamingContainer;
-
-
-            btn.Visible = false;
-
-            Button btnGuardar = (Button)fila.FindControl("btnGuardarInactivacion");
-            Button btnCncelar2 = (Button)fila.FindControl("btnCncelar2");
-            if (btnGuardar != null)
-                btnGuardar.Visible = true;
-
-            if (btnCncelar2 != null)
-                btnCncelar2.Visible = true;
-
-        }
-
-        protected void btnActivar_Click1(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            GridViewRow fila = (GridViewRow)btn.NamingContainer;
-
-
-            btn.Visible = false;
-
-
-
-            Button btnGuardar = (Button)fila.FindControl("btnActivarUsuario");
-            Button btnCancelar = (Button)fila.FindControl("btnCancelar");
-            if (btnGuardar != null)
-                btnGuardar.Visible = true;
-
-
-            if (btnCancelar != null)
-                btnCancelar.Visible = true;
-        }
-
         protected void gvUsuario_RowDataBound(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
-                Button btnGuardarInactivacion = (Button)e.Row.FindControl("btnGuardarInactivacion");
-                Button btnActivarUsuario = (Button)e.Row.FindControl("btnActivarUsuario");
-
-                if (btnGuardarInactivacion != null)
-                    btnGuardarInactivacion.Visible = false;
-
-                if (btnActivarUsuario != null)
-                    btnActivarUsuario.Visible = false;
-            }
-
-        }
-
-        protected void btnGuardarInactivacion_Click(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            GridViewRow fila = (GridViewRow)btn.NamingContainer;
-            int idUsuario = Convert.ToInt32(gvUsuario.DataKeys[fila.RowIndex].Value);
-
-            UsuarioNegocio negocio = new UsuarioNegocio();
-
-
-            negocio.CambiarEstadoUsuario(idUsuario, false);
-            lblActivoCorrectamente.Visible = false;
-            lblInactivoCorecto.Visible = true;
             
-            btnVolver.Visible = true;
-
-
-
-            CargarGrillaUsuario();
-
-        }
-
-        protected void btnActivarUsuario_Click(object sender, EventArgs e)
-        {
-            Button btn = (Button)sender;
-            GridViewRow fila = (GridViewRow)btn.NamingContainer;
-            int idUsuario = Convert.ToInt32(gvUsuario.DataKeys[fila.RowIndex].Value);
-
-            UsuarioNegocio negocio = new UsuarioNegocio();
-            negocio.CambiarEstadoUsuario(idUsuario, true);
-            lblActivoCorrectamente.Visible = true;
-            lblInactivoCorecto.Visible = false;
-            btnVolver.Visible = true;
-            
-            CargarGrillaUsuario();
-        }
-
-        protected void btnCancelar_Click(object sender, EventArgs e)
-        {
-            CargarGrillaUsuario();
-        }
-
-        protected void btnCncelar2_Click(object sender, EventArgs e)
-        {
-            CargarGrillaUsuario();
         }
 
         protected void txtFiltradoUsario_TextChanged(object sender, EventArgs e)
         {
-
-
             List<Usuario> lista = (List<Usuario>)Session["listausuario"];
             string filtro = txtFiltradoUsario.Text.ToUpper();
-
             List<Usuario> listafiltrada;
 
             if (string.IsNullOrWhiteSpace(filtro))
-            {
-
                 listafiltrada = lista;
-            }
             else
-            {
-
-                listafiltrada = lista.FindAll(
-                  x => x.NombreUsuario != null &&
-                   x.NombreUsuario.ToUpper().Contains(filtro));
-
-
-
-
-
-            }
+                listafiltrada = lista.FindAll(x => x.NombreUsuario != null && x.NombreUsuario.ToUpper().Contains(filtro));
 
             gvUsuario.DataSource = listafiltrada;
             gvUsuario.DataBind();
-
-            txtFiltradoUsario.Focus();
-        }
-
-        protected void btnLimpiar_Click(object sender, EventArgs e)
-        {
-            TxtNombreUsuario.Text = "";
-            TxtPassword.Text = "";
-            lblMensaje.Visible=false;
         }
 
         protected void btnVolver_Click(object sender, EventArgs e)
         {
-            lblActivoCorrectamente.Visible = false;
-            lblInactivoCorecto.Visible = false;
-            btnVolver.Visible = false;
-
-       
-            CargarGrillaUsuario();
-
-      
-            txtFiltradoUsario.Text = string.Empty;
-            txtFiltradoUsario.Focus();
-        }
-
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-
+            
+            Response.Redirect("~/Medicos/AgregarMedico.aspx");
         }
     }
 }

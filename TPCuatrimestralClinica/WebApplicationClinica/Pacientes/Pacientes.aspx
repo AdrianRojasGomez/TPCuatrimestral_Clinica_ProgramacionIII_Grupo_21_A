@@ -153,7 +153,7 @@
             <div class="table-responsive">
                 <asp:GridView ID="gvPacientes" runat="server" AutoGenerateColumns="False" DataKeyNames="IdPaciente"
                     CssClass="table table-hover table-striped table-bordered" EmptyDataText="No hay pacientes registrados."
-                    OnRowCommand="gvPacientes_RowCommand"
+                    OnRowDataBound="gvPacientes_RowDataBound"  OnRowCommand="gvPacientes_RowCommand"
 
                     AllowPaging="true" PageSize="10" OnPageIndexChanging="gvPacientes_PageIndexChanging"
                     AllowSorting="true" OnSorting="gvPacientes_Sorting" OnRowCreated="gvPacientes_RowCreated">
@@ -174,6 +174,15 @@
                                 ToolTip="Editar Paciente">
                                 <i class="bi bi-pencil-fill"></i> Editar
                             </asp:LinkButton>
+
+                            <asp:LinkButton ID="btnValidarEmail" runat="server"
+                                CommandName="ValidateEmail"
+                                CommandArgument='<%# Eval("IdPaciente") %>'
+                                CssClass="btn btn-sm btn-secondary mx-1"
+                                ToolTip="Enviar Correo de Validación">
+                                <i class="bi bi-envelope-fill"></i> Validar
+                            </asp:LinkButton>
+
         
                             <%-- Botón Eliminar (Lógico) - Visible solo si Estado = 1 (true) --%>
                             <asp:LinkButton ID="btnEliminar" runat="server"

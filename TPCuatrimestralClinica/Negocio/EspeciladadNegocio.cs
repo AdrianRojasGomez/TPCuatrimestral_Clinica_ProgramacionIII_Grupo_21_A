@@ -40,7 +40,7 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("SELECT IdEspecialidad, Nombre FROM Especialidad WHERE IdEspecialidad=@id");
+                d.SetearConsulta("SELECT IdEspecialidades, Nombre FROM Especialidad WHERE IdEspecialidad=@id");
                 d.SetearParametros("@id", id);
                 d.EjecutarLectura();
                 if (d.Lector.Read())
@@ -75,7 +75,7 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("UPDATE Especialidad SET Nombre=@n WHERE IdEspecialidad=@id");
+                d.SetearConsulta("UPDATE Especialidades SET Nombre=@n WHERE IdEspecialidad=@id");
                 d.SetearParametros("@id", esp.IdEspecialidad);
                 d.SetearParametros("@n", esp.Nombre);
                 d.EjecutarAccion();
@@ -89,7 +89,7 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("DELETE FROM Especialidad WHERE IdEspecialidad=@id");
+                d.SetearConsulta("DELETE FROM Especialidades WHERE IdEspecialidad=@id");
                 d.SetearParametros("@id", id);
                 d.EjecutarAccion();
             }

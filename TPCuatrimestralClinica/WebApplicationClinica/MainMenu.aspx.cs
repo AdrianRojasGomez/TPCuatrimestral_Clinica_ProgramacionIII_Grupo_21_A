@@ -39,13 +39,11 @@ namespace WebApplicationClinica
             }
 
             if (Login.PuedeVerTurnos(Session) == TipoUsuario.Recepcion)
-            {
-
-               
+            {               
                btnAgregarMedico.Visible = false;
                 btnModificarMedico.Visible= false;
-               btnListarMedico.Visible= false;
-                btnBajaMedico.Visible= false;   
+                btnListarMedico.Visible = true;
+                btnBajaMedico.Visible = false;   
                 
 
             }

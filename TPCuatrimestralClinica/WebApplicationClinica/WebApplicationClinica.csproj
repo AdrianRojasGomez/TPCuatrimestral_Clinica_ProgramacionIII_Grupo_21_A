@@ -79,7 +79,7 @@
     <Content Include="Pacientes\Pacientes.aspx" />
     <Content Include="Error.aspx" />
     <Content Include="Login y Usuarios\CrearUsuario.aspx" />
-    <Content Include="Medicos\Especilidades.aspx" />
+    <Content Include="Medicos\Especialidades.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clinica.Master.cs">
@@ -153,12 +153,12 @@
     <Compile Include="Turnos\GestionTurno.aspx.designer.cs">
       <DependentUpon>GestionTurno.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Medicos\Especilidades.aspx.cs">
-      <DependentUpon>Especilidades.aspx</DependentUpon>
+    <Compile Include="Medicos\Especialidades.aspx.cs">
+      <DependentUpon>Especialidades.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Medicos\Especilidades.aspx.designer.cs">
-      <DependentUpon>Especilidades.aspx</DependentUpon>
+    <Compile Include="Medicos\Especialidades.aspx.designer.cs">
+      <DependentUpon>Especialidades.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

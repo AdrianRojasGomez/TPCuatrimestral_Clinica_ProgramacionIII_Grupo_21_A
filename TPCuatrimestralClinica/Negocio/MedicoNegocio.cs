@@ -650,7 +650,8 @@ namespace Negocio
             var horariosLibres = ObtenerHorariosLibres(idMedico, fecha);
             return horariosLibres.Count > 0;
         }
-
+      
+        
     }
 }
 

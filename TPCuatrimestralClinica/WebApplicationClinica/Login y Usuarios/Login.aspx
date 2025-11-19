@@ -32,10 +32,7 @@
                                         <button type="button" class="btn btn-outline-secondary" id="btnMostrarPass" onclick="mostrarOcultarPassword()">👁</button>
 
                                     </div>
-                                    <div id="passwordHelp" class="form-text">Must be 8–20 characters long.</div>
-
-
-
+                                    <div id="passwordHelp" class="form-text">Debe contener entre 8-20 caracteres.</div>
                                 </div>
 
                             </div>
@@ -49,8 +46,7 @@
                                         <asp:Button ID="BtnIngresar" cssclas="btn btn-primary" runat="server"
                                             Text="Ingresar" OnClick="BtnIngresar_Click" />
 
-                                        <asp:Label ID="LblCargar" runat="server" Text=""
-                                            CssClass="alert alert-danger mt-2 text-center fw-semibold shadow-sm"></asp:Label>
+                                        <asp:Label ID="LblCargar" runat="server" Text="" CssClass="alert alert-danger mt-3 text-center fw-semibold shadow-sm"></asp:Label>
 
                                     </div>
                                 </div>

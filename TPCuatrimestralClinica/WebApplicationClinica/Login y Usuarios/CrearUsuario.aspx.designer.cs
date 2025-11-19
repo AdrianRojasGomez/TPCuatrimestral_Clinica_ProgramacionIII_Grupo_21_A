@@ -11,8 +11,17 @@ namespace WebApplicationClinica
 {
 
 
-    public partial class WebForm2
+    public partial class CrearUsuario
     {
+
+        /// <summary>
+        /// Control hfIdUsuario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hfIdUsuario;
 
         /// <summary>
         /// Control Button1.
@@ -60,15 +69,6 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.Button btnGuardarUsuario;
 
         /// <summary>
-        /// Control lblMensaje.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMensaje;
-
-        /// <summary>
         /// Control btnLimpiar.
         /// </summary>
         /// <remarks>
@@ -78,6 +78,15 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.Button btnLimpiar;
 
         /// <summary>
+        /// Control lblMensaje.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensaje;
+
+        /// <summary>
         /// Control txtFiltradoUsario.
         /// </summary>
         /// <remarks>
@@ -85,33 +94,6 @@ namespace WebApplicationClinica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtFiltradoUsario;
-
-        /// <summary>
-        /// Control lblInactivoCorecto.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInactivoCorecto;
-
-        /// <summary>
-        /// Control lblActivoCorrectamente.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblActivoCorrectamente;
-
-        /// <summary>
-        /// Control btnVolver.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnVolver;
 
         /// <summary>
         /// Control gvUsuario.

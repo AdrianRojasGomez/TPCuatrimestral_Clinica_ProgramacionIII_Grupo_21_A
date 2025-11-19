@@ -15,22 +15,40 @@ namespace WebApplicationClinica.Medicos
     {
 
         /// <summary>
-        /// Control btnMostrar.
+        /// Control lblMedicoAdmin.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnMostrar;
+        protected global::System.Web.UI.WebControls.Label lblMedicoAdmin;
 
         /// <summary>
-        /// Control lblError.
+        /// Control lblMedicoRecepcion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblError;
+        protected global::System.Web.UI.WebControls.Label lblMedicoRecepcion;
+
+        /// <summary>
+        /// Control lblAdminSubtitulo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblAdminSubtitulo;
+
+        /// <summary>
+        /// Control lblRecepcionSubTitulo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRecepcionSubTitulo;
 
         /// <summary>
         /// Control panelGrillaMedico.
@@ -78,24 +96,6 @@ namespace WebApplicationClinica.Medicos
         protected global::System.Web.UI.WebControls.DropDownList ddllistTurnoTrabajo;
 
         /// <summary>
-        /// Control cblDiasSemanaNuevo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBoxList cblDiasSemanaNuevo;
-
-        /// <summary>
-        /// Control cblEspecialidades.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBoxList cblEspecialidades;
-
-        /// <summary>
         /// Control txtHoraInicio.
         /// </summary>
         /// <remarks>
@@ -112,6 +112,24 @@ namespace WebApplicationClinica.Medicos
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtHoraFin;
+
+        /// <summary>
+        /// Control cblDiasSemanaNuevo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList cblDiasSemanaNuevo;
+
+        /// <summary>
+        /// Control cblEspecialidades.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList cblEspecialidades;
 
         /// <summary>
         /// Control btnGuardarMedico.
@@ -139,6 +157,24 @@ namespace WebApplicationClinica.Medicos
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancelar;
+
+        /// <summary>
+        /// Control btnMostrar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnMostrar;
+
+        /// <summary>
+        /// Control lblError.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblError;
 
         /// <summary>
         /// Control txtFiltrarMedico.

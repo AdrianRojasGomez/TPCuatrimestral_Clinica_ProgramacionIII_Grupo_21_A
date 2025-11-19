@@ -2,6 +2,7 @@
 using Negocio;
 using System;
 using System.Data;
+using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -9,8 +10,15 @@ namespace WebApplicationClinica
 {
     public partial class Pacientes : System.Web.UI.Page
     {
+
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (Session["usuario"] == null)
+            {
+                Response.Redirect("~/Login y Usuarios/Login.aspx");
+                return;
+            }
+
             if (!IsPostBack)
             {
                 CargarPacientes();
@@ -18,7 +26,7 @@ namespace WebApplicationClinica
             }
         }
 
-        #region MÉTODOS DE DATOS (LLAMAN A NEGOCIO)
+        #region MÉTODOS DE DATOS  NEGOCIO
 
         void CargarPacientes(string filtro = "")
         {
@@ -181,7 +189,26 @@ namespace WebApplicationClinica
             CargarPacientes(txtBuscarPaciente.Text.Trim());
             divMensaje.Visible = false;
         }
+        // vista  admin
+        protected void gvPacientes_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
 
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
+                var tipoUsuario = Login.PuedeVerTurnos(Session);
+                bool esAdmin = (tipoUsuario == TipoUsuario.Admin);
+
+                LinkButton btnEliminar = (LinkButton)e.Row.FindControl("btnEliminar");
+                LinkButton btnReactivar = (LinkButton)e.Row.FindControl("btnReactivar");
+
+                if (!esAdmin)
+                {
+                    if (btnEliminar != null) btnEliminar.Visible = false;
+                    if (btnReactivar != null) btnReactivar.Visible = false;
+                }
+
+            }
+        }
         #endregion
 
         #region EVENTOS DEL GRIDVIEW
@@ -205,7 +232,7 @@ namespace WebApplicationClinica
 
         protected void gvPacientes_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            
+
             if (!int.TryParse(e.CommandArgument?.ToString(), out int pacienteId))
             {
                 return;
@@ -218,12 +245,17 @@ namespace WebApplicationClinica
                 lblFormTitulo.Text = "Editar Paciente";
                 divMensaje.Visible = false;
             }
+            else if (e.CommandName == "ValidateEmail")
+            {
+                EnviarCorreoValidacion(pacienteId);
+                CargarPacientes(txtBuscarPaciente.Text.Trim());
+            }
             else if (e.CommandName == "CustomDelete")
             {
                 EliminarPaciente(pacienteId);
-                CargarPacientes(txtBuscarPaciente.Text.Trim()); 
+                CargarPacientes(txtBuscarPaciente.Text.Trim());
             }
-            else if (e.CommandName == "ReactivarPaciente") 
+            else if (e.CommandName == "ReactivarPaciente")
             {
                 ReactivarPaciente(pacienteId);
                 CargarPacientes(txtBuscarPaciente.Text.Trim());
@@ -266,16 +298,43 @@ namespace WebApplicationClinica
                 }
             }
 
-            else if (e.Row.RowType == DataControlRowType.Pager)
-            {
-                // Aquí va tu código para el paginador de Bootstrap
-            }
+
         }
 
         #endregion
 
         #region MÉTODOS AUXILIARES
+        void EnviarCorreoValidacion(int idPaciente)
+        {
+            PacienteNegocio pacNegocio = new PacienteNegocio();
+            EmailService emailService = new EmailService();
 
+            try
+            {
+                //Busqueda del paciente para el email
+                Paciente paciente = pacNegocio.BuscarPorId(idPaciente);
+
+                if (paciente == null || string.IsNullOrWhiteSpace(paciente.Email))
+                {
+                    MostrarMensaje("Error: El paciente no tiene un correo electrónico válido registrado.", "danger");
+                    return;
+                }
+                // Constructor del correo
+                string asunto = "CLÍNICA - Registro del sistema";
+                string cuerpo = $"<h1>CLINIA UTN</h1>" +
+                                $"<p>Hola {paciente.Nombre},</p>" +
+                                $"<p>Este es un correo enviado por el sistema. Su email ({paciente.Email}) ha sido validado correctamente para recibir notificaciones.</p>" ;
+
+                //Envio
+                emailService.EnviarEmail(paciente.Email, asunto, cuerpo);
+
+                MostrarMensaje($"Correo de validación enviado exitosamente a: {paciente.Email}", "success");
+            }
+            catch (Exception ex)
+            {
+                MostrarMensaje($"❌ Fallo al enviar correo. Verifique credenciales SMTP. Error: {ex.Message}", "danger");
+            }
+        }
         void LimpiarFormulario()
         {
             hfPacienteId.Value = "0";

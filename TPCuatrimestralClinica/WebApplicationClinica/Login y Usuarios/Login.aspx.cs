@@ -19,8 +19,15 @@ namespace WebApplicationClinica
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            LblCargar.Visible = false;
-
+            
+            if (!IsPostBack)
+            {
+                var navBar = Master.FindControl("MiBarraNavegacion");
+                if (navBar != null)
+                {
+                    navBar.Visible = false;
+                }
+            }
         }
 
         public static Dominio.TipoUsuario PuedeVerTurnos(HttpSessionState session)
@@ -28,20 +35,14 @@ namespace WebApplicationClinica
 
             if (session["usuario"] != null )
             {
-
                 return ((Dominio.Usuario)session["usuario"]).TipoUsuario;
             }
 
             else
             {
-
                   return Dominio.TipoUsuario.SinDefinir;
-
-            }
-        
-
-             
-
+            }     
+                         
         }
 
         protected void BtnIngresar_Click(object sender, EventArgs e)
@@ -49,8 +50,7 @@ namespace WebApplicationClinica
             Usuario usuario = new Usuario();
 
             UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
-
-         
+                     
             if (string.IsNullOrWhiteSpace(TxtUsuario.Text) || string.IsNullOrWhiteSpace(TxtPassword.Text))
             {
                 LblCargar.Visible = true;
@@ -61,8 +61,7 @@ namespace WebApplicationClinica
             {
                 usuario.NombreUsuario = TxtUsuario.Text;
                 usuario.Password = TxtPassword.Text;
-
-                
+                                
                 if (usuarioNegocio.loguearmedico(usuario))
                 {
                     usuario.Password = null;
@@ -73,8 +72,7 @@ namespace WebApplicationClinica
                     Response.Redirect("~/Medicos/MenuMedico.aspx");
                     return;
                 }
-
-              
+                              
                 if (usuarioNegocio.Loguear(usuario))
                 {
                     usuario.Password = null;

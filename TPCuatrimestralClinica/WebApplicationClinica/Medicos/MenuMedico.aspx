@@ -62,6 +62,8 @@
             </div>
         </div>
 
+
+
         <!-- Contenido principal -->
         <div class="row g-3">
             <!-- Columna izquierda: Turno en curso -->

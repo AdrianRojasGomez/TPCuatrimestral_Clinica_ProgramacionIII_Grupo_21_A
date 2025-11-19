@@ -11,7 +11,7 @@ namespace Negocio
 
         public EmailService()
         {
-            // Configuración del servidor SMTP (Gmail)
+            // Configuración del servidor SMTP 
             servidor = new SmtpClient();
             servidor.Credentials = new NetworkCredential("b9aff267e2ad87", "f491945f94e658");
             servidor.EnableSsl = true;
@@ -24,7 +24,7 @@ namespace Negocio
             try
             {
                 email = new MailMessage();
-                email.From = new MailAddress("no-responder@clinica.com", "Clínica Médica App");
+                email.From = new MailAddress("no-responder@clinica.com", "Clínica Médica AppUTN");
 
                 // destinatario
                 email.To.Add(emailDestino);
@@ -37,11 +37,12 @@ namespace Negocio
             }
             catch (Exception ex)
             {
+                
                 throw new Exception("Error al enviar el correo: " + ex.Message, ex);
             }
             finally
             {
-                email?.Dispose(); 
+                email?.Dispose();
             }
         }
     }

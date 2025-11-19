@@ -677,22 +677,38 @@ namespace WebApplicationClinica.Medicos
                 bool esFilaEdit = (e.Row.RowIndex == gvMedicos.EditIndex);
 
 
+
+
                 if (tipo == TipoUsuario.Recepcion)
                 {
 
-                    btnEditar.Enabled = false;
-                    btnCancelar.Enabled = false;
-                    btnEliminar.Enabled = false;
-                    btnModificar.Enabled = false;
-                    btnCrearUsuario.Enabled = false;
-                    btnActivarUsuarioDesdeMedico.Enabled = false;
-                
+                    lblMedicoAdmin.Visible = false;
+                    lblMedicoRecepcion.Visible = true;
+
+                    lblRecepcionSubTitulo.Visible = true;
+                    lblAdminSubtitulo.Visible = false;
+
+                    int colAcciones = GetIndiceColumnaAcciones();
+                    if (colAcciones >= 0)
+                    {
+
+                        if (e.Row.RowType == DataControlRowType.Header)
+                            e.Row.Cells[colAcciones].Visible = false;
+
+
+                        if (e.Row.RowType == DataControlRowType.DataRow)
+                            e.Row.Cells[colAcciones].Visible = false;
+                    }
+
+
+                    return;
+
 
 
 
                 }
 
-                else if(tipo == TipoUsuario.Medico)
+                else if (tipo == TipoUsuario.Medico)
                 {
 
                     btnEditar.Enabled = true;
@@ -702,6 +718,14 @@ namespace WebApplicationClinica.Medicos
                     btnCrearUsuario.Enabled = false;
                     btnActivarUsuarioDesdeMedico.Enabled = false;
 
+
+                }
+
+                else if (tipo == TipoUsuario.Admin) 
+                {
+
+                    lblRecepcionSubTitulo.Visible = false;
+                    lblMedicoRecepcion.Visible = false;
 
                 }
 
@@ -976,6 +1000,16 @@ namespace WebApplicationClinica.Medicos
         {
             Response.Redirect("~/Login y Usuarios/CrearUsuario.aspx");
 
+        }
+
+        public int GetIndiceColumnaAcciones()
+        {
+            for (int i = 0; i < gvMedicos.Columns.Count; i++)
+            {
+                if (gvMedicos.Columns[i].HeaderText == "Acciones")
+                    return i;
+            }
+            return -1;
         }
     }
 }

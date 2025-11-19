@@ -1,4 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="AgregarMedico.aspx.cs" Inherits="WebApplicationClinica.Medicos.WebForm2" %>
+﻿
+<%@ Page Title="" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="AgregarMedico.aspx.cs" Inherits="WebApplicationClinica.Medicos.WebForm2" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -19,8 +20,15 @@
         <!-- ===================== ENCABEZADO ===================== -->
         <div class="d-flex align-items-center justify-content-between mb-4">
             <div>
-                <h2 class="mb-1 text-success fw-bold">Gestión de Médicos</h2>
-                <p class="text-success mb-0 opacity-75">Alta de médicos y asignación de turno + especialidades</p>
+                
+                <asp:Label ID="lblMedicoAdmin" runat="server" Text="Gestión de Médicos" class="mb-1 text-success fw-bold" />
+
+                <asp:Label ID="lblMedicoRecepcion" runat="server" class="mb-1 text-success fw-bold"  Text="Lista de Médicos" /> 
+
+                <asp:Label ID="lblAdminSubtitulo" runat="server" Text="Alta de médicos y asignación de turno + especialidades" 
+                    CssClass="text-success mb-0 opacity-75 d-block" />
+                <asp:Label ID="lblRecepcionSubTitulo" runat="server" Text="Acceso de solo lectura para Recepción" 
+                    class="text-success mb-0 opacity-75 d-block" /> 
 
             </div>
 
@@ -336,7 +344,7 @@
 
 
 
-                    <asp:TemplateField HeaderText="Acciones">
+                    <asp:TemplateField HeaderText="Acciones" >
                         <ItemTemplate>
 
                             <asp:Button ID="btnEditar" runat="server" Text="✏️ Modificar"

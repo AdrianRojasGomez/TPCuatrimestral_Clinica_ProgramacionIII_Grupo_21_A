@@ -52,12 +52,7 @@
                         <p class="card-text text-soft mb-4">
                             Registra o actualiza la información de tus pacientes de forma segura.
                         </p>
-
-
                         <asp:Button ID="BtnAltaPaciente" runat="server" Text="Gestion Paciente" CssClass="btn btn-primary mt-auto shadow" OnClick="BtnAltaPaciente_Click" />
-
-
-
                     </div>
                 </div>
             </div>
@@ -80,8 +75,6 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 
@@ -99,7 +92,7 @@
     </div>
 
     <div class="p-3">
-        <%-- 1. AÑADE ESTE LITERAL PARA EL MENSAJE DE ERROR --%>
+      
         <asp:Literal ID="litErrorTurnos" runat="server" Visible="false" />
                 
        <%-- Panel para mostrar la grilla si hay turnos --%>
@@ -144,9 +137,8 @@
 
             <%-- Panel para mostrar si NO hay turnos --%>
           <asp:Panel ID="pnlNoTurnos" runat="server" Visible="false">
-              <%-- ... tu mensaje de "no hay turnos" ... --%>
+              <%-- ... mensaje de "no hay turnos" ... --%>
           </asp:Panel>
-
     </div>
 </div>
 
@@ -162,9 +154,6 @@
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTurno" aria-expanded="false" aria-controls="collapseTurno">
                         Gestion Turnos
                     </button>
-
-
-
                 </h2>
 
                 <div id="collapseTurno" class="accordion-collapse collapse" data-bs-parent="#accordionTurnos">
@@ -276,8 +265,6 @@
                     <%--Elementos dentro del acordeon--%>
                 </div>
             </div>
-
-
         </div>
     </div>
 

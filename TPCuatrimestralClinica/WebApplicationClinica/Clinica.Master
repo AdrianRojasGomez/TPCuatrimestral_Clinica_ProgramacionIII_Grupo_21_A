@@ -14,11 +14,7 @@
 </head>
 <body>
     <form id="form1" runat="server" class="needs-validation" novalidate>
-        <%--NavBar: hay que esconderla  del login con code-behind,Por ahora esta de apoyo
-            para navegar entre las paginas del frontEnd, al final cuando este todo bien
-            definido, ponemos el CTA principal= Crear Turno y accesos rapidos a otros sitios
-            usados--%>
-        <div>
+       <div>
             <nav class="navbar navbar-expand-lg bg-body-tertiary" id="MiBarraNavegacion" runat="server">
                 <div class="container-fluid">
                     <a class="navbar-brand" href="#">Clinica</a>
@@ -46,8 +42,7 @@
                             </li>
                             <li class="nav-item" id="LiGestionMedicos" runat="server" visible="false">
                                 <a class="nav-link" href="<%: ResolveUrl("~/Medicos/AgregarMedico.aspx") %>">Gestion Medicos</a>
-                            </li>
-                            
+                            </li>                            
                             <li class="nav-item" id="LiEspecialidades" runat="server" visible="false">
                                 <a class="nav-link" href="<%: ResolveUrl("~/Medicos/Especialidades.aspx") %>">Gestion Especialidades</a>
                             </li>
@@ -55,12 +50,10 @@
                                 <a class="nav-link" href="<%: ResolveUrl("~/Login y Usuarios/Crearusuario.aspx") %>">Crear Usuario</a>
                             </li>
                             
-
                         </ul>
 
                         <div class="d-flex align-items-center ms-auto" id="PanelUsuario" runat="server" visible="false">
-
-                            <span class="navbar-text text-black me-3">
+                             <span class="navbar-text text-black me-3">
                                 <i class="bi bi-person-circle"></i>
                                 <asp:Label ID="LblUser" runat="server" Text="" CssClass="fw-bold"></asp:Label>
                             </span>

@@ -43,9 +43,11 @@ namespace WebApplicationClinica
                     LiCrearTurno.Visible = true;
                     LiGestionTurnos.Visible = true;
                     LiPacientes.Visible = true;
+                    LiMenuMedico.Visible = true;
                     LiGestionMedicos.Visible = true;
                     LiEspecialidades.Visible = true;
                     LiCrearUsuario.Visible = true;
+
                     break;
 
                 case TipoUsuario.Recepcion:
@@ -74,7 +76,7 @@ namespace WebApplicationClinica
         }
         protected void BtnSalir_Click(object sender, EventArgs e)
         {
-            // Lógica para cerrar sesión
+            // cerrar sesión
             Session.Clear();
             Session.Abandon();
             Response.Redirect("~/Login y Usuarios/Login.aspx");

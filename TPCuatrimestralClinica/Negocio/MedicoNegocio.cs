@@ -337,14 +337,37 @@ namespace Negocio
             }
         }
 
-        public void EliminarMedico(int id)
+        public bool EliminarMedico(int id)
         {
             AccesoDatos datos = new AccesoDatos();
+
             try
             {
+             
+                datos.SetearConsulta("SELECT COUNT(*) FROM Turnos WHERE IdMedico = @id");
+                datos.SetearParametros("@id", id);
+                datos.EjecutarLectura();
+
+                int cantidad = 0;
+                if (datos.Lector.Read())
+                    cantidad = Convert.ToInt32(datos.Lector[0]);
+
+                datos.CerrarConexion(); 
+
+
+               
+                if (cantidad > 0)
+                {
+                    return false;
+                }
+
+               
+                datos = new AccesoDatos(); 
                 datos.SetearConsulta("UPDATE Medicos SET Activo = 0 WHERE IdMedico = @Id");
                 datos.SetearParametros("@Id", id);
                 datos.EjecutarAccion();
+
+                return true;
             }
             finally
             {

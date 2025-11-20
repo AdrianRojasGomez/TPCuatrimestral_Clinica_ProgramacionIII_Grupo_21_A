@@ -629,33 +629,33 @@ namespace WebApplicationClinica.Medicos
             {
                 MedicoNegocio medicoNegocio = new MedicoNegocio();
 
-
                 int id = (int)ViewState["IdMedicoEliminar"];
 
+                bool eliminado = medicoNegocio.EliminarMedico(id);
 
-                medicoNegocio.EliminarMedico(id);
+                if (!eliminado)
+                {
+              
+                    lblEliminado.Visible = false;
 
+                    lblEminadoEror.Visible = true;
+                    lblEminadoEror.Text = "❌ No se puede eliminar un médico que tiene turnos asignados.";
+
+                    btnVolver.Visible = true;
+                    return;
+                }
+
+         
                 lblEliminado.Visible = true;
                 lblEminadoEror.Visible = false;
-
                 btnVolver.Visible = true;
 
-
-
-
-
                 CargarGrillaMedicos();
-
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 lblEminadoEror.Visible = true;
-
-                throw ex;
-
-
+                lblEminadoEror.Text = "❌ Ocurrió un error inesperado al eliminar el médico.";
             }
 
 

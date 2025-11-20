@@ -82,10 +82,11 @@ namespace Negocio
                     if (accesoDatos.Lector["IdTurnoTrabajo"] != DBNull.Value)
                     {
                         int idTurno = (int)accesoDatos.Lector["IdTurnoTrabajo"];
-                        byte diaNumero = (byte)accesoDatos.Lector["DiaSemana"];
+                      
 
 
-                        string diaSemana = ConvertirDiaSemanaTexto(diaNumero);
+                        int diaNumero = Convert.ToInt32(accesoDatos.Lector["DiaSemana"]);
+                        DayOfWeek diaSemana = (DayOfWeek)diaNumero;
 
                         bool yaExisteTurno = aux.turnoTrabajos.Any(t =>
                             t.IdTurnoTrabajo == idTurno && t.DiaSemana == diaSemana);
@@ -195,7 +196,9 @@ namespace Negocio
 
                         datosGuardia.SetearParametros("@IdMedico", idMedicoNuevo);
                         datosGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
-                        int diaSemanaNumero = ConvertirDiaSemana(turno.DiaSemana);
+
+
+                        int diaSemanaNumero = (int)turno.DiaSemana;
                         datosGuardia.SetearParametros("@DiaSemana", diaSemanaNumero);
 
                         datosGuardia.EjecutarAccion();
@@ -290,7 +293,7 @@ namespace Negocio
                     VALUES (@IdMedico, @IdGuardia, @DiaSemana)");
                         datosInsGuardia.SetearParametros("@IdMedico", medico.IdMedico);
                         datosInsGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
-                        int diaNumero = ConvertirDiaSemana(turno.DiaSemana);
+                        int diaNumero = (int)(turno.DiaSemana);
                         datosInsGuardia.SetearParametros("@DiaSemana", diaNumero);
                         datosInsGuardia.EjecutarAccion();
                     }
@@ -397,9 +400,8 @@ namespace Negocio
                         MedicoPorGuardia turno = new MedicoPorGuardia();
                         turno.IdTurnoTrabajo = (int)datosMedico.Lector["IdGuardia"];
                         turno.Nombre = datosMedico.Lector["NombreGuardia"].ToString();
-                        byte diaNumero = (byte)datosMedico.Lector["DiaSemana"];
-                        string diaSemana = ConvertirDiaSemanaTexto(diaNumero);
-                        turno.DiaSemana = diaSemana;
+                        int diaNumero = Convert.ToInt32(datosMedico.Lector["DiaSemana"]);
+                        turno.DiaSemana = (DayOfWeek)diaNumero;
 
                         if (!(datosMedico.Lector["HoraInicio"] is DBNull))
                             turno.HoraInicio = (TimeSpan)datosMedico.Lector["HoraInicio"];
@@ -475,20 +477,7 @@ namespace Negocio
             return BuscarMedicoPorId(idMedico, out idsDescartados);
         }
 
-        public int ConvertirDiaSemana(string dia)
-        {
-            switch (dia)
-            {
-                case "Lunes": return 1;
-                case "Martes": return 2;
-                case "Miércoles": return 3;
-                case "Jueves": return 4;
-                case "Viernes": return 5;
-                case "Sábado": return 6;
-                case "Domingo": return 7;
-                default: return 1;
-            }
-        }
+      
 
         public string ObtenerNombreDiaEnEspanol(DateTime fecha)
         {
@@ -505,20 +494,7 @@ namespace Negocio
             }
         }
 
-        public string ConvertirDiaSemanaTexto(byte dia)
-        {
-            switch (dia)
-            {
-                case 1: return "Lunes";
-                case 2: return "Martes";
-                case 3: return "Miércoles";
-                case 4: return "Jueves";
-                case 5: return "Viernes";
-                case 6: return "Sábado";
-                case 7: return "Domingo";
-                default: return "Lunes";
-            }
-        }
+   
 
         //Adri: Nuevo metodo para listar medicos por especialidad
         public List<Medico> ListarPorEspecialidad(int idEspecialidad)
@@ -567,7 +543,7 @@ namespace Negocio
             if (medico.turnoTrabajos == null || medico.turnoTrabajos.Count == 0)
                 return resultadoHorario;
 
-            MedicoPorGuardia guardiaDelDia = null;
+         //   MedicoPorGuardia guardiaDelDia = null;
 
             TimeSpan inicio = medico.TurnoTrabajo.HoraInicio;
             TimeSpan fin = medico.TurnoTrabajo.HoraFin;

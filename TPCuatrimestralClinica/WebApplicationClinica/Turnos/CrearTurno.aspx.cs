@@ -346,7 +346,7 @@ namespace WebApplicationClinica
 
         protected void btnExito_Click(object sender, EventArgs e)
         {
-            //Response.Redirect("~/Turnos/GestionTurno.aspx");
+            Response.Redirect("~/Turnos/GestionTurno.aspx");
         }
 
         #endregion

@@ -98,13 +98,13 @@
                     <label class="form-label text-danger fw-semibold">Días de la semana</label>
                     <asp:CheckBoxList ID="cblDiasSemanaNuevo" runat="server" CssClass="dias-semana"
                         RepeatDirection="Horizontal">
-                        <asp:ListItem Text="Lunes" Value="Lunes" />
-                        <asp:ListItem Text="Martes" Value="Martes" />
-                        <asp:ListItem Text="Miércoles" Value="Miércoles" />
-                        <asp:ListItem Text="Jueves" Value="Jueves" />
-                        <asp:ListItem Text="Viernes" Value="Viernes" />
-                        <asp:ListItem Text="Sábado" Value="Sábado" />
-                        <asp:ListItem Text="Domingo" Value="Domingo" />
+                        <asp:ListItem Text="Lunes" Value=1 />
+                        <asp:ListItem Text="Martes" Value=2 />
+                        <asp:ListItem Text="Miércoles" Value=3 />
+                        <asp:ListItem Text="Jueves" Value=4 />
+                        <asp:ListItem Text="Viernes" Value=5 />
+                        <asp:ListItem Text="Sábado" Value=6 />
+                        <asp:ListItem Text="Domingo" Value=7 />
                     </asp:CheckBoxList>
                 </div>
 

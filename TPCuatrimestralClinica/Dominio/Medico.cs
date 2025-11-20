@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Dominio
 {
     public class Medico
@@ -44,11 +45,26 @@ namespace Dominio
 
                 return string.Join(", ",
                     turnoTrabajos
-                        .Select(t => t.DiaSemana)
+                        .Select(t => DiaEnEspanol(t.DiaSemana))
                         .Distinct()
                         .OrderBy(d => d));  
             }
         }
+        public static string DiaEnEspanol(DayOfWeek dia)
+        {
+            switch (dia)
+            {
+                case DayOfWeek.Monday: return "Lunes";
+                case DayOfWeek.Tuesday: return "Martes";
+                case DayOfWeek.Wednesday: return "Miércoles";
+                case DayOfWeek.Thursday: return "Jueves";
+                case DayOfWeek.Friday: return "Viernes";
+                case DayOfWeek.Saturday: return "Sábado";
+                case DayOfWeek.Sunday: return "Domingo";
+                default: return "";
+            }
+        }
+
 
 
     }

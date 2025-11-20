@@ -493,8 +493,8 @@ namespace Negocio
                 default: return string.Empty;
             }
         }
+ 
 
-   
 
         //Adri: Nuevo metodo para listar medicos por especialidad
         public List<Medico> ListarPorEspecialidad(int idEspecialidad)
@@ -626,8 +626,72 @@ namespace Negocio
             var horariosLibres = ObtenerHorariosLibres(idMedico, fecha);
             return horariosLibres.Count > 0;
         }
-      
-        
+
+
+        public List<DayOfWeek> ObtenerDiasQueTrabaja(int idMedico)
+        {
+            List<DayOfWeek> dias = new List<DayOfWeek>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT DiaSemana FROM MedicosPorGuardia WHERE IdMedico = @id");
+                datos.SetearParametros("@id", idMedico);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+             
+                    int diaInt = (int)datos.Lector["DiaSemana"];
+                    DayOfWeek dia = (DayOfWeek)diaInt;
+
+                    dias.Add(dia);
+                }
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return dias;
+        }
+
+        public bool ExisteMedicoPorMatricula(string matricula)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT COUNT(*) FROM Medicos WHERE Matricula = @matricula");
+                datos.SetearParametros("@matricula", matricula);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    int cantidad = (int)datos.Lector[0];
+                    if (cantidad > 0)
+                    {
+                        return true;   
+                    }
+                }
+
+                return false; 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al verificar si existe un médico con esa matrícula.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+
+
+
+
     }
 }
 

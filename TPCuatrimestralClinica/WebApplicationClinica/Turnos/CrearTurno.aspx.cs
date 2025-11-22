@@ -246,7 +246,8 @@ namespace WebApplicationClinica
             ddlHorario.Enabled = true;
 
             //Modificar el mensaje FechaMuted
-            FechaMuted.InnerHtml = $"Horarios disponibles para el {fechaSeleccionada.ToString("dd/MM/yyyy")}";
+            var horarios = HorariosRecomendados();
+            FechaMuted.InnerHtml = $"Horarios recomendados: " + string.Join(", ",horarios) + ".";
             FechaMuted.Attributes["class"] = "text-success d-block mt-2";
             HorarioMuted.InnerHtml = "4. Seleccione un horario disponible.";
 
@@ -324,7 +325,7 @@ namespace WebApplicationClinica
                 nuevoTurno.IdPaciente = Session["IdPaciente"] != null ? (int)Session["IdPaciente"] : (int)ViewState["IdPaciente"];
                 nuevoTurno.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
                 nuevoTurno.Motivo = txtMotivo.Text;
-                nuevoTurno.Estado = 1;
+                nuevoTurno.Estado = 2;
                 nuevoTurno.Paciente = null;
                 nuevoTurno.Medico = null;
 
@@ -379,7 +380,7 @@ namespace WebApplicationClinica
         }
         #endregion
 
-        #region Helpers de limpieza
+        #region Helpers
         private void RevertirMuted()
         {
             EspecialidadMuted.InnerHtml = "1. Comience seleccionando una especialidad.";
@@ -390,6 +391,17 @@ namespace WebApplicationClinica
             FechaMuted.Attributes["class"] = "text-muted d-block mt-2";
             HorarioMuted.InnerHtml = "4. Seleccione una fecha para ver los horarios disponibles.";
             HorarioMuted.Attributes["class"] = "text-muted d-block mt-2";
+        }
+
+        private List<string> HorariosRecomendados()
+        {
+            List<string> horarios = new List<string>
+            {
+                "09:00",
+                "10:00",
+                "11:00",
+            };
+            return horarios;
         }
 
         #endregion

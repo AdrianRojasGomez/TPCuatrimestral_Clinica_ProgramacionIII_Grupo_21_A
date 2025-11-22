@@ -219,25 +219,20 @@ namespace WebApplicationClinica
             ///Validar las fechas no disponibles para ese medico
             List<DayOfWeek> diasDisponibles = medicoNegocio.ObtenerDiasQueTrabaja(medicoSeleccionado.IdMedico);
 
+            ActualizarDiasSegunMedico(diasDisponibles);
+            ///DEBUG : Mostrar los dias disponibles en consola
+            string diasTexto = string.Join(", ", diasDisponibles.Select(d => d.ToString()));
+            MedicoMuted.InnerHtml = $"Días disponibles: {diasTexto}.";
+            ///System.Diagnostics.Debug.WriteLine(medicoSeleccionado.TurnoTrabajo.DiaSemana);
 
-
-            //DEBUG : Mostrar los dias disponibles en consola
-            //string diasTexto = string.Join(", ", diasDisponibles.Select(d => d.ToString()))
-            //MedicoMuted.InnerHtml = $"Días disponibles: {diasTexto}.";
-            //System.Diagnostics.Debug.WriteLine(medicoSeleccionado.TurnoTrabajo.DiaSemana);
-
-
-
-            //ActualizarDiasSegunMedico(diasDisponibles);
-
-            //Habilitar el datepicker
+            ///Habilitar el datepicker
             ddlHorario.Items.Clear();
             ddlHorario.Enabled = false;
             btnGuardar.Enabled = false;
             HabilitarDatepicker();
 
             ///Modificar el mensaje MedicoMuted
-            MedicoMuted.InnerHtml = $"Médico seleccionado: {ddlMedicoDisponible.SelectedItem.Text}.";
+            //MedicoMuted.InnerHtml = $"Médico seleccionado: {ddlMedicoDisponible.SelectedItem.Text}.";
             MedicoMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
         }
 
@@ -286,7 +281,6 @@ namespace WebApplicationClinica
             FechaMuted.InnerHtml = $"Fecha seleccionada: {fecha:yyyy-MM-dd}.";
             FechaMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
             MostrarHorariosRecomendadosEnLabel();
-            VolverAMarcarFecha();
         }
 
         protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
@@ -467,19 +461,6 @@ namespace WebApplicationClinica
         }
 
 
-        private void VolverAMarcarFecha()
-        {
-            ConfigurarMinimoHoy();
-            DateTime fecha = (DateTime)Session["FechaTurno"];
-            string script = $"$('#calendarioTurnos').datepicker('setDate', '{fecha:yyyy-MM-dd}');";
-            ScriptManager.RegisterStartupScript(
-                this,
-                this.GetType(),
-                "ReselectDateAfterPostback",
-                script,
-                true
-            );
-        }
         #endregion
 
         #region Helpers

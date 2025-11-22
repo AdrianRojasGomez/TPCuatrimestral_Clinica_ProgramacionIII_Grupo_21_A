@@ -19,11 +19,11 @@ namespace WebApplicationClinica
                 lblMensajeError.Visible = false;
                 btnIrAgregarPaciente.Visible = false;
                 btnGuardar.Enabled = false;
-                dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
+                //dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
 
                 //Deshabilitar Medico, Fecha y hora hasta seleccionar una Especialidad
                 ddlMedicoDisponible.Enabled = false;
-                dtFechaTurno.Enabled = false;
+                //dtFechaTurno.Enabled = false;
                 ddlHorario.Enabled = false;
 
                 //Cargar lista de Especialidades
@@ -175,7 +175,7 @@ namespace WebApplicationClinica
             especialidadSeleccionada.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
             especialidadSeleccionada.Nombre = ddlEspecialidad.SelectedItem.Text;
 
-            dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
+            //dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
             ddlMedicoDisponible.Items.Clear();
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             List<Medico> medicosConEspecialidad = new List<Medico>();
@@ -189,7 +189,7 @@ namespace WebApplicationClinica
             //Habilitar el ddlMedicoDisponible
             ddlMedicoDisponible.Enabled = true;
             //Habilitar el dtFechaTurno
-            dtFechaTurno.Enabled = true;
+            //dtFechaTurno.Enabled = true;
 
             if (medicosConEspecialidad.Count == 1)
             {
@@ -198,7 +198,7 @@ namespace WebApplicationClinica
             }
             //Modificar el mensaje EspecialidadMuted
             EspecialidadMuted.InnerHtml = $"Se encontraron {medicosConEspecialidad.Count} médicos con la especialidad de {especialidadSeleccionada.Nombre}.";
-            EspecialidadMuted.Attributes["class"] = "text-success d-block mt-2";
+            EspecialidadMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
 
 
         }
@@ -224,7 +224,7 @@ namespace WebApplicationClinica
 
             //Modificar el mensaje MedicoMuted
             MedicoMuted.InnerHtml = $"Médico seleccionado: {ddlMedicoDisponible.SelectedItem.Text}.";
-            MedicoMuted.Attributes["class"] = "text-success d-block mt-2";
+            MedicoMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
         }
 
         protected void dtFechaTurno_Changed(object sender, EventArgs e)
@@ -234,22 +234,22 @@ namespace WebApplicationClinica
                 btnGuardar.Enabled = false;
             }
 
-            MedicoNegocio medicoNegocio = new MedicoNegocio();
-            DateTime fechaSeleccionada = DateTime.Parse(dtFechaTurno.Text);
-            int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
-            List<TimeSpan> horariosDisponibles = medicoNegocio.ObtenerHorariosLibres(idMedico, fechaSeleccionada);
-            ddlHorario.Items.Clear();
-            foreach (TimeSpan horario in horariosDisponibles)
-            {
-                ddlHorario.Items.Add(new ListItem(horario.ToString(@"hh\:mm"), horario.ToString()));
-            }
-            ddlHorario.Enabled = true;
+            //MedicoNegocio medicoNegocio = new MedicoNegocio();
+            //DateTime fechaSeleccionada = DateTime.Parse(dtFechaTurno.Text);
+            //int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+            //List<TimeSpan> horariosDisponibles = medicoNegocio.ObtenerHorariosLibres(idMedico, fechaSeleccionada);
+            //ddlHorario.Items.Clear();
+            //foreach (TimeSpan horario in horariosDisponibles)
+            //{
+            //    ddlHorario.Items.Add(new ListItem(horario.ToString(@"hh\:mm"), horario.ToString()));
+            //}
+            //ddlHorario.Enabled = true;
 
-            //Modificar el mensaje FechaMuted
-            var horarios = HorariosRecomendados();
-            FechaMuted.InnerHtml = $"Horarios recomendados: " + string.Join(", ",horarios) + ".";
-            FechaMuted.Attributes["class"] = "text-success d-block mt-2";
-            HorarioMuted.InnerHtml = "4. Seleccione un horario disponible.";
+            ////Modificar el mensaje FechaMuted
+            //var horarios = HorariosRecomendados();
+            //FechaMuted.InnerHtml = $"Horarios recomendados: " + string.Join(", ",horarios) + ".";
+            //FechaMuted.Attributes["class"] = "text-success d-block mt-2";
+            //HorarioMuted.InnerHtml = "4. Seleccione un horario disponible.";
 
         }
 
@@ -264,7 +264,7 @@ namespace WebApplicationClinica
 
             //Modificar el mensaje HorarioMuted
             HorarioMuted.InnerHtml = $"Horario seleccionado: {ddlHorario.SelectedItem.Text}.";
-            HorarioMuted.Attributes["class"] = "text-success d-block mt-2";
+            HorarioMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
         }
 
         #endregion
@@ -315,7 +315,7 @@ namespace WebApplicationClinica
             {
                 Turno nuevoTurno = new Turno();
                 nuevoTurno.NumeroTurno = (turnoNegocio.ObtenerUltimoID() + 1).ToString();
-                nuevoTurno.FechaInicio = DateTime.Parse(dtFechaTurno.Text);
+                //nuevoTurno.FechaInicio = DateTime.Parse(dtFechaTurno.Text);
                 nuevoTurno.FechaFin = nuevoTurno.FechaInicio;
                 nuevoTurno.HoraInicio = TimeSpan.Parse(ddlHorario.SelectedValue);
                 nuevoTurno.HoraFin = nuevoTurno.HoraInicio + TimeSpan.FromHours(1);
@@ -367,7 +367,7 @@ namespace WebApplicationClinica
                             $"<strong>Nombre de Paciente</strong>: {txtNombrePaciente.Text} {txtApellidoPaciente.Text}<br />" +
                             $"<strong>Especialidad</strong>: {ddlEspecialidad.SelectedItem.Text}<br />" +
                             $"<strong>Doctor asignado</strong>: {ddlMedicoDisponible.SelectedItem.Text}<br />" +
-                            $"<strong>Fecha del Turno</strong>: {dtFechaTurno.Text}<br />" +
+                            //$"<strong>Fecha del Turno</strong>: {dtFechaTurno.Text}<br />" +
                             $"<strong>Horario del Turno</strong>: {ddlHorario.SelectedItem.Text}<br /><br />" +
                             $"Desea confirmar el turno?";
 
@@ -384,13 +384,13 @@ namespace WebApplicationClinica
         private void RevertirMuted()
         {
             EspecialidadMuted.InnerHtml = "1. Comience seleccionando una especialidad.";
-            EspecialidadMuted.Attributes["class"] = "text-muted d-block mt-2";
+            EspecialidadMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
             MedicoMuted.InnerHtml = "2. Seleccione una especialidad para ver los medicos disponibles.";
-            MedicoMuted.Attributes["class"] = "text-muted d-block mt-2";
+            MedicoMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
             FechaMuted.InnerHtml = "3. Seleccione un medico para ver las fechas disponibles.";
-            FechaMuted.Attributes["class"] = "text-muted d-block mt-2";
+            FechaMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
             HorarioMuted.InnerHtml = "4. Seleccione una fecha para ver los horarios disponibles.";
-            HorarioMuted.Attributes["class"] = "text-muted d-block mt-2";
+            HorarioMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
         }
 
         private List<string> HorariosRecomendados()

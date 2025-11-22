@@ -169,6 +169,7 @@ namespace WebApplicationClinica.Medicos
                 }
                 catch (Exception ex)
                 {
+                    throw ex;
                     // Manejar error
                 }
             }

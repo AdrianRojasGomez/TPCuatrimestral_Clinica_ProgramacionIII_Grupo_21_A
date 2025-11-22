@@ -82,10 +82,11 @@ namespace Negocio
                     if (accesoDatos.Lector["IdTurnoTrabajo"] != DBNull.Value)
                     {
                         int idTurno = (int)accesoDatos.Lector["IdTurnoTrabajo"];
-                        byte diaNumero = (byte)accesoDatos.Lector["DiaSemana"];
+                      
 
 
-                        string diaSemana = ConvertirDiaSemanaTexto(diaNumero);
+                        int diaNumero = Convert.ToInt32(accesoDatos.Lector["DiaSemana"]);
+                        DayOfWeek diaSemana = (DayOfWeek)diaNumero;
 
                         bool yaExisteTurno = aux.turnoTrabajos.Any(t =>
                             t.IdTurnoTrabajo == idTurno && t.DiaSemana == diaSemana);
@@ -195,7 +196,9 @@ namespace Negocio
 
                         datosGuardia.SetearParametros("@IdMedico", idMedicoNuevo);
                         datosGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
-                        int diaSemanaNumero = ConvertirDiaSemana(turno.DiaSemana);
+
+
+                        int diaSemanaNumero = (int)turno.DiaSemana;
                         datosGuardia.SetearParametros("@DiaSemana", diaSemanaNumero);
 
                         datosGuardia.EjecutarAccion();
@@ -290,7 +293,7 @@ namespace Negocio
                     VALUES (@IdMedico, @IdGuardia, @DiaSemana)");
                         datosInsGuardia.SetearParametros("@IdMedico", medico.IdMedico);
                         datosInsGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
-                        int diaNumero = ConvertirDiaSemana(turno.DiaSemana);
+                        int diaNumero = (int)(turno.DiaSemana);
                         datosInsGuardia.SetearParametros("@DiaSemana", diaNumero);
                         datosInsGuardia.EjecutarAccion();
                     }
@@ -334,14 +337,37 @@ namespace Negocio
             }
         }
 
-        public void EliminarMedico(int id)
+        public bool EliminarMedico(int id)
         {
             AccesoDatos datos = new AccesoDatos();
+
             try
             {
+             
+                datos.SetearConsulta("SELECT COUNT(*) FROM Turnos WHERE IdMedico = @id");
+                datos.SetearParametros("@id", id);
+                datos.EjecutarLectura();
+
+                int cantidad = 0;
+                if (datos.Lector.Read())
+                    cantidad = Convert.ToInt32(datos.Lector[0]);
+
+                datos.CerrarConexion(); 
+
+
+               
+                if (cantidad > 0)
+                {
+                    return false;
+                }
+
+               
+                datos = new AccesoDatos(); 
                 datos.SetearConsulta("UPDATE Medicos SET Activo = 0 WHERE IdMedico = @Id");
                 datos.SetearParametros("@Id", id);
                 datos.EjecutarAccion();
+
+                return true;
             }
             finally
             {
@@ -397,9 +423,8 @@ namespace Negocio
                         MedicoPorGuardia turno = new MedicoPorGuardia();
                         turno.IdTurnoTrabajo = (int)datosMedico.Lector["IdGuardia"];
                         turno.Nombre = datosMedico.Lector["NombreGuardia"].ToString();
-                        byte diaNumero = (byte)datosMedico.Lector["DiaSemana"];
-                        string diaSemana = ConvertirDiaSemanaTexto(diaNumero);
-                        turno.DiaSemana = diaSemana;
+                        int diaNumero = Convert.ToInt32(datosMedico.Lector["DiaSemana"]);
+                        turno.DiaSemana = (DayOfWeek)diaNumero;
 
                         if (!(datosMedico.Lector["HoraInicio"] is DBNull))
                             turno.HoraInicio = (TimeSpan)datosMedico.Lector["HoraInicio"];
@@ -475,20 +500,7 @@ namespace Negocio
             return BuscarMedicoPorId(idMedico, out idsDescartados);
         }
 
-        public int ConvertirDiaSemana(string dia)
-        {
-            switch (dia)
-            {
-                case "Lunes": return 1;
-                case "Martes": return 2;
-                case "Miércoles": return 3;
-                case "Jueves": return 4;
-                case "Viernes": return 5;
-                case "Sábado": return 6;
-                case "Domingo": return 7;
-                default: return 1;
-            }
-        }
+      
 
         public string ObtenerNombreDiaEnEspanol(DateTime fecha)
         {
@@ -504,21 +516,8 @@ namespace Negocio
                 default: return string.Empty;
             }
         }
+ 
 
-        public string ConvertirDiaSemanaTexto(byte dia)
-        {
-            switch (dia)
-            {
-                case 1: return "Lunes";
-                case 2: return "Martes";
-                case 3: return "Miércoles";
-                case 4: return "Jueves";
-                case 5: return "Viernes";
-                case 6: return "Sábado";
-                case 7: return "Domingo";
-                default: return "Lunes";
-            }
-        }
 
         //Adri: Nuevo metodo para listar medicos por especialidad
         public List<Medico> ListarPorEspecialidad(int idEspecialidad)
@@ -567,7 +566,7 @@ namespace Negocio
             if (medico.turnoTrabajos == null || medico.turnoTrabajos.Count == 0)
                 return resultadoHorario;
 
-            MedicoPorGuardia guardiaDelDia = null;
+         //   MedicoPorGuardia guardiaDelDia = null;
 
             TimeSpan inicio = medico.TurnoTrabajo.HoraInicio;
             TimeSpan fin = medico.TurnoTrabajo.HoraFin;
@@ -650,8 +649,72 @@ namespace Negocio
             var horariosLibres = ObtenerHorariosLibres(idMedico, fecha);
             return horariosLibres.Count > 0;
         }
-      
-        
+
+
+        public List<DayOfWeek> ObtenerDiasQueTrabaja(int idMedico)
+        {
+            List<DayOfWeek> dias = new List<DayOfWeek>();
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT DiaSemana FROM MedicosPorGuardia WHERE IdMedico = @id");
+                datos.SetearParametros("@id", idMedico);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+             
+                    int diaInt = (int)datos.Lector["DiaSemana"];
+                    DayOfWeek dia = (DayOfWeek)diaInt;
+
+                    dias.Add(dia);
+                }
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+
+            return dias;
+        }
+
+        public bool ExisteMedicoPorMatricula(string matricula)
+        {
+            AccesoDatos datos = new AccesoDatos();
+
+            try
+            {
+                datos.SetearConsulta("SELECT COUNT(*) FROM Medicos WHERE Matricula = @matricula");
+                datos.SetearParametros("@matricula", matricula);
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    int cantidad = (int)datos.Lector[0];
+                    if (cantidad > 0)
+                    {
+                        return true;   
+                    }
+                }
+
+                return false; 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al verificar si existe un médico con esa matrícula.", ex);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
+
+
+
+
+
     }
 }
 

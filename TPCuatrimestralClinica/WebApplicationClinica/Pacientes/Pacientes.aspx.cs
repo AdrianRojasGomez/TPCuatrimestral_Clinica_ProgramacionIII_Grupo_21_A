@@ -332,7 +332,7 @@ namespace WebApplicationClinica
             }
             catch (Exception ex)
             {
-                MostrarMensaje($"❌ Fallo al enviar correo. Verifique credenciales SMTP. Error: {ex.Message}", "danger");
+                MostrarMensaje($"Fallo al enviar correo. Verifique credenciales SMTP. Error: {ex.Message}", "danger");
             }
         }
         void LimpiarFormulario()

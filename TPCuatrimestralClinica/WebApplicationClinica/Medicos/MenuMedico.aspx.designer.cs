@@ -24,15 +24,6 @@ namespace WebApplicationClinica.Medicos
         protected global::System.Web.UI.WebControls.Label lblNombreDoctor;
 
         /// <summary>
-        /// Control lblNombreConsultorio.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNombreConsultorio;
-
-        /// <summary>
         /// Control lblEspecialidad.
         /// </summary>
         /// <remarks>
@@ -42,85 +33,22 @@ namespace WebApplicationClinica.Medicos
         protected global::System.Web.UI.WebControls.Label lblEspecialidad;
 
         /// <summary>
-        /// Control lblTurnoCurso.
+        /// Control pnlAlertaSeleccion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTurnoCurso;
+        protected global::System.Web.UI.WebControls.Panel pnlAlertaSeleccion;
 
         /// <summary>
-        /// Control lblNombrePaciente.
+        /// Control litMensajeSeleccion.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblNombrePaciente;
-
-        /// <summary>
-        /// Control lblEsperaTurno.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblEsperaTurno;
-
-        /// <summary>
-        /// Control lblMinutosEspera.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMinutosEspera;
-
-        /// <summary>
-        /// Control lblTiempoEspera.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTiempoEspera;
-
-        /// <summary>
-        /// Control lblAtendidos.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblAtendidos;
-
-        /// <summary>
-        /// Control lblOjetivo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblOjetivo;
-
-        /// <summary>
-        /// Control lblSiguienteTurno.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSiguienteTurno;
-
-        /// <summary>
-        /// Control lblSiguientePaciente.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblSiguientePaciente;
+        protected global::System.Web.UI.WebControls.Literal litMensajeSeleccion;
 
         /// <summary>
         /// Control lblturnoActual.
@@ -130,6 +58,15 @@ namespace WebApplicationClinica.Medicos
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblturnoActual;
+
+        /// <summary>
+        /// Control pnlDetalleTurno.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlDetalleTurno;
 
         /// <summary>
         /// Control lblPaciente.
@@ -159,13 +96,13 @@ namespace WebApplicationClinica.Medicos
         protected global::System.Web.UI.WebControls.TextBox txtObservaciones;
 
         /// <summary>
-        /// Control btnLLamarPaciente.
+        /// Control hdnIdTurnoSeleccionado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLLamarPaciente;
+        protected global::System.Web.UI.WebControls.HiddenField hdnIdTurnoSeleccionado;
 
         /// <summary>
         /// Control btnAtender.
@@ -195,24 +132,6 @@ namespace WebApplicationClinica.Medicos
         protected global::System.Web.UI.WebControls.Button btnReprogramar;
 
         /// <summary>
-        /// Control btnSiguientePaciente.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSiguientePaciente;
-
-        /// <summary>
-        /// Control txteBuscarPaciente.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txteBuscarPaciente;
-
-        /// <summary>
         /// Control btnActualizar.
         /// </summary>
         /// <remarks>
@@ -222,12 +141,21 @@ namespace WebApplicationClinica.Medicos
         protected global::System.Web.UI.WebControls.Button btnActualizar;
 
         /// <summary>
-        /// Control btnLlamarProxPaciente.
+        /// Control rptColaTurnos.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnLlamarProxPaciente;
+        protected global::System.Web.UI.WebControls.Repeater rptColaTurnos;
+
+        /// <summary>
+        /// Control litSinTurnos.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litSinTurnos;
     }
 }

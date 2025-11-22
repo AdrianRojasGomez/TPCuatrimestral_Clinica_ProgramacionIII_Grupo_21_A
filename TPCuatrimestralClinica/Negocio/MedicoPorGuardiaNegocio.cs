@@ -67,7 +67,7 @@ namespace Negocio
                         Nombre = (string)d.Lector["Nombre"],
                         HoraInicio = (TimeSpan)d.Lector["HoraInicio"],
                         HoraFin = (TimeSpan)d.Lector["HoraFin"],
-                        DiaSemana = (string)d.Lector["DiaSemana"]
+                        DiaSemana = (DayOfWeek)d.Lector["DiaSemana"]
                     };
                 }
                 return null;

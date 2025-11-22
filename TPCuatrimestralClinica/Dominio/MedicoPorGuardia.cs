@@ -13,7 +13,7 @@ namespace Dominio
         public TimeSpan HoraInicio { get; set; }
         public TimeSpan HoraFin { get; set; }
 
-        public string DiaSemana { get; set; }
+        public DayOfWeek DiaSemana { get; set; }
         
         public Guardia Guardia { get; set; }
     }

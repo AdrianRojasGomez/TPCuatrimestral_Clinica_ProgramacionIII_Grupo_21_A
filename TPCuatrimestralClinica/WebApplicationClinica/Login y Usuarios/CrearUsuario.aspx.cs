@@ -11,6 +11,8 @@ namespace WebApplicationClinica
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+
+           
             if (Session["usuario"] == null) { Response.Redirect("~/Login y Usuarios/Login.aspx"); return; }
 
             Usuario usuarioLogueado = (Usuario)Session["usuario"];
@@ -20,12 +22,43 @@ namespace WebApplicationClinica
                 Response.Redirect("~/Login y Usuarios/Login.aspx");
                 return;
             }
+            if (Session["idMedicoCreado"] != null)
+            {
+              
+                int idMedico = Convert.ToInt32(Session["idMedicoCreado"]);
+
+               
+                ddlTipoUsuario.SelectedValue = ((int)TipoUsuario.Medico).ToString();
+
+                
+                ddlTipoUsuario.Enabled = false;
+
+                Medico medico = new Medico();
+                MedicoNegocio medicoNegocio = new MedicoNegocio();
+
+                medico = medicoNegocio.BuscarMedicoPorIdSimple(idMedico);
+
+                if (medico != null)
+                {
+
+                    TxtNombreUsuario.Attributes["placeholder"] = medico.Nombre.ToLower() +  " " + medico.Apellido.ToLower();
+                }
+
+
+            }
+
+
+
+
+
 
             if (!IsPostBack)
             {
                 CargarGrillaUsuario();
                 txtFiltradoUsario.Attributes["oninput"] = $"liveFilter('{txtFiltradoUsario.UniqueID}')";
             }
+
+            
         }
 
         // ACCIÓN: GUARDAR O EDITAR

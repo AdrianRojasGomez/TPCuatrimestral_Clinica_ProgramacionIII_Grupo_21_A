@@ -177,6 +177,14 @@ namespace WebApplicationClinica.Medicos
                     lblError.Visible = true;
                     return;
                 }
+                bool existeMatricula = medicoNegocio.ExisteMedicoPorMatricula(matricula);
+
+                if (existeMatricula)
+                {
+                    lblError.Text = "❌ Ya existe un médico registrado con esa matrícula.";
+                    lblError.Visible = true;
+                    return;
+                }
 
                 if (idTurno == "0")
                 {
@@ -239,8 +247,8 @@ namespace WebApplicationClinica.Medicos
                 foreach (var diaItem in diasSeleccionados)
                 {
                     MedicoPorGuardia turno = new MedicoPorGuardia();
-                    turno.IdTurnoTrabajo = int.Parse(idTurno);   
-                    turno.DiaSemana = diaItem.Value;              
+                    turno.IdTurnoTrabajo = int.Parse(idTurno);
+                    turno.DiaSemana = (DayOfWeek)int.Parse(diaItem.Value);              
                     turno.HoraInicio = horaInicio;
                     turno.HoraFin = horaFin;
                     
@@ -481,7 +489,7 @@ namespace WebApplicationClinica.Medicos
                     turno.Nombre = ddlTurnoEdit.SelectedItem.Text;
                     turno.HoraInicio = horaInicio;
                     turno.HoraFin = horaFin;
-                    turno.DiaSemana = diaItem.Value; 
+                    turno.DiaSemana =(DayOfWeek)int.Parse( diaItem.Value); 
 
                     medico.turnoTrabajos.Add(turno);
                 }
@@ -621,33 +629,33 @@ namespace WebApplicationClinica.Medicos
             {
                 MedicoNegocio medicoNegocio = new MedicoNegocio();
 
-
                 int id = (int)ViewState["IdMedicoEliminar"];
 
+                bool eliminado = medicoNegocio.EliminarMedico(id);
 
-                medicoNegocio.EliminarMedico(id);
+                if (!eliminado)
+                {
+              
+                    lblEliminado.Visible = false;
 
+                    lblEminadoEror.Visible = true;
+                    lblEminadoEror.Text = "❌ No se puede eliminar un médico que tiene turnos asignados.";
+
+                    btnVolver.Visible = true;
+                    return;
+                }
+
+         
                 lblEliminado.Visible = true;
                 lblEminadoEror.Visible = false;
-
                 btnVolver.Visible = true;
 
-
-
-
-
                 CargarGrillaMedicos();
-
-
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-
                 lblEminadoEror.Visible = true;
-
-                throw ex;
-
-
+                lblEminadoEror.Text = "❌ Ocurrió un error inesperado al eliminar el médico.";
             }
 
 
@@ -776,8 +784,8 @@ namespace WebApplicationClinica.Medicos
                     DropDownList ddlDiaSemanaEdit = (DropDownList)e.Row.FindControl("ddlDiaSemanaEdit");
                     if (ddlDiaSemanaEdit != null && medico.TurnoTrabajo != null)
                     {
-                      
-                        ddlDiaSemanaEdit.SelectedValue = medico.TurnoTrabajo.DiaSemana;
+
+                        ddlDiaSemanaEdit.SelectedValue = ((int)medico.TurnoTrabajo.DiaSemana).ToString();
                     }
 
                   
@@ -807,20 +815,20 @@ namespace WebApplicationClinica.Medicos
                     {
                         // 1) Cargar los días SIEMPRE en este orden
                         cblDiasSemanaEdit.Items.Clear();
-                        cblDiasSemanaEdit.Items.Add(new ListItem("Lunes", "Lunes"));
-                        cblDiasSemanaEdit.Items.Add(new ListItem("Martes", "Martes"));
-                        cblDiasSemanaEdit.Items.Add(new ListItem("Miércoles", "Miercoles"));
-                        cblDiasSemanaEdit.Items.Add(new ListItem("Jueves", "Jueves"));
-                        cblDiasSemanaEdit.Items.Add(new ListItem("Viernes", "Viernes"));
-                        cblDiasSemanaEdit.Items.Add(new ListItem("Sábado", "Sabado"));
-                        cblDiasSemanaEdit.Items.Add(new ListItem("Domingo", "Domingo"));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Lunes", ((int)DayOfWeek.Monday).ToString()));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Martes", ((int)DayOfWeek.Tuesday).ToString()));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Miércoles", ((int)DayOfWeek.Wednesday).ToString()));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Jueves", ((int)DayOfWeek.Thursday).ToString()));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Viernes", ((int)DayOfWeek.Friday).ToString()));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Sábado", ((int)DayOfWeek.Saturday).ToString()));
+                        cblDiasSemanaEdit.Items.Add(new ListItem("Domingo", ((int)DayOfWeek.Sunday).ToString()));
 
                         // 2) Tildar los días que YA tiene el médico
                         if (medico.turnoTrabajos != null && medico.turnoTrabajos.Count > 0)
                         {
                             foreach (var turno in medico.turnoTrabajos)
                             {
-                                ListItem diaItem = cblDiasSemanaEdit.Items.FindByValue(turno.DiaSemana);
+                                ListItem diaItem = cblDiasSemanaEdit.Items.FindByValue(((int)turno.DiaSemana).ToString());
                                 if (diaItem != null)
                                     diaItem.Selected = true;
                             }
@@ -828,7 +836,7 @@ namespace WebApplicationClinica.Medicos
                         else if (medico.TurnoTrabajo != null)
                         {
                             // Caso viejo: solo un turno/día
-                            ListItem diaItem = cblDiasSemanaEdit.Items.FindByValue(medico.TurnoTrabajo.DiaSemana);
+                            ListItem diaItem = cblDiasSemanaEdit.Items.FindByValue(((int)medico.TurnoTrabajo.DiaSemana).ToString());
                             if (diaItem != null)
                                 diaItem.Selected = true;
                         }

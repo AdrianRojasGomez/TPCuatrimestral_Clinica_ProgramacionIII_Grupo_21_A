@@ -14,24 +14,19 @@ namespace WebApplicationClinica
         {
             if (!IsPostBack)
             {
-                int idMedicoPrueba = 5; // Elegí un médico que SABÉS que tiene varios días
-
-                MedicoNegocio negocio = new MedicoNegocio();
-                var dias = negocio.ObtenerDiasQueTrabaja(idMedicoPrueba);
-
-                lblmostrardia.Text = "Días: " + string.Join(" | ",
-                    dias.Select(d => (int)d + "-" + d.ToString()));
+       
                 //Setup Inicial
+                //mm
                 pnlDatosPaciente.Visible = false;
                 pnlAgregarPaciente.Visible = false;
                 lblMensajeError.Visible = false;
                 btnIrAgregarPaciente.Visible = false;
                 btnGuardar.Enabled = false;
-                //dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
+
 
                 //Deshabilitar Medico, Fecha y hora hasta seleccionar una Especialidad
                 ddlMedicoDisponible.Enabled = false;
-                //dtFechaTurno.Enabled = false;
+                DeshabilitarDatepicker();
                 ddlHorario.Enabled = false;
 
                 //Cargar lista de Especialidades
@@ -173,17 +168,19 @@ namespace WebApplicationClinica
                 return;
             }
 
-            if (btnGuardar.Enabled)
-            {
-                btnGuardar.Enabled = false;
-            }
+
             RevertirMuted();
+            DeshabilitarDatepicker();
+            ddlHorario.Items.Clear();
+            ddlHorario.Enabled = false;
+            btnGuardar.Enabled = false;
+            Session["FechaTurno"] = null;
+
 
             Especialidad especialidadSeleccionada = new Especialidad();
             especialidadSeleccionada.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
             especialidadSeleccionada.Nombre = ddlEspecialidad.SelectedItem.Text;
 
-            //dtFechaTurno.Attributes["min"] = DateTime.Today.ToString("yyyy-MM-dd");
             ddlMedicoDisponible.Items.Clear();
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             List<Medico> medicosConEspecialidad = new List<Medico>();
@@ -196,8 +193,7 @@ namespace WebApplicationClinica
             ddlMedicoDisponible.DataBind();
             //Habilitar el ddlMedicoDisponible
             ddlMedicoDisponible.Enabled = true;
-            //Habilitar el dtFechaTurno
-            //dtFechaTurno.Enabled = true;
+
 
             if (medicosConEspecialidad.Count == 1)
             {
@@ -218,57 +214,81 @@ namespace WebApplicationClinica
                 return;
             }
 
-            if (btnGuardar.Enabled)
-            {
-                btnGuardar.Enabled = false;
-            }
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             Medico medicoSeleccionado = new Medico();
             int aux = int.Parse(ddlMedicoDisponible.SelectedValue);
             medicoSeleccionado = medicoNegocio.BuscarMedicoPorIdSimple(aux);
-            System.Diagnostics.Debug.WriteLine(medicoSeleccionado.TurnoTrabajo.DiaSemana);
-            //Validar las fechas no disponibles para ese medico
-            //TODO: Implementar la lógica para ocultar fechas no disponibles en el dtFechaTurno
+            ///Validar las fechas no disponibles para ese medico
+            List<DayOfWeek> diasDisponibles = medicoNegocio.ObtenerDiasQueTrabaja(medicoSeleccionado.IdMedico);
 
-            //Modificar el mensaje MedicoMuted
-            MedicoMuted.InnerHtml = $"Médico seleccionado: {ddlMedicoDisponible.SelectedItem.Text}.";
+            ActualizarDiasSegunMedico(diasDisponibles);
+            ///DEBUG : Mostrar los dias disponibles en consola
+            string diasTexto = string.Join(", ", diasDisponibles.Select(d => d.ToString()));
+            MedicoMuted.InnerHtml = $"Días disponibles: {diasTexto}.";
+            ///System.Diagnostics.Debug.WriteLine(medicoSeleccionado.TurnoTrabajo.DiaSemana);
+
+            ///Habilitar el datepicker
+            ddlHorario.Items.Clear();
+            ddlHorario.Enabled = false;
+            btnGuardar.Enabled = false;
+            HabilitarDatepicker();
+
+            ///Modificar el mensaje MedicoMuted
+            //MedicoMuted.InnerHtml = $"Médico seleccionado: {ddlMedicoDisponible.SelectedItem.Text}.";
             MedicoMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
         }
 
-        protected void dtFechaTurno_Changed(object sender, EventArgs e)
+        protected void lnkFechaSeleccionada_Click(object sender, EventArgs e)
         {
-            if (btnGuardar.Enabled)
+            if (string.IsNullOrWhiteSpace(hdnFechaTurno.Value))
+                return;
+
+            DateTime fecha;
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+
+            try
             {
-                btnGuardar.Enabled = false;
+                fecha = DateTime.Parse(hdnFechaTurno.Value);
+            }
+            catch
+            {
+                FechaMuted.InnerHtml = "Fecha inválida.";
+                FechaMuted.Attributes["class"] = "text-danger d-block mt-2 mt-auto";
+                hdnFechaTurno.Value = "";
+                return;
             }
 
-            //MedicoNegocio medicoNegocio = new MedicoNegocio();
-            //DateTime fechaSeleccionada = DateTime.Parse(dtFechaTurno.Text);
-            //int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
-            //List<TimeSpan> horariosDisponibles = medicoNegocio.ObtenerHorariosLibres(idMedico, fechaSeleccionada);
-            //ddlHorario.Items.Clear();
-            //foreach (TimeSpan horario in horariosDisponibles)
-            //{
-            //    ddlHorario.Items.Add(new ListItem(horario.ToString(@"hh\:mm"), horario.ToString()));
-            //}
-            //ddlHorario.Enabled = true;
+            if (fecha.Date < DateTime.Today)
+            {
+                FechaMuted.InnerHtml = "No se pueden seleccionar fechas anteriores a hoy.";
+                FechaMuted.Attributes["class"] = "text-danger d-block mt-2 mt-auto";
+                hdnFechaTurno.Value = "";
+                return;
+            }
 
-            ////Modificar el mensaje FechaMuted
-            //var horarios = HorariosRecomendados();
-            //FechaMuted.InnerHtml = $"Horarios recomendados: " + string.Join(", ",horarios) + ".";
-            //FechaMuted.Attributes["class"] = "text-success d-block mt-2";
-            //HorarioMuted.InnerHtml = "4. Seleccione un horario disponible.";
 
+
+            //Cargar los horarios recomendados
+            int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+            List<TimeSpan> horariosDisponibles = medicoNegocio.ObtenerHorariosLibres(idMedico, fecha);
+
+            ddlHorario.Items.Clear();
+            foreach (TimeSpan horario in horariosDisponibles)
+            {
+                ddlHorario.Items.Add(new ListItem(horario.ToString(@"hh\:mm"), horario.ToString()));
+            }
+            ddlHorario.Enabled = true;
+            Session["FechaTurno"] = fecha;
+
+            FechaMuted.InnerHtml = $"Fecha seleccionada: {fecha:yyyy-MM-dd}.";
+            FechaMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
+            MostrarHorariosRecomendadosEnLabel();
         }
 
         protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
         {
 
             btnGuardar.Enabled = true;
-
-            //Validar dias de semana
-            
-
 
             //Modificar el mensaje HorarioMuted
             HorarioMuted.InnerHtml = $"Horario seleccionado: {ddlHorario.SelectedItem.Text}.";
@@ -318,13 +338,14 @@ namespace WebApplicationClinica
         protected void btnConfirmarModal_Click(object sender, EventArgs e)
         {
             TurnoNegocio turnoNegocio = new TurnoNegocio();
+            DateTime fechaTurno = (DateTime)Session["FechaTurno"];
 
             try
             {
                 Turno nuevoTurno = new Turno();
                 nuevoTurno.NumeroTurno = (turnoNegocio.ObtenerUltimoID() + 1).ToString();
-                //nuevoTurno.FechaInicio = DateTime.Parse(dtFechaTurno.Text);
-                nuevoTurno.FechaFin = nuevoTurno.FechaInicio;
+                nuevoTurno.FechaInicio = fechaTurno;
+                nuevoTurno.FechaFin = fechaTurno;
                 nuevoTurno.HoraInicio = TimeSpan.Parse(ddlHorario.SelectedValue);
                 nuevoTurno.HoraFin = nuevoTurno.HoraInicio + TimeSpan.FromHours(1);
                 nuevoTurno.ObservacionesSolicitud = txtObservaciones.Text;
@@ -375,7 +396,7 @@ namespace WebApplicationClinica
                             $"<strong>Nombre de Paciente</strong>: {txtNombrePaciente.Text} {txtApellidoPaciente.Text}<br />" +
                             $"<strong>Especialidad</strong>: {ddlEspecialidad.SelectedItem.Text}<br />" +
                             $"<strong>Doctor asignado</strong>: {ddlMedicoDisponible.SelectedItem.Text}<br />" +
-                            //$"<strong>Fecha del Turno</strong>: {dtFechaTurno.Text}<br />" +
+                            $"<strong>Fecha del Turno</strong>: {Session["FechaTurno"]}<br />" +
                             $"<strong>Horario del Turno</strong>: {ddlHorario.SelectedItem.Text}<br /><br />" +
                             $"Desea confirmar el turno?";
 
@@ -386,6 +407,62 @@ namespace WebApplicationClinica
         {
             Response.Redirect("~/Mainmenu.aspx");
         }
+        #endregion
+
+        #region Datepicker Metodos
+        private void DeshabilitarDatepicker()
+        {
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "DisableCalendarFlag",
+                "deshabilitarCalendario();",
+                true);
+        }
+
+        private void HabilitarDatepicker()
+        {
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "EnableCalendarFlag",
+                "habilitarCalendario();",
+                true);
+
+            ConfigurarMinimoHoy();
+        }
+
+        private void DeshabilitarDiasSemana(List<DayOfWeek> dias)
+        {
+
+            var indices = dias.Select(d => (int)d);
+            string jsArray = string.Join(",", indices);
+
+            string script = $@"
+        $('#calendarioTurnos').datepicker('setDaysOfWeekDisabled', [{jsArray}]);";
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "DisableDaysOfWeek",
+                script,
+                true);
+        }
+
+        private void ConfigurarMinimoHoy()
+        {
+            string script = "$('#calendarioTurnos').datepicker('setStartDate', new Date());";
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "SetStartDateToday",
+                script,
+                true
+            );
+        }
+
+
         #endregion
 
         #region Helpers
@@ -401,18 +478,56 @@ namespace WebApplicationClinica
             HorarioMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
         }
 
-        private List<string> HorariosRecomendados()
+        private List<string> ObtenerHorariosDesdeDdl()
         {
-            List<string> horarios = new List<string>
+            List<string> horarios = new List<string>();
+
+            foreach (ListItem item in ddlHorario.Items)
             {
-                "09:00",
-                "10:00",
-                "11:00",
-            };
+                horarios.Add(item.Text);
+            }
+
             return horarios;
         }
 
+        private void MostrarHorariosRecomendadosEnLabel()
+        {
+            List<string> horarios = ObtenerHorariosDesdeDdl();
+
+            // Tomo solo los primeros 3 (o menos si no hay tantos)
+            var primeros = horarios.Take(3).ToList();
+
+            if (primeros.Count == 0)
+            {
+                HorarioMuted.InnerHtml = "No hay horarios recomendados disponibles.";
+            }
+            else
+            {
+                string lista = string.Join(", ", primeros);
+                HorarioMuted.InnerHtml = $"Horarios recomendados: {lista}";
+            }
+
+            HorarioMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
+        }
+
+        private void ActualizarDiasSegunMedico(List<DayOfWeek> diasQueTrabaja)
+        {
+
+            var todosLosDias = Enum.GetValues(typeof(DayOfWeek))
+                                   .Cast<DayOfWeek>();
+
+            // Días que NO trabaja = todos - los que sí trabaja
+            var diasQueNoTrabaja = todosLosDias
+                .Except(diasQueTrabaja)
+                .ToList();
+
+
+            DeshabilitarDiasSemana(diasQueNoTrabaja);
+        }
         #endregion
 
+
+
     }
+
 }

@@ -61,14 +61,14 @@ namespace WebApplicationClinica
             
         }
 
-        // ACCIÓN: GUARDAR O EDITAR
+        //GUARDAR O EDITAR
         protected void btnGuardarUsuario_Click(object sender, EventArgs e)
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(TxtNombreUsuario.Text) || string.IsNullOrWhiteSpace(TxtPassword.Text))
                 {
-                    lblMensaje.Text = "⚠️ Complete usuario y contraseña.";
+                    lblMensaje.Text = " Complete usuario y contraseña.";
                     lblMensaje.CssClass = "text-danger";
                     return;
                 }
@@ -84,7 +84,7 @@ namespace WebApplicationClinica
                 if (string.IsNullOrEmpty(hfIdUsuario.Value))
                 {
                     
-                    // Lógica de Médico
+                    // Lógica para Médico
                     if (usuario.TipoUsuario == TipoUsuario.Medico)
                     {
                         if (Session["idMedicoCreado"] != null)
@@ -95,7 +95,7 @@ namespace WebApplicationClinica
                         }
                         else
                         {
-                            lblMensaje.Text = "⚠️ Para crear un Médico nuevo, primero debe darlo de alta en la sección Médicos.";
+                            lblMensaje.Text = "Para crear un Médico nuevo, primero debe darlo de alta en la sección Médicos.";
                             return;
                         }
                     }
@@ -104,18 +104,18 @@ namespace WebApplicationClinica
                         
                         negocio.GuardarUsuario(usuario);
                     }
-                    lblMensaje.Text = "✅ Usuario Creado.";
+                    lblMensaje.Text = " Usuario Creado.";
                 }
                 else
                 {
-                    // --- ES MODIFICACIÓN ---
+                    // ES MODIFICACIÓN 
                     usuario.IdUsuario = int.Parse(hfIdUsuario.Value);
 
                     // Aquí permitimos cambiar nombre, pass y ROL.
                     // no estamos asignando ID Medico aquí para simplificar.
                     negocio.ActualizarUsuario(usuario);
 
-                    lblMensaje.Text = "✏️ Usuario Modificado Exitosamente.";
+                    lblMensaje.Text = "Usuario Modificado Exitosamente.";
                 }
 
                
@@ -125,12 +125,12 @@ namespace WebApplicationClinica
             }
             catch (Exception ex)
             {
-                lblMensaje.Text = "❌ Error: " + ex.Message;
+                lblMensaje.Text = " Error: " + ex.Message;
                 lblMensaje.CssClass = "text-danger";
             }
         }
 
-        //  EDITAR (Desde la Grilla)
+        //  EDITAR
         protected void gvUsuario_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             if (e.CommandName == "Editar")
@@ -145,10 +145,9 @@ namespace WebApplicationClinica
                 {
                     
                     TxtNombreUsuario.Text = seleccionado.NombreUsuario;
-                    TxtPassword.Text = seleccionado.Password;
+                    // No mostramos la contraseña TxtPassword.Text = seleccionado.Password;
                     ddlTipoUsuario.SelectedValue = ((int)seleccionado.TipoUsuario).ToString();
-
-                   
+                                     
                     hfIdUsuario.Value = seleccionado.IdUsuario.ToString();
 
                     btnGuardarUsuario.Text = "Modificar Usuario";

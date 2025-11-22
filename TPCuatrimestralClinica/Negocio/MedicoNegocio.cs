@@ -665,7 +665,7 @@ namespace Negocio
                 while (datos.Lector.Read())
                 {
              
-                    int diaInt = (int)datos.Lector["DiaSemana"];
+                    int diaInt = Convert.ToInt32(datos.Lector["DiaSemana"]);
                     DayOfWeek dia = (DayOfWeek)diaInt;
 
                     dias.Add(dia);

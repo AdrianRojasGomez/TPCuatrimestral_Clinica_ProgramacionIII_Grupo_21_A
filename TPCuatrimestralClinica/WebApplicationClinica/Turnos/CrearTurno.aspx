@@ -15,6 +15,7 @@
                     <div class="card shadow-lg border-0 rounded-3 w-100">
                         <div class="card-header bg-white sticky-top">
                             <h4 class="mb-0 text-center">Ingrese el detalle del turno</h4>
+                            <asp:Label ID="lblmostrardia" runat="server" Text="hola" CssClass="text-info fw-bold" />
                         </div>
 
                         <div class="card-body p-4 p-md-5 overflow-auto">

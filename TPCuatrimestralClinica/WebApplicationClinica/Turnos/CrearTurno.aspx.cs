@@ -2,6 +2,7 @@
 using Negocio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -13,6 +14,13 @@ namespace WebApplicationClinica
         {
             if (!IsPostBack)
             {
+                int idMedicoPrueba = 5; // Elegí un médico que SABÉS que tiene varios días
+
+                MedicoNegocio negocio = new MedicoNegocio();
+                var dias = negocio.ObtenerDiasQueTrabaja(idMedicoPrueba);
+
+                lblmostrardia.Text = "Días: " + string.Join(" | ",
+                    dias.Select(d => (int)d + "-" + d.ToString()));
                 //Setup Inicial
                 pnlDatosPaciente.Visible = false;
                 pnlAgregarPaciente.Visible = false;

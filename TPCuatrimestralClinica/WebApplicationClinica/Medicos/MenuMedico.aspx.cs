@@ -14,13 +14,14 @@ namespace WebApplicationClinica.Medicos
         {
             if (!IsPostBack)
             {
-                if (Session["idMedico"] == null)
-                {
-                    Response.Redirect("~/Login%20y%20Usuarios/Login.aspx");
-                    return;
-                }
+                //if (Session["idMedico"] == null)
+                //{
+                //    Response.Redirect("~/Login%20y%20Usuarios/Login.aspx");
+                //    return;
+                //}
 
-                int idMedico = (int)Session["idMedico"];
+                //int idMedico = (int)Session["idMedico"];
+                int idMedico = 1; // Temporal hasta login
 
                 CargarDatosDoctor(idMedico);
 

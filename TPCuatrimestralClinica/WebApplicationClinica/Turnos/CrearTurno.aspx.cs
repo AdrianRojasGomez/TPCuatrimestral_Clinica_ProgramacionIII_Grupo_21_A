@@ -16,7 +16,7 @@ namespace WebApplicationClinica
             {
        
                 //Setup Inicial
-                //mm
+                
                 pnlDatosPaciente.Visible = false;
                 pnlAgregarPaciente.Visible = false;
                 lblMensajeError.Visible = false;

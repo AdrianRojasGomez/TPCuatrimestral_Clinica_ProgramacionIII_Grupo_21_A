@@ -147,8 +147,18 @@ namespace WebApplicationClinica
                     TxtNombreUsuario.Text = seleccionado.NombreUsuario;
                     // No mostramos la contraseña TxtPassword.Text = seleccionado.Password;
                     ddlTipoUsuario.SelectedValue = ((int)seleccionado.TipoUsuario).ToString();
-                                     
+
+                    if ( seleccionado.IdMedicoAsociado == 0)
+                    {
+                        ListItem itemMedico = ddlTipoUsuario.Items.FindByValue(((int)TipoUsuario.Medico).ToString());
+                        if (itemMedico != null)
+                            itemMedico.Enabled = false;  
+                    }
+
+
                     hfIdUsuario.Value = seleccionado.IdUsuario.ToString();
+
+
 
                     btnGuardarUsuario.Text = "Modificar Usuario";
                     btnGuardarUsuario.CssClass = "btn btn-warning me-3";

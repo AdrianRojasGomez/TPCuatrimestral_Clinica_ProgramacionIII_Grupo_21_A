@@ -15,9 +15,6 @@
         
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2 class="mb-1 text-success fw-bold">Gestión de Usuarios</h2>
-            <asp:Button ID="Button1" runat="server" 
-                Text="↩️ Volver a Médicos"
-                CssClass="btn btn-secondary" OnClick="btnVolver_Click" /> 
         </div>
 
         <div class="card shadow-sm p-4 mb-4">

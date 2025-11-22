@@ -71,6 +71,7 @@
     <Content Include="content\img\Turnos.png" />
     <Content Include="content\SQLScripts\Insert Datos.sql" />
     <Content Include="content\SQLScripts\NewCreation Bd.sql" />
+    <Content Include="scripts\fechas.js" />
     <Content Include="Medicos\MenuMedico.aspx" />
     <Content Include="Medicos\AgregarMedico.aspx" />
     <Content Include="Turnos\CrearTurno.aspx" />

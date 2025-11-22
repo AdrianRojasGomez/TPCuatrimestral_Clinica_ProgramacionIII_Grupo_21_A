@@ -1,6 +1,8 @@
 ﻿<%@ Page Title="Crear Nuevo Turno" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="CrearTurno.aspx.cs" Inherits="WebApplicationClinica.CrearTurno" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css" />
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
@@ -110,91 +112,105 @@
                                 <div class="border-top border border-secondary-subtle opacity-50 my-4"></div>
                                 <label class="form-label"><b>2. Completar Datos del Turno</b></label>
 
-                                <div class="row row-cols-4 g-3 align-items-end">
+                                <div class="row row-cols-4 g-3 align-items-stretch">
                                     <%--Especialidad--%>
                                     <div class="col-12 col-md-3">
-                                        <div class="card shadow-sm">
-                                            <div class="card-body">
+                                        <div class="card shadow-sm h-100">
+                                            <div class="card-body d-flex flex-column">
                                                 <h6 class="card-title mb-3">Especialidades</h6>
-                                                <asp:DropDownList
-                                                    runat="server"
-                                                    ID="ddlEspecialidad"
-                                                    ClientIDMode="Static"
-                                                    CssClass="form-select"
-                                                    AutoPostBack="true"
-                                                    OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged"
-                                                    AppendDataBoundItems="true">
-                                                    <asp:ListItem Value="">Seleccione una especialidad…</asp:ListItem>
-                                                </asp:DropDownList>
+
+                                                    <asp:DropDownList
+                                                        runat="server"
+                                                        ID="ddlEspecialidad"
+                                                        ClientIDMode="Static"
+                                                        CssClass="form-select"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlEspecialidad_SelectedIndexChanged"
+                                                        AppendDataBoundItems="true">
+                                                        <asp:ListItem Value="">Seleccione una especialidad…</asp:ListItem>
+                                                    </asp:DropDownList>
+                                                
+
                                                 <small
                                                     id="EspecialidadMuted"
                                                     runat="server"
-                                                    class="text-muted d-block mt-2">1. Comience seleccionando una especialidad.
+                                                    class="text-muted d-block mt-2 mt-auto">1. Comience seleccionando una especialidad.
                                                 </small>
                                             </div>
                                         </div>
                                     </div>
                                     <%--Médico--%>
                                     <div class="col-12 col-md-3">
-                                        <div class="card shadow-sm">
-                                            <div class="card-body">
+                                        <div class="card shadow-sm h-100">
+                                            <div class="card-body d-flex flex-column">
                                                 <h6 class="card-title mb-3">Medicos</h6>
-                                                <asp:DropDownList
-                                                    runat="server"
-                                                    ID="ddlMedicoDisponible"
-                                                    ClientIDMode="Static"
-                                                    CssClass="form-select"
-                                                    AutoPostBack="true"
-                                                    OnSelectedIndexChanged="ddlMedicoDisponible_SelectedIndexChanged"
-                                                    AppendDataBoundItems="true">
-                                                    <asp:ListItem Value="">Seleccione un médico…</asp:ListItem>
-                                                </asp:DropDownList>
+
+                                                    <asp:DropDownList
+                                                        runat="server"
+                                                        ID="ddlMedicoDisponible"
+                                                        ClientIDMode="Static"
+                                                        CssClass="form-select"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlMedicoDisponible_SelectedIndexChanged"
+                                                        AppendDataBoundItems="true">
+                                                        <asp:ListItem Value="">Seleccione un médico…</asp:ListItem>
+                                                    </asp:DropDownList>
+                                               
+
                                                 <small
                                                     id="MedicoMuted"
                                                     runat="server"
-                                                    class="text-muted d-block mt-2">2. Seleccione una especialidad para ver los medicos disponibles.
+                                                    class="text-muted d-block mt-2 mt-auto">2. Seleccione una especialidad para ver los medicos disponibles.
                                                 </small>
                                             </div>
                                         </div>
                                     </div>
                                     <%--Fecha--%>
+                                    <%--TextMode="Date" removido, ahora lo  aneja fechas.js--%>
                                     <div class="col-12 col-md-3">
-                                        <div class="card shadow-sm">
-                                            <div class="card-body">
+                                        <div class="card shadow-sm h-100">
+                                            <div class="card-body d-flex flex-column">
                                                 <h6 class="card-title mb-3">Fechas Disponibles</h6>
-                                                <asp:TextBox
-                                                    ID="dtFechaTurno"
+
+                                                <%--Calendario inline visible --%>
+                                                <div class="flex-grow-1 d-flex justify-content-center align-items-center">
+                                                    <div id="calendarioTurnos" class="border rounded p-2"></div>
+                                                </div>
+                                                <%--Campo invisible para almacenar la fecha seleccionada--%>
+                                                <asp:HiddenField
+                                                    ID="hdnFechaTurno"
                                                     runat="server"
-                                                    CssClass="form-control"
-                                                    TextMode="Date"
-                                                    AutoPostBack="true"
-                                                    OnTextChanged="dtFechaTurno_Changed" />
+                                                    ClientIDMode="Static" />
+
                                                 <small
                                                     id="FechaMuted"
                                                     runat="server"
-                                                    class="text-muted d-block mt-2">3. Seleccione un medico para ver las fechas disponibles.
+                                                    class="text-muted d-block mt-2 mt-auto">3. Seleccione un medico para ver las fechas disponibles.
                                                 </small>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- Caja de horarios disponibles -->
+                                    <%--Horarios disponibles--%>
                                     <div class="col-12 col-md-3">
-                                        <div class="card shadow-sm">
-                                            <div class="card-body">
+                                        <div class="card shadow-sm h-100">
+                                            <div class="card-body d-flex flex-column">
                                                 <h6 class="card-title mb-3">Horarios disponibles</h6>
 
-                                                <asp:DropDownList
-                                                    runat="server"
-                                                    ID="ddlHorario"
-                                                    CssClass="form-select"
-                                                    AutoPostBack="true"
-                                                    OnSelectedIndexChanged="ddlHorario_SelectedIndexChanged">
-                                                    <asp:ListItem Value="">Seleccione un horario…</asp:ListItem>
-                                                </asp:DropDownList>
+                                                
+                                                    <asp:DropDownList
+                                                        runat="server"
+                                                        ID="ddlHorario"
+                                                        CssClass="form-select"
+                                                        AutoPostBack="true"
+                                                        OnSelectedIndexChanged="ddlHorario_SelectedIndexChanged">
+                                                        <asp:ListItem Value="">Seleccione un horario…</asp:ListItem>
+                                                    </asp:DropDownList>
+                                                
+
                                                 <small
                                                     id="HorarioMuted"
                                                     runat="server"
-                                                    class="text-muted d-block mt-2">4. Seleccione una fecha para ver los horarios disponibles.
+                                                    class="text-muted d-block mt-2 mt-auto">4. Seleccione una fecha para ver los horarios disponibles.
                                                 </small>
                                             </div>
                                         </div>
@@ -281,7 +297,7 @@
         </div>
     </div>
 
-    <!-- MODAL DE MENSAJE DE ÉXITO -->
+    <%--MODAL DE MENSAJE DE ÉXITO --%>
     <div class="modal fade" id="modalMensaje" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -306,5 +322,10 @@
         </div>
     </div>
 
+    <%--srcs--%>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/locales/bootstrap-datepicker.es.min.js"></script>
+    <script src="<%: ResolveUrl("~/scripts/fechas.js") %>"></script>
 </asp:Content>

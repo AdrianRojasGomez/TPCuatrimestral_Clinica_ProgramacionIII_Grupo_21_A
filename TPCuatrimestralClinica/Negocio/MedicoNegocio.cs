@@ -9,7 +9,6 @@ namespace Negocio
 {
     public class MedicoNegocio
     {
-
         public List<Medico> ListarMedicos()
         {
             var dict = new Dictionary<int, Medico>();
@@ -18,48 +17,35 @@ namespace Negocio
             try
             {
                 accesoDatos.SetearConsulta(@"
-        SELECT 
-        m.IdMedico,
-        m.Nombre,
-        m.Apellido,
-        m.Matricula,
-        t.IdGuardia AS IdTurnoTrabajo,
-        t.Nombre    AS TurnoNombre,
-        t.HoraInicio,
-        t.HoraFin,
-        mt.DiaSemana,               
-        e.IdEspecialidad,
-        e.Nombre    AS EspecialidadNombre,
-
-        -- ⚠️ NUEVO: info de usuario
-        CASE 
-            WHEN um.IdUsuario IS NULL THEN 0 
-            ELSE 1 
-        END AS TieneUsuario,
-
-        CASE 
-            WHEN um.IdUsuario IS NOT NULL AND u.Estado = 1 THEN 1
-            ELSE 0
-        END AS UsuarioActivo
-
-    FROM Medicos m
-    LEFT JOIN MedicosPorGuardia      mt ON mt.IdMedico      = m.IdMedico
-    LEFT JOIN Guardias               t  ON t.IdGuardia      = mt.IdGuardia
-    LEFT JOIN MedicosPorEspecialidad me ON me.IdMedico      = m.IdMedico
-    LEFT JOIN Especialidades         e  ON e.IdEspecialidad = me.IdEspecialidad
-    LEFT JOIN UsuariosAppxMedico     um ON um.IdMedico      = m.IdMedico
-    LEFT JOIN UsuariosApp            u  ON u.IdUsuario      = um.IdUsuario
-    WHERE m.Activo = 1
-    ORDER BY m.Apellido, m.Nombre, e.Nombre");
-
-
+                SELECT 
+                    m.IdMedico,
+                    m.Nombre,
+                    m.Apellido,
+                    m.Matricula,
+                    t.IdGuardia AS IdTurnoTrabajo,
+                    t.Nombre    AS TurnoNombre,
+                    t.HoraInicio,
+                    t.HoraFin,
+                    mt.DiaSemana,                
+                    e.IdEspecialidad,
+                    e.Nombre    AS EspecialidadNombre,
+                    CASE WHEN um.IdUsuario IS NULL THEN 0 ELSE 1 END AS TieneUsuario,
+                    CASE WHEN um.IdUsuario IS NOT NULL AND u.Estado = 1 THEN 1 ELSE 0 END AS UsuarioActivo
+                FROM Medicos m
+                LEFT JOIN MedicosPorGuardia     mt ON mt.IdMedico       = m.IdMedico
+                LEFT JOIN Guardias              t  ON t.IdGuardia       = mt.IdGuardia
+                LEFT JOIN MedicosPorEspecialidad me ON me.IdMedico       = m.IdMedico
+                LEFT JOIN Especialidades         e  ON e.IdEspecialidad = me.IdEspecialidad
+                LEFT JOIN UsuariosAppxMedico     um ON um.IdMedico       = m.IdMedico
+                LEFT JOIN UsuariosApp            u  ON u.IdUsuario       = um.IdUsuario
+                WHERE m.Activo = 1
+                ORDER BY m.Apellido, m.Nombre, e.Nombre");
 
                 accesoDatos.EjecutarLectura();
 
                 while (accesoDatos.Lector.Read())
                 {
                     int idMedico = (int)accesoDatos.Lector["IdMedico"];
-
 
                     if (!dict.TryGetValue(idMedico, out Medico aux))
                     {
@@ -78,13 +64,10 @@ namespace Negocio
                         dict.Add(idMedico, aux);
                     }
 
-
+                    // Cargar Turnos (Guardias)
                     if (accesoDatos.Lector["IdTurnoTrabajo"] != DBNull.Value)
                     {
                         int idTurno = (int)accesoDatos.Lector["IdTurnoTrabajo"];
-                      
-
-
                         int diaNumero = Convert.ToInt32(accesoDatos.Lector["DiaSemana"]);
                         DayOfWeek diaSemana = (DayOfWeek)diaNumero;
 
@@ -104,19 +87,16 @@ namespace Negocio
 
                             aux.turnoTrabajos.Add(turno);
 
-
                             if (aux.TurnoTrabajo == null)
                                 aux.TurnoTrabajo = turno;
                         }
                     }
 
-
+                    // Cargar Especialidades
                     if (accesoDatos.Lector["IdEspecialidad"] != DBNull.Value)
                     {
                         int idEsp = (int)accesoDatos.Lector["IdEspecialidad"];
-
-                        bool yaExisteEsp = aux.Especialidades.Any(e =>
-                            e.IdEspecialidad == idEsp);
+                        bool yaExisteEsp = aux.Especialidades.Any(e => e.IdEspecialidad == idEsp);
 
                         if (!yaExisteEsp)
                         {
@@ -125,7 +105,6 @@ namespace Negocio
                                 IdEspecialidad = idEsp,
                                 Nombre = (string)accesoDatos.Lector["EspecialidadNombre"]
                             };
-
                             aux.Especialidades.Add(esp);
                         }
                     }
@@ -150,16 +129,14 @@ namespace Negocio
 
             try
             {
-
                 datos.SetearConsulta(
                     "INSERT INTO Medicos (Nombre, Apellido, Matricula , Activo) " +
-                    "VALUES (@Nombre, @Apellido, @Matricula,1); " +
+                    "VALUES (@Nombre, @Apellido, @Matricula, 1); " +
                     "SELECT CAST(SCOPE_IDENTITY() AS INT);"
                 );
                 datos.SetearParametros("@Nombre", medico.Nombre);
                 datos.SetearParametros("@Apellido", medico.Apellido);
                 datos.SetearParametros("@Matricula", medico.Matricula);
-
 
                 idMedicoNuevo = Convert.ToInt32(datos.EjecutarEscalar());
             }
@@ -172,7 +149,6 @@ namespace Negocio
                 datos.CerrarConexion();
             }
 
-
             if (medico.turnoTrabajos != null && medico.turnoTrabajos.Count > 0)
             {
                 foreach (var turno in medico.turnoTrabajos)
@@ -181,23 +157,21 @@ namespace Negocio
                     try
                     {
                         datosGuardia.SetearConsulta(@"
-                    IF NOT EXISTS (
-                        SELECT 1 
-                        FROM MedicosPorGuardia
-                        WHERE IdMedico = @IdMedico
-                          AND IdGuardia = @IdGuardia
-                          AND DiaSemana = @DiaSemana
-                    )
-                    BEGIN
-                        INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia, DiaSemana)
-                        VALUES (@IdMedico, @IdGuardia, @DiaSemana)
-                    END
-                ");
+                        IF NOT EXISTS (
+                            SELECT 1 
+                            FROM MedicosPorGuardia
+                            WHERE IdMedico = @IdMedico
+                              AND IdGuardia = @IdGuardia
+                              AND DiaSemana = @DiaSemana
+                        )
+                        BEGIN
+                            INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia, DiaSemana)
+                            VALUES (@IdMedico, @IdGuardia, @DiaSemana)
+                        END
+                        ");
 
                         datosGuardia.SetearParametros("@IdMedico", idMedicoNuevo);
                         datosGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
-
-
                         int diaSemanaNumero = (int)turno.DiaSemana;
                         datosGuardia.SetearParametros("@DiaSemana", diaSemanaNumero);
 
@@ -210,7 +184,6 @@ namespace Negocio
                 }
             }
 
-
             if (medico.Especialidades != null && medico.Especialidades.Count > 0)
             {
                 foreach (var esp in medico.Especialidades)
@@ -219,16 +192,16 @@ namespace Negocio
                     try
                     {
                         datosEsp.SetearConsulta(@"
-                    IF NOT EXISTS (
-                        SELECT 1 
-                        FROM MedicosPorEspecialidad 
-                        WHERE IdMedico = @IdMedico AND IdEspecialidad = @IdEspecialidad
-                    )
-                    BEGIN
-                        INSERT INTO MedicosPorEspecialidad (IdMedico, IdEspecialidad)
-                        VALUES (@IdMedico, @IdEspecialidad)
-                    END
-                ");
+                        IF NOT EXISTS (
+                            SELECT 1 
+                            FROM MedicosPorEspecialidad 
+                            WHERE IdMedico = @IdMedico AND IdEspecialidad = @IdEspecialidad
+                        )
+                        BEGIN
+                            INSERT INTO MedicosPorEspecialidad (IdMedico, IdEspecialidad)
+                            VALUES (@IdMedico, @IdEspecialidad)
+                        END
+                        ");
 
                         datosEsp.SetearParametros("@IdMedico", idMedicoNuevo);
                         datosEsp.SetearParametros("@IdEspecialidad", esp.IdEspecialidad);
@@ -250,11 +223,11 @@ namespace Negocio
             try
             {
                 datosMedico.SetearConsulta(@"
-            UPDATE Medicos
-               SET Nombre   = @Nombre,
-                   Apellido = @Apellido,
-                   Matricula = @Matricula
-             WHERE IdMedico = @IdMedico");
+                UPDATE Medicos
+                   SET Nombre    = @Nombre,
+                       Apellido = @Apellido,
+                       Matricula = @Matricula
+                 WHERE IdMedico = @IdMedico");
 
                 datosMedico.SetearParametros("@IdMedico", medico.IdMedico);
                 datosMedico.SetearParametros("@Nombre", medico.Nombre);
@@ -266,7 +239,6 @@ namespace Negocio
             {
                 datosMedico.CerrarConexion();
             }
-
 
             AccesoDatos datosGuardia = new AccesoDatos();
             try
@@ -280,7 +252,6 @@ namespace Negocio
                 datosGuardia.CerrarConexion();
             }
 
-
             if (medico.turnoTrabajos != null && medico.turnoTrabajos.Count > 0)
             {
                 foreach (var turno in medico.turnoTrabajos)
@@ -289,8 +260,8 @@ namespace Negocio
                     try
                     {
                         datosInsGuardia.SetearConsulta(@"
-                    INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia, DiaSemana)
-                    VALUES (@IdMedico, @IdGuardia, @DiaSemana)");
+                        INSERT INTO MedicosPorGuardia (IdMedico, IdGuardia, DiaSemana)
+                        VALUES (@IdMedico, @IdGuardia, @DiaSemana)");
                         datosInsGuardia.SetearParametros("@IdMedico", medico.IdMedico);
                         datosInsGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
                         int diaNumero = (int)(turno.DiaSemana);
@@ -304,7 +275,6 @@ namespace Negocio
                 }
             }
 
-
             AccesoDatos datosEsp = new AccesoDatos();
             try
             {
@@ -317,15 +287,14 @@ namespace Negocio
                 datosEsp.CerrarConexion();
             }
 
-
             foreach (int idEsp in idsEspecialidades)
             {
                 AccesoDatos datosIns = new AccesoDatos();
                 try
                 {
                     datosIns.SetearConsulta(@"
-                INSERT INTO MedicosPorEspecialidad (IdMedico, IdEspecialidad)
-                VALUES (@IdMedico, @IdEspecialidad)");
+                    INSERT INTO MedicosPorEspecialidad (IdMedico, IdEspecialidad)
+                    VALUES (@IdMedico, @IdEspecialidad)");
                     datosIns.SetearParametros("@IdMedico", medico.IdMedico);
                     datosIns.SetearParametros("@IdEspecialidad", idEsp);
                     datosIns.EjecutarAccion();
@@ -340,10 +309,8 @@ namespace Negocio
         public bool EliminarMedico(int id)
         {
             AccesoDatos datos = new AccesoDatos();
-
             try
             {
-             
                 datos.SetearConsulta("SELECT COUNT(*) FROM Turnos WHERE IdMedico = @id");
                 datos.SetearParametros("@id", id);
                 datos.EjecutarLectura();
@@ -352,17 +319,14 @@ namespace Negocio
                 if (datos.Lector.Read())
                     cantidad = Convert.ToInt32(datos.Lector[0]);
 
-                datos.CerrarConexion(); 
+                datos.CerrarConexion();
 
-
-               
                 if (cantidad > 0)
                 {
                     return false;
                 }
 
-               
-                datos = new AccesoDatos(); 
+                datos = new AccesoDatos();
                 datos.SetearConsulta("UPDATE Medicos SET Activo = 0 WHERE IdMedico = @Id");
                 datos.SetearParametros("@Id", id);
                 datos.EjecutarAccion();
@@ -380,20 +344,19 @@ namespace Negocio
             Medico medico = null;
             idsEspecialidades = new List<int>();
 
-
             AccesoDatos datosMedico = new AccesoDatos();
             try
             {
                 datosMedico.SetearConsulta(@"
                     SELECT M.IdMedico,
-                   M.Nombre,
-                   M.Apellido,
-                   M.Matricula,
-                   MG.IdGuardia,
-                   MG.DiaSemana,
-                   G.Nombre     AS NombreGuardia,
-                   G.HoraInicio,
-                   G.HoraFin
+                    M.Nombre,
+                    M.Apellido,
+                    M.Matricula,
+                    MG.IdGuardia,
+                    MG.DiaSemana,
+                    G.Nombre     AS NombreGuardia,
+                    G.HoraInicio,
+                    G.HoraFin
                 FROM Medicos M
                 LEFT JOIN MedicosPorGuardia MG ON MG.IdMedico = M.IdMedico
                 LEFT JOIN Guardias G          ON G.IdGuardia = MG.IdGuardia
@@ -417,7 +380,6 @@ namespace Negocio
                         medico.TurnoTrabajo = null;
                     }
 
-
                     if (!(datosMedico.Lector["IdGuardia"] is DBNull))
                     {
                         MedicoPorGuardia turno = new MedicoPorGuardia();
@@ -431,7 +393,6 @@ namespace Negocio
                         if (!(datosMedico.Lector["HoraFin"] is DBNull))
                             turno.HoraFin = (TimeSpan)datosMedico.Lector["HoraFin"];
 
-
                         bool existe = medico.turnoTrabajos.Any(t =>
                             t.IdTurnoTrabajo == turno.IdTurnoTrabajo &&
                             t.DiaSemana == turno.DiaSemana);
@@ -439,8 +400,6 @@ namespace Negocio
                         if (!existe)
                         {
                             medico.turnoTrabajos.Add(turno);
-
-
                             if (medico.TurnoTrabajo == null)
                                 medico.TurnoTrabajo = turno;
                         }
@@ -451,7 +410,6 @@ namespace Negocio
             {
                 datosMedico.CerrarConexion();
             }
-
 
             if (medico != null)
             {
@@ -490,8 +448,6 @@ namespace Negocio
             }
 
             return medico;
-
-
         }
 
         public Medico BuscarMedicoPorIdSimple(int idMedico)
@@ -499,8 +455,6 @@ namespace Negocio
             List<int> idsDescartados;
             return BuscarMedicoPorId(idMedico, out idsDescartados);
         }
-
-      
 
         public string ObtenerNombreDiaEnEspanol(DateTime fecha)
         {
@@ -516,10 +470,7 @@ namespace Negocio
                 default: return string.Empty;
             }
         }
- 
 
-
-        //Adri: Nuevo metodo para listar medicos por especialidad
         public List<Medico> ListarPorEspecialidad(int idEspecialidad)
         {
             List<Medico> medicos = new List<Medico>();
@@ -552,64 +503,75 @@ namespace Negocio
                 datos.CerrarConexion();
             }
 
-
             return medicos;
         }
 
-        //Adri: Nuevo metodo para obtener Horarios de un medico en una fecha en particular
+        // ----------------------------------------------------------------------
+        // FIX: Método corregido para obtener horarios correctos según el día
+        // ----------------------------------------------------------------------
         public List<TimeSpan> ObtenerHorariosDeTrabajoDelMedico(int idMedico, DateTime fecha)
         {
             List<TimeSpan> resultadoHorario = new List<TimeSpan>();
 
             Medico medico = BuscarMedicoPorIdSimple(idMedico);
 
+            // Validamos que el médico tenga turnos cargados
             if (medico.turnoTrabajos == null || medico.turnoTrabajos.Count == 0)
                 return resultadoHorario;
 
-         //   MedicoPorGuardia guardiaDelDia = null;
+            // 1. Determinar el día de la semana de la fecha solicitada
+            DayOfWeek diaBuscado = fecha.DayOfWeek;
 
-            TimeSpan inicio = medico.TurnoTrabajo.HoraInicio;
-            TimeSpan fin = medico.TurnoTrabajo.HoraFin;
-            foreach (var guardia in medico.turnoTrabajos)
+            // 2. Buscar en la lista de turnos si trabaja ese día específico
+            var guardiaDelDia = medico.turnoTrabajos.FirstOrDefault(t => t.DiaSemana == diaBuscado);
+
+            // Si no se encuentra guardia para ese día, devuelve lista vacía (no trabaja)
+            if (guardiaDelDia == null)
+                return resultadoHorario;
+
+            // 3. Usar SOLAMENTE la hora inicio y fin de la guardia encontrada
+            TimeSpan inicio = guardiaDelDia.HoraInicio;
+            TimeSpan fin = guardiaDelDia.HoraFin;
+
+            if (fin > inicio)
             {
-                if (fin > inicio)
+                var horaActual = inicio;
+                while (horaActual < fin)
                 {
-                    var horaActual = inicio;
-                    while (horaActual < fin)
-                    {
-                        resultadoHorario.Add(horaActual);
-                        horaActual = horaActual.Add(TimeSpan.FromHours(1));
-                    }
+                    resultadoHorario.Add(horaActual);
+                    horaActual = horaActual.Add(TimeSpan.FromHours(1));
                 }
+            }
+            else
+            {
+                // Caso especial: Turno que cruza la medianoche (ej. 22:00 a 06:00)
+                // Nota: Para una implementación simple de un día, cortamos a las 24hs
+                var horaActual = inicio;
+                var finDia = TimeSpan.FromHours(24); // 24:00
 
-                else
+                while (horaActual < finDia)
                 {
-                    //tengo que pensar que verga quiero hacer si lo quiero agregar al otro dia o que onda, hubiesemos hecho una 
-                    // clinica de ortodoncia y esto no pasaba jajaja
-                    var hora = inicio;
-                    var finDia = TimeSpan.FromHours(24); // 24:00
-
-                    while (hora < finDia)
-                    {
-                        resultadoHorario.Add(hora);
-                        hora = hora.Add(TimeSpan.FromHours(1));
-                    }
+                    resultadoHorario.Add(horaActual);
+                    horaActual = horaActual.Add(TimeSpan.FromHours(1));
                 }
             }
 
             return resultadoHorario;
         }
-        //Adri: Nuevo metodo para obtener los Horarios Libres de un medico en una fecha en particular
+
         public List<TimeSpan> ObtenerHorariosLibres(int idMedico, DateTime fecha)
-        { 
+        {
             TurnoNegocio turnoNegocio = new TurnoNegocio();
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             List<Turno> turnos = turnoNegocio.ObtenerTodosLosTurnos();
             Medico medico = medicoNegocio.BuscarMedicoPorIdSimple(idMedico);
+
+            // Ahora llamamos al método corregido
             var horariosTrabajo = ObtenerHorariosDeTrabajoDelMedico(medico.IdMedico, fecha);
+
             var horariosLibres = new List<TimeSpan>();
 
-            if(horariosTrabajo.Count == 0)
+            if (horariosTrabajo.Count == 0)
                 return horariosLibres;
 
             var horariosOcupados = new List<TimeSpan>();
@@ -643,13 +605,12 @@ namespace Negocio
 
             return horariosLibres;
         }
-        //Adri: Nuevo metodo para verificar si un medico tiene horarios libres en una fecha en particular
+
         public bool MedicoTieneHorariosLibres(int idMedico, DateTime fecha)
         {
             var horariosLibres = ObtenerHorariosLibres(idMedico, fecha);
             return horariosLibres.Count > 0;
         }
-
 
         public List<DayOfWeek> ObtenerDiasQueTrabaja(int idMedico)
         {
@@ -664,10 +625,8 @@ namespace Negocio
 
                 while (datos.Lector.Read())
                 {
-
-                   int diaInt= Convert.ToInt32(datos.Lector["DiaSemana"]);
+                    int diaInt = Convert.ToInt32(datos.Lector["DiaSemana"]);
                     DayOfWeek dia = (DayOfWeek)diaInt;
-
                     dias.Add(dia);
                 }
             }
@@ -694,11 +653,11 @@ namespace Negocio
                     int cantidad = (int)datos.Lector[0];
                     if (cantidad > 0)
                     {
-                        return true;   
+                        return true;
                     }
                 }
 
-                return false; 
+                return false;
             }
             catch (Exception ex)
             {
@@ -709,12 +668,5 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
-
-
-
-
-
-
     }
 }
-

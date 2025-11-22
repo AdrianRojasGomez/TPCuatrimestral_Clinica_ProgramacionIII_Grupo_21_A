@@ -15,15 +15,6 @@ namespace WebApplicationClinica
     {
 
         /// <summary>
-        /// Control lblmostrardia.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblmostrardia;
-
-        /// <summary>
         /// Control txtDocumento.
         /// </summary>
         /// <remarks>
@@ -51,15 +42,6 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.Label lblPacienteEstado;
 
         /// <summary>
-        /// Control btnIrAgregarPaciente.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnIrAgregarPaciente;
-
-        /// <summary>
         /// Control lblMensajeError.
         /// </summary>
         /// <remarks>
@@ -67,6 +49,15 @@ namespace WebApplicationClinica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMensajeError;
+
+        /// <summary>
+        /// Control btnIrAgregarPaciente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnIrAgregarPaciente;
 
         /// <summary>
         /// Control pnlDatosPaciente.
@@ -78,15 +69,6 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.Panel pnlDatosPaciente;
 
         /// <summary>
-        /// Control Label1.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
-
-        /// <summary>
         /// Control txtNombrePaciente.
         /// </summary>
         /// <remarks>
@@ -94,15 +76,6 @@ namespace WebApplicationClinica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNombrePaciente;
-
-        /// <summary>
-        /// Control Label2.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label2;
 
         /// <summary>
         /// Control txtApellidoPaciente.
@@ -114,15 +87,6 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.TextBox txtApellidoPaciente;
 
         /// <summary>
-        /// Control Label3.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label3;
-
-        /// <summary>
         /// Control txtEmailPaciente.
         /// </summary>
         /// <remarks>
@@ -130,15 +94,6 @@ namespace WebApplicationClinica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtEmailPaciente;
-
-        /// <summary>
-        /// Control Label4.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label4;
 
         /// <summary>
         /// Control txtTelefonoPaciente.
@@ -159,22 +114,13 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.Panel pnlAgregarPaciente;
 
         /// <summary>
-        /// Control lblMensajeNuevoPaciente.
+        /// Control txtNuevoDni.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMensajeNuevoPaciente;
-
-        /// <summary>
-        /// Control Label5.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label5;
+        protected global::System.Web.UI.WebControls.TextBox txtNuevoDni;
 
         /// <summary>
         /// Control txtNuevoNombre.
@@ -186,24 +132,6 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.TextBox txtNuevoNombre;
 
         /// <summary>
-        /// Control rfvNuevoNombre.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNuevoNombre;
-
-        /// <summary>
-        /// Control Label6.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label6;
-
-        /// <summary>
         /// Control txtNuevoApellido.
         /// </summary>
         /// <remarks>
@@ -211,42 +139,6 @@ namespace WebApplicationClinica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNuevoApellido;
-
-        /// <summary>
-        /// Control rfvNuevoApellido.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNuevoApellido;
-
-        /// <summary>
-        /// Control Label7.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label7;
-
-        /// <summary>
-        /// Control txtNuevoDni.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNuevoDni;
-
-        /// <summary>
-        /// Control Label8.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label8;
 
         /// <summary>
         /// Control txtNuevoEmail.
@@ -258,24 +150,6 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.TextBox txtNuevoEmail;
 
         /// <summary>
-        /// Control rfvNuevoEmail.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvNuevoEmail;
-
-        /// <summary>
-        /// Control Label9.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label9;
-
-        /// <summary>
         /// Control txtNuevoTelefono.
         /// </summary>
         /// <remarks>
@@ -283,33 +157,6 @@ namespace WebApplicationClinica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNuevoTelefono;
-
-        /// <summary>
-        /// Control Label10.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label10;
-
-        /// <summary>
-        /// Control txtNuevoFechaNacimiento.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtNuevoFechaNacimiento;
-
-        /// <summary>
-        /// Control Label11.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label11;
 
         /// <summary>
         /// Control txtNuevoDireccion.
@@ -321,13 +168,22 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.TextBox txtNuevoDireccion;
 
         /// <summary>
-        /// Control btnGuardarNuevoPaciente.
+        /// Control txtNuevoFechaNacimiento.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGuardarNuevoPaciente;
+        protected global::System.Web.UI.WebControls.TextBox txtNuevoFechaNacimiento;
+
+        /// <summary>
+        /// Control lblMensajeNuevoPaciente.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensajeNuevoPaciente;
 
         /// <summary>
         /// Control btnCancelarRegistro.
@@ -339,13 +195,13 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.Button btnCancelarRegistro;
 
         /// <summary>
-        /// Control pnlDatosTurno.
+        /// Control btnGuardarNuevoPaciente.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlDatosTurno;
+        protected global::System.Web.UI.WebControls.Button btnGuardarNuevoPaciente;
 
         /// <summary>
         /// Control ddlEspecialidad.
@@ -384,29 +240,27 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl MedicoMuted;
 
         /// <summary>
-        /// Control hdnFechaTurno.
+        /// Control ddlFechaTurno.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hdnFechaTurno;
+        protected global::System.Web.UI.WebControls.DropDownList ddlFechaTurno;
 
         /// <summary>
-<<<<<<< HEAD
         /// Control FechaMuted.
-=======
-        /// lnkFechaSeleccionada control.
+        /// Control FechaMuted.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton lnkFechaSeleccionada;
 
         /// <summary>
         /// FechaMuted control.
->>>>>>> 5fe5f2584896eddf9b792c3708b0e93af02e82ce
+      5fe5f2584896eddf9b792c3708b0e93af02e82ce
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
@@ -451,13 +305,13 @@ namespace WebApplicationClinica
         protected global::System.Web.UI.WebControls.TextBox txtObservaciones;
 
         /// <summary>
-        /// Control pnlFooter.
+        /// Control btnCancelar.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel pnlFooter;
+        protected global::System.Web.UI.WebControls.Button btnCancelar;
 
         /// <summary>
         /// Control btnGuardar.
@@ -467,15 +321,6 @@ namespace WebApplicationClinica
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnGuardar;
-
-        /// <summary>
-        /// Control btnCancelar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelar;
 
         /// <summary>
         /// Control lblTituloModal.

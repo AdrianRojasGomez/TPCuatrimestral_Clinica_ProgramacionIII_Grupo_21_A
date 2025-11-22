@@ -14,53 +14,212 @@ namespace WebApplicationClinica
         {
             if (!IsPostBack)
             {
-       
-                //Setup Inicial
-                //mm
+                // Configuración inicial de visibilidad
                 pnlDatosPaciente.Visible = false;
                 pnlAgregarPaciente.Visible = false;
                 lblMensajeError.Visible = false;
                 btnIrAgregarPaciente.Visible = false;
                 btnGuardar.Enabled = false;
 
-
-                //Deshabilitar Medico, Fecha y hora hasta seleccionar una Especialidad
+                // Deshabilitar controles dependientes
                 ddlMedicoDisponible.Enabled = false;
-                DeshabilitarDatepicker();
+                ddlFechaTurno.Enabled = false;
                 ddlHorario.Enabled = false;
 
-                //Cargar lista de Especialidades
-                List<Especialidad> especialidades = new List<Especialidad>();
+                CargarEspecialidades();
+            }
+        }
+
+        private void CargarEspecialidades()
+        {
+            try
+            {
                 EspeciladadNegocio espNegocio = new EspeciladadNegocio();
-                especialidades = espNegocio.Listar();
-                ddlEspecialidad.DataSource = especialidades;
+                ddlEspecialidad.DataSource = espNegocio.Listar();
                 ddlEspecialidad.DataTextField = "Nombre";
                 ddlEspecialidad.DataValueField = "IdEspecialidad";
                 ddlEspecialidad.DataBind();
 
+                ddlEspecialidad.Items.Insert(0, new ListItem("-- Seleccione Especialidad --", ""));
+            }
+            catch (Exception ex)
+            {
+                lblMensajeError.Text = "Error al cargar especialidades: " + ex.Message;
+                lblMensajeError.Visible = true;
             }
         }
 
-        #region Pacientes Dentro De Turno
+        #region Flujo de Selección de Turno
+
+        protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(ddlEspecialidad.SelectedValue)) return;
+
+            ResetearSelectores(1); // Limpiar desde Médico
+
+            int idEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
+
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+            List<Medico> medicos = medicoNegocio.ListarPorEspecialidad(idEspecialidad);
+
+            //CAMBIO AQUÍ: Creamos una lista temporal uniendo Nombre + Apellido
+            var listaMedicosCompleta = medicos.Select(m => new
+            {
+                IdMedico = m.IdMedico,
+                NombreCompleto = m.Nombre + " " + m.Apellido
+            }).ToList();
+
+            ddlMedicoDisponible.DataSource = listaMedicosCompleta;
+            ddlMedicoDisponible.DataTextField = "NombreCompleto";
+            ddlMedicoDisponible.DataValueField = "IdMedico";
+            ddlMedicoDisponible.DataBind();
+
+            ddlMedicoDisponible.Items.Insert(0, new ListItem("-- Seleccione Médico --", ""));
+            ddlMedicoDisponible.Enabled = true;
+
+            EspecialidadMuted.Attributes["class"] = "text-success d-block mt-1";
+            EspecialidadMuted.InnerText = "Especialidad seleccionada.";
+        }
+
+        protected void ddlMedicoDisponible_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(ddlMedicoDisponible.SelectedValue)) return;
+
+            ResetearSelectores(2); // Limpiar Fecha y Hora
+
+            int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+            MedicoNegocio medicoNegocio = new MedicoNegocio();
+
+            // 1. Obtenemos los días de la semana que trabaja el médico
+            List<DayOfWeek> diasTrabajo = medicoNegocio.ObtenerDiasQueTrabaja(idMedico);
+
+            ddlFechaTurno.Items.Clear();
+
+            if (diasTrabajo.Count > 0)
+            {
+                ddlFechaTurno.Items.Add(new ListItem("-- Seleccione una Fecha Disponible --", ""));
+
+                // 2. Generamos fechas para los próximos 30 días
+                DateTime fechaBase = DateTime.Today;
+                for (int i = 0; i < 30; i++)
+                {
+                    DateTime fecha = fechaBase.AddDays(i);
+
+                    // 3. Filtramos: Solo agregamos si coincide con los días de trabajo
+                    if (diasTrabajo.Contains(fecha.DayOfWeek))
+                    {
+                        string nombreDia = medicoNegocio.ObtenerNombreDiaEnEspanol(fecha);
+                        string textoMostrar = $"{nombreDia} {fecha:dd/MM/yyyy}";
+                        string valor = fecha.ToString("yyyy-MM-dd");
+
+                        ddlFechaTurno.Items.Add(new ListItem(textoMostrar, valor));
+                    }
+                }
+
+                ddlFechaTurno.Enabled = true;
+                MedicoMuted.Attributes["class"] = "text-success d-block mt-1";
+                MedicoMuted.InnerText = "Médico seleccionado. Fechas cargadas.";
+            }
+            else
+            {
+                ddlFechaTurno.Enabled = false;
+                MedicoMuted.Attributes["class"] = "text-danger d-block mt-1";
+                MedicoMuted.InnerText = "Este médico no tiene días asignados.";
+            }
+        }
+
+        protected void ddlFechaTurno_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(ddlFechaTurno.SelectedValue)) return;
+
+            try
+            {
+                DateTime fechaSeleccionada = DateTime.Parse(ddlFechaTurno.SelectedValue);
+                int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
+
+                MedicoNegocio medicoNegocio = new MedicoNegocio();
+
+                // Obtenemos horarios libres
+                List<TimeSpan> horariosLibres = medicoNegocio.ObtenerHorariosLibres(idMedico, fechaSeleccionada);
+
+                ddlHorario.Items.Clear();
+
+                if (horariosLibres.Count > 0)
+                {
+                    foreach (TimeSpan horario in horariosLibres)
+                    {
+                        ddlHorario.Items.Add(new ListItem(horario.ToString(@"hh\:mm"), horario.ToString()));
+                    }
+
+                    ddlHorario.Items.Insert(0, new ListItem("-- Seleccione Hora --", ""));
+                    ddlHorario.Enabled = true;
+
+                    FechaMuted.Attributes["class"] = "text-success d-block mt-1";
+                    FechaMuted.InnerText = $" Fecha válida. {horariosLibres.Count} horarios disponibles.";
+                    HorarioMuted.InnerText = "4. Seleccione un horario.";
+                    lblMensajeError.Visible = false;
+                }
+                else
+                {
+                    ddlHorario.Enabled = false;
+                    FechaMuted.Attributes["class"] = "text-danger d-block mt-1";
+                    FechaMuted.InnerText = "Sin horarios disponibles para esta fecha.";
+                }
+            }
+            catch (Exception ex)
+            {
+                lblMensajeError.Text = "Error al calcular horarios: " + ex.Message;
+                lblMensajeError.Visible = true;
+            }
+        }
+
+        protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(ddlHorario.SelectedValue))
+            {
+                HorarioMuted.Attributes["class"] = "text-success d-block mt-1";
+                HorarioMuted.InnerText = "✔ Horario seleccionado.";
+                VerificarHabilitarGuardado();
+            }
+        }
+
+        private void ResetearSelectores(int nivel)
+        {
+            if (nivel <= 1)
+            {
+                ddlMedicoDisponible.Items.Clear();
+                ddlMedicoDisponible.Enabled = false;
+                MedicoMuted.Attributes["class"] = "text-muted d-block mt-1";
+            }
+            if (nivel <= 2)
+            {
+                ddlFechaTurno.Items.Clear();
+                ddlFechaTurno.Enabled = false;
+                FechaMuted.Attributes["class"] = "text-muted d-block mt-1";
+                FechaMuted.InnerText = "3. Elija una fecha de la lista.";
+            }
+
+            ddlHorario.Items.Clear();
+            ddlHorario.Enabled = false;
+            HorarioMuted.Attributes["class"] = "text-muted d-block mt-1";
+            btnGuardar.Enabled = false;
+        }
+
+        private void VerificarHabilitarGuardado()
+        {
+            bool hayHorario = !string.IsNullOrEmpty(ddlHorario.SelectedValue);
+            bool hayPaciente = Session["IdPaciente"] != null || ViewState["IdPaciente"] != null;
+            btnGuardar.Enabled = hayHorario && hayPaciente;
+        }
+
+        #endregion
+
+        #region Paciente
+
         protected void btnBuscarPaciente_Click(object sender, EventArgs e)
         {
-            pnlDatosPaciente.Visible = false;
-            pnlAgregarPaciente.Visible = false;
-            lblMensajeError.Visible = false;
-            btnIrAgregarPaciente.Visible = false;
-            lblPacienteEstado.CssClass = "badge bg-secondary";
-            lblPacienteEstado.Text = "Buscando...";
-
             string dni = txtDocumento.Text.Trim();
-
-            if (string.IsNullOrEmpty(dni))
-            {
-                lblMensajeError.Text = "Debe ingresar un DNI.";
-                lblMensajeError.Visible = true;
-                lblPacienteEstado.Text = "Error";
-                lblPacienteEstado.CssClass = "badge bg-danger";
-                return;
-            }
+            if (string.IsNullOrEmpty(dni)) return;
 
             try
             {
@@ -70,29 +229,35 @@ namespace WebApplicationClinica
                 if (pacienteEncontrado != null)
                 {
                     pnlDatosPaciente.Visible = true;
-                    lblPacienteEstado.CssClass = "badge bg-success";
-                    lblPacienteEstado.Text = "Paciente Encontrado";
+                    pnlAgregarPaciente.Visible = false;
+                    btnIrAgregarPaciente.Visible = false;
+                    lblMensajeError.Visible = false;
+
                     txtNombrePaciente.Text = pacienteEncontrado.Nombre;
                     txtApellidoPaciente.Text = pacienteEncontrado.Apellido;
                     txtEmailPaciente.Text = pacienteEncontrado.Email;
                     txtTelefonoPaciente.Text = pacienteEncontrado.Telefono;
-                    ViewState["IdPaciente"] = pacienteEncontrado.IdPaciente;
+
                     Session["IdPaciente"] = pacienteEncontrado.IdPaciente;
+                    lblPacienteEstado.Text = "Encontrado";
+                    lblPacienteEstado.CssClass = "badge bg-success";
+
+                    VerificarHabilitarGuardado();
                 }
                 else
                 {
+                    pnlDatosPaciente.Visible = false;
+                    lblPacienteEstado.Text = "No encontrado";
                     lblPacienteEstado.CssClass = "badge bg-danger";
-                    lblPacienteEstado.Text = "Paciente no registrado";
-                    lblMensajeError.Text = "El DNI ingresado no pertenece a un paciente. Puede agregarlo.";
+                    lblMensajeError.Text = "Paciente no encontrado. Regístrelo.";
                     lblMensajeError.Visible = true;
                     btnIrAgregarPaciente.Visible = true;
+                    btnGuardar.Enabled = false;
                 }
             }
             catch (Exception ex)
             {
-                lblPacienteEstado.CssClass = "badge bg-danger";
-                lblPacienteEstado.Text = "Error";
-                lblMensajeError.Text = "Error al buscar en la base de datos: " + ex.Message;
+                lblMensajeError.Text = ex.Message;
                 lblMensajeError.Visible = true;
             }
         }
@@ -101,52 +266,40 @@ namespace WebApplicationClinica
         {
             pnlAgregarPaciente.Visible = true;
             pnlDatosPaciente.Visible = false;
-            lblMensajeError.Visible = false;
-            btnIrAgregarPaciente.Visible = false;
-            txtNuevoDni.Text = txtDocumento.Text.Trim();
+            txtNuevoDni.Text = txtDocumento.Text;
         }
 
         protected void btnGuardarNuevoPaciente_Click(object sender, EventArgs e)
         {
-
-            if (!Page.IsValid)
-            {
-                return;
-            }
-
             try
             {
                 Paciente pac = new Paciente();
-                pac.Dni = txtNuevoDni.Text.Trim();
-                pac.Nombre = txtNuevoNombre.Text.Trim();
-                pac.Apellido = txtNuevoApellido.Text.Trim();
-                pac.Email = txtNuevoEmail.Text.Trim();
-                pac.Telefono = txtNuevoTelefono.Text.Trim();
-                pac.Direccion = txtNuevoDireccion.Text.Trim();
+                pac.Dni = txtNuevoDni.Text;
+                pac.Nombre = txtNuevoNombre.Text;
+                pac.Apellido = txtNuevoApellido.Text;
+                pac.Email = txtNuevoEmail.Text;
+                pac.Telefono = txtNuevoTelefono.Text;
+                pac.Direccion = txtNuevoDireccion.Text;
                 if (!string.IsNullOrEmpty(txtNuevoFechaNacimiento.Text))
-                {
-                    pac.FechaNacimiento = Convert.ToDateTime(txtNuevoFechaNacimiento.Text);
-                }
+                    pac.FechaNacimiento = DateTime.Parse(txtNuevoFechaNacimiento.Text);
+                pac.Estado = true;
 
                 PacienteNegocio negocio = new PacienteNegocio();
                 negocio.GuardarNuevo(pac);
 
-                Paciente pacienteGuardado = negocio.BuscarPorDni(pac.Dni);
+                Paciente guardado = negocio.BuscarPorDni(pac.Dni);
+                Session["IdPaciente"] = guardado.IdPaciente;
 
                 pnlAgregarPaciente.Visible = false;
                 pnlDatosPaciente.Visible = true;
-                lblPacienteEstado.CssClass = "badge bg-success";
-                lblPacienteEstado.Text = "Guardado y Seleccionado";
-                txtNombrePaciente.Text = pacienteGuardado.Nombre;
-                txtApellidoPaciente.Text = pacienteGuardado.Apellido;
-                txtEmailPaciente.Text = pacienteGuardado.Email;
-                txtTelefonoPaciente.Text = pacienteGuardado.Telefono;
-                ViewState["IdPaciente"] = pacienteGuardado.IdPaciente;
-                Session["IdPaciente"] = pacienteGuardado.IdPaciente;
+                txtNombrePaciente.Text = guardado.Nombre;
+                txtApellidoPaciente.Text = guardado.Apellido;
+
+                VerificarHabilitarGuardado();
             }
             catch (Exception ex)
             {
-                lblMensajeNuevoPaciente.Text = ex.Message;
+                lblMensajeNuevoPaciente.Text = "Error: " + ex.Message;
                 lblMensajeNuevoPaciente.Visible = true;
             }
         }
@@ -154,340 +307,74 @@ namespace WebApplicationClinica
         protected void btnCancelarRegistro_Click(object sender, EventArgs e)
         {
             pnlAgregarPaciente.Visible = false;
-            lblMensajeError.Visible = true;
-            btnIrAgregarPaciente.Visible = true;
         }
 
         #endregion
 
-        #region Metodos del Turno
-        protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
+        #region Guardado del Turno
+
+        protected void btnGuardar_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(ddlEspecialidad.SelectedValue))
-            {
-                return;
-            }
+            string resumen = $"<strong>Paciente:</strong> {txtNombrePaciente.Text} {txtApellidoPaciente.Text}<br/>" +
+                             $"<strong>Médico:</strong> {ddlMedicoDisponible.SelectedItem.Text}<br/>" +
+                             $"<strong>Fecha:</strong> {ddlFechaTurno.SelectedItem.Text} - <strong>Hora:</strong> {ddlHorario.SelectedItem.Text}";
 
+            lblTituloModal.Text = "Confirmar Turno";
+            litCuerpoModal.Text = resumen;
 
-            RevertirMuted();
-            DeshabilitarDatepicker();
-            ddlHorario.Items.Clear();
-            ddlHorario.Enabled = false;
-            btnGuardar.Enabled = false;
-            Session["FechaTurno"] = null;
-
-
-            Especialidad especialidadSeleccionada = new Especialidad();
-            especialidadSeleccionada.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
-            especialidadSeleccionada.Nombre = ddlEspecialidad.SelectedItem.Text;
-
-            ddlMedicoDisponible.Items.Clear();
-            MedicoNegocio medicoNegocio = new MedicoNegocio();
-            List<Medico> medicosConEspecialidad = new List<Medico>();
-            medicosConEspecialidad = medicoNegocio.ListarPorEspecialidad(especialidadSeleccionada.IdEspecialidad);
-
-            //Cargar el ddlMedicoDisponible
-            ddlMedicoDisponible.DataSource = medicosConEspecialidad;
-            ddlMedicoDisponible.DataTextField = "NombreCompleto";
-            ddlMedicoDisponible.DataValueField = "IdMedico";
-            ddlMedicoDisponible.DataBind();
-            //Habilitar el ddlMedicoDisponible
-            ddlMedicoDisponible.Enabled = true;
-
-
-            if (medicosConEspecialidad.Count == 1)
-            {
-                ddlMedicoDisponible.SelectedIndex = 0;
-                ddlMedicoDisponible_SelectedIndexChanged(sender, e);
-            }
-            //Modificar el mensaje EspecialidadMuted
-            EspecialidadMuted.InnerHtml = $"Se encontraron {medicosConEspecialidad.Count} médicos con la especialidad de {especialidadSeleccionada.Nombre}.";
-            EspecialidadMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
-
-
-        }
-
-        protected void ddlMedicoDisponible_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(ddlMedicoDisponible.SelectedValue))
-            {
-                return;
-            }
-
-            MedicoNegocio medicoNegocio = new MedicoNegocio();
-            Medico medicoSeleccionado = new Medico();
-            int aux = int.Parse(ddlMedicoDisponible.SelectedValue);
-            medicoSeleccionado = medicoNegocio.BuscarMedicoPorIdSimple(aux);
-            ///Validar las fechas no disponibles para ese medico
-            List<DayOfWeek> diasDisponibles = medicoNegocio.ObtenerDiasQueTrabaja(medicoSeleccionado.IdMedico);
-
-            ActualizarDiasSegunMedico(diasDisponibles);
-            ///DEBUG : Mostrar los dias disponibles en consola
-            string diasTexto = string.Join(", ", diasDisponibles.Select(d => d.ToString()));
-            MedicoMuted.InnerHtml = $"Días disponibles: {diasTexto}.";
-            ///System.Diagnostics.Debug.WriteLine(medicoSeleccionado.TurnoTrabajo.DiaSemana);
-
-            ///Habilitar el datepicker
-            ddlHorario.Items.Clear();
-            ddlHorario.Enabled = false;
-            btnGuardar.Enabled = false;
-            HabilitarDatepicker();
-
-            ///Modificar el mensaje MedicoMuted
-            //MedicoMuted.InnerHtml = $"Médico seleccionado: {ddlMedicoDisponible.SelectedItem.Text}.";
-            MedicoMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
-        }
-
-        protected void lnkFechaSeleccionada_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(hdnFechaTurno.Value))
-                return;
-
-            DateTime fecha;
-            MedicoNegocio medicoNegocio = new MedicoNegocio();
-
-            try
-            {
-                fecha = DateTime.Parse(hdnFechaTurno.Value);
-            }
-            catch
-            {
-                FechaMuted.InnerHtml = "Fecha inválida.";
-                FechaMuted.Attributes["class"] = "text-danger d-block mt-2 mt-auto";
-                hdnFechaTurno.Value = "";
-                return;
-            }
-
-            if (fecha.Date < DateTime.Today)
-            {
-                FechaMuted.InnerHtml = "No se pueden seleccionar fechas anteriores a hoy.";
-                FechaMuted.Attributes["class"] = "text-danger d-block mt-2 mt-auto";
-                hdnFechaTurno.Value = "";
-                return;
-            }
-
-
-
-            //Cargar los horarios recomendados
-            int idMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
-            List<TimeSpan> horariosDisponibles = medicoNegocio.ObtenerHorariosLibres(idMedico, fecha);
-
-            ddlHorario.Items.Clear();
-            foreach (TimeSpan horario in horariosDisponibles)
-            {
-                ddlHorario.Items.Add(new ListItem(horario.ToString(@"hh\:mm"), horario.ToString()));
-            }
-            ddlHorario.Enabled = true;
-            Session["FechaTurno"] = fecha;
-
-            FechaMuted.InnerHtml = $"Fecha seleccionada: {fecha:yyyy-MM-dd}.";
-            FechaMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
-            MostrarHorariosRecomendadosEnLabel();
-        }
-
-        protected void ddlHorario_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-            btnGuardar.Enabled = true;
-
-            //Modificar el mensaje HorarioMuted
-            HorarioMuted.InnerHtml = $"Horario seleccionado: {ddlHorario.SelectedItem.Text}.";
-            HorarioMuted.Attributes["class"] = "text-success d-block mt-2 mt-auto";
-        }
-
-        #endregion
-
-        #region Modals de confirmacion
-
-        private void MostrarModalConfirmacion(string titulo, string cuerpoHtml)
-        {
-            lblTituloModal.Text = titulo;
-            litCuerpoModal.Text = cuerpoHtml;
-
-            string script =
-                "var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacion')); " +
-                "myModal.show();";
-
-            ScriptManager.RegisterStartupScript(
-                this,
-                this.GetType(),
-                "MostrarModalConfirmacion",
-                script,
-                true
-            );
-        }
-
-        private void MostrarModalMensajeExito(string titulo, string cuerpoHtml)
-        {
-            lblTituloMensaje.Text = titulo;
-            litCuerpoMensaje.Text = cuerpoHtml;
-
-            string script =
-                "var myModal = new bootstrap.Modal(document.getElementById('modalMensaje')); " +
-                "myModal.show();";
-
-            ScriptManager.RegisterStartupScript(
-                this,
-                this.GetType(),
-                "MostrarModalMensaje",
-                script,
-                true
-            );
+            ScriptManager.RegisterStartupScript(this, GetType(), "ShowModal",
+                "var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacion')); myModal.show();", true);
         }
 
         protected void btnConfirmarModal_Click(object sender, EventArgs e)
         {
-            TurnoNegocio turnoNegocio = new TurnoNegocio();
-            DateTime fechaTurno = (DateTime)Session["FechaTurno"];
-
             try
             {
+                TurnoNegocio turnoNegocio = new TurnoNegocio();
                 Turno nuevoTurno = new Turno();
+
                 nuevoTurno.NumeroTurno = (turnoNegocio.ObtenerUltimoID() + 1).ToString();
-                nuevoTurno.FechaInicio = fechaTurno;
-                nuevoTurno.FechaFin = fechaTurno;
-                nuevoTurno.HoraInicio = TimeSpan.Parse(ddlHorario.SelectedValue);
-                nuevoTurno.HoraFin = nuevoTurno.HoraInicio + TimeSpan.FromHours(1);
-                nuevoTurno.ObservacionesSolicitud = txtObservaciones.Text;
-                nuevoTurno.ObservacionesDiagnostico = "";
+                nuevoTurno.FechaInicio = DateTime.Parse(ddlFechaTurno.SelectedValue);
+                nuevoTurno.FechaFin = nuevoTurno.FechaInicio;
+
+                TimeSpan horaInicio = TimeSpan.Parse(ddlHorario.SelectedValue);
+                nuevoTurno.HoraInicio = horaInicio;
+                nuevoTurno.HoraFin = horaInicio.Add(TimeSpan.FromHours(1));
+
+                nuevoTurno.ObservacionesSolicitud = txtMotivo.Text;
+                nuevoTurno.ObservacionesDiagnostico = txtObservaciones.Text;
+
                 nuevoTurno.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
-                nuevoTurno.IdPaciente = Session["IdPaciente"] != null ? (int)Session["IdPaciente"] : (int)ViewState["IdPaciente"];
+                nuevoTurno.IdPaciente = (int)Session["IdPaciente"];
                 nuevoTurno.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
+
                 nuevoTurno.Motivo = txtMotivo.Text;
-                nuevoTurno.Estado = 2;
-                nuevoTurno.Paciente = null;
-                nuevoTurno.Medico = null;
+                nuevoTurno.Estado = 0; // Pendiente
 
                 turnoNegocio.AgregarTurno(nuevoTurno);
+
+                lblTituloMensaje.Text = "¡Éxito!";
+                litCuerpoMensaje.Text = "El turno ha sido agendado correctamente.";
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModalExito",
+                    "var myModal = new bootstrap.Modal(document.getElementById('modalMensaje')); myModal.show();", true);
             }
             catch (Exception ex)
             {
-                lblMensajeError.Text = "Error al guardar el turno: " + ex.Message;
-                lblMensajeError.Visible = true;
+                lblTituloModal.Text = "Error";
+                litCuerpoModal.Text = "Hubo un error al guardar: " + ex.Message;
+                ScriptManager.RegisterStartupScript(this, GetType(), "ShowModalError",
+                    "var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacion')); myModal.show();", true);
             }
-
-            string titulo = "Turno guardado";
-            string cuerpo =
-                "<strong>El turno se guardó correctamente.</strong><br/>" +
-                "Podés consultar tus turnos en la sección correspondiente.";
-
-            MostrarModalMensajeExito(titulo, cuerpo);
         }
 
         protected void btnExito_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Turnos/GestionTurno.aspx");
-        }
-
-        #endregion
-
-        #region Botones footers guardar /cancelar   
-        protected void btnGuardar_Click(object sender, EventArgs e)
-        {
-            if (ViewState["IdPaciente"] == null)
-            {
-                lblMensajeError.Text = "Debe buscar y encontrar un paciente válido antes de guardar.";
-                lblMensajeError.Visible = true;
-                return;
-            }
-
-            string titulo = "Verifique los Datos antes de Confirmar";
-            string cuerpo = $"<strong>DNI</strong>: {txtDocumento.Text.Trim()}<br />" +
-                            $"<strong>Nombre de Paciente</strong>: {txtNombrePaciente.Text} {txtApellidoPaciente.Text}<br />" +
-                            $"<strong>Especialidad</strong>: {ddlEspecialidad.SelectedItem.Text}<br />" +
-                            $"<strong>Doctor asignado</strong>: {ddlMedicoDisponible.SelectedItem.Text}<br />" +
-                            $"<strong>Fecha del Turno</strong>: {Session["FechaTurno"]}<br />" +
-                            $"<strong>Horario del Turno</strong>: {ddlHorario.SelectedItem.Text}<br /><br />" +
-                            $"Desea confirmar el turno?";
-
-            MostrarModalConfirmacion(titulo, cuerpo);
+            Response.Redirect("turnos/GestionTurnos.aspx");
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/Mainmenu.aspx");
-        }
-        #endregion
-
-        #region Datepicker Metodos
-        private void DeshabilitarDatepicker()
-        {
-            ScriptManager.RegisterStartupScript(
-                this,
-                GetType(),
-                "DisableCalendarFlag",
-                "deshabilitarCalendario();",
-                true);
-        }
-
-        private void HabilitarDatepicker()
-        {
-            ScriptManager.RegisterStartupScript(
-                this,
-                GetType(),
-                "EnableCalendarFlag",
-                "habilitarCalendario();",
-                true);
-
-            ConfigurarMinimoHoy();
-        }
-
-        private void DeshabilitarDiasSemana(List<DayOfWeek> dias)
-        {
-
-            var indices = dias.Select(d => (int)d);
-            string jsArray = string.Join(",", indices);
-
-            string script = $@"
-        $('#calendarioTurnos').datepicker('setDaysOfWeekDisabled', [{jsArray}]);";
-
-            ScriptManager.RegisterStartupScript(
-                this,
-                GetType(),
-                "DisableDaysOfWeek",
-                script,
-                true);
-        }
-
-        private void ConfigurarMinimoHoy()
-        {
-            string script = "$('#calendarioTurnos').datepicker('setStartDate', new Date());";
-
-            ScriptManager.RegisterStartupScript(
-                this,
-                GetType(),
-                "SetStartDateToday",
-                script,
-                true
-            );
-        }
-
-
-        #endregion
-
-        #region Helpers
-        private void RevertirMuted()
-        {
-            EspecialidadMuted.InnerHtml = "1. Comience seleccionando una especialidad.";
-            EspecialidadMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
-            MedicoMuted.InnerHtml = "2. Seleccione una especialidad para ver los medicos disponibles.";
-            MedicoMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
-            FechaMuted.InnerHtml = "3. Seleccione un medico para ver las fechas disponibles.";
-            FechaMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
-            HorarioMuted.InnerHtml = "4. Seleccione una fecha para ver los horarios disponibles.";
-            HorarioMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
-        }
-
-        private List<string> ObtenerHorariosDesdeDdl()
-        {
-            List<string> horarios = new List<string>();
-
-            foreach (ListItem item in ddlHorario.Items)
-            {
-                horarios.Add(item.Text);
-            }
-
-            return horarios;
+            Response.Redirect("Default.aspx");
         }
 
         private void MostrarHorariosRecomendadosEnLabel()
@@ -525,9 +412,6 @@ namespace WebApplicationClinica
             DeshabilitarDiasSemana(diasQueNoTrabaja);
         }
         #endregion
-
-
-
     }
 
 }

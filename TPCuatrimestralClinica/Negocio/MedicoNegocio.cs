@@ -198,7 +198,7 @@ namespace Negocio
                         datosGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
 
 
-                        int diaSemanaNumero = Convert.ToInt32(datos.Lector["DiaSemana"]);
+                        int diaSemanaNumero = Convert.ToInt32(turno.DiaSemana);
                         datosGuardia.SetearParametros("@DiaSemana", diaSemanaNumero);
 
                         datosGuardia.EjecutarAccion();

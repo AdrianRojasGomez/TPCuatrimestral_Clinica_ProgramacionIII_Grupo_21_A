@@ -2,7 +2,7 @@
 using Negocio;
 using System;
 using System.Collections.Generic;
-using System.Linq; // 👈 Importante: Agregado para poder unir Nombre + Apellido
+using System.Linq;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -377,6 +377,41 @@ namespace WebApplicationClinica
             Response.Redirect("Default.aspx");
         }
 
+        private void MostrarHorariosRecomendadosEnLabel()
+        {
+            List<string> horarios = ObtenerHorariosDesdeDdl();
+
+            // Tomo solo los primeros 3 (o menos si no hay tantos)
+            var primeros = horarios.Take(3).ToList();
+
+            if (primeros.Count == 0)
+            {
+                HorarioMuted.InnerHtml = "No hay horarios recomendados disponibles.";
+            }
+            else
+            {
+                string lista = string.Join(", ", primeros);
+                HorarioMuted.InnerHtml = $"Horarios recomendados: {lista}";
+            }
+
+            HorarioMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
+        }
+
+        private void ActualizarDiasSegunMedico(List<DayOfWeek> diasQueTrabaja)
+        {
+
+            var todosLosDias = Enum.GetValues(typeof(DayOfWeek))
+                                   .Cast<DayOfWeek>();
+
+            // Días que NO trabaja = todos - los que sí trabaja
+            var diasQueNoTrabaja = todosLosDias
+                .Except(diasQueTrabaja)
+                .ToList();
+
+
+            DeshabilitarDiasSemana(diasQueNoTrabaja);
+        }
         #endregion
     }
+
 }

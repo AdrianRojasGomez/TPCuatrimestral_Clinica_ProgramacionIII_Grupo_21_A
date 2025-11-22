@@ -264,7 +264,11 @@ namespace Negocio
                         VALUES (@IdMedico, @IdGuardia, @DiaSemana)");
                         datosInsGuardia.SetearParametros("@IdMedico", medico.IdMedico);
                         datosInsGuardia.SetearParametros("@IdGuardia", turno.IdTurnoTrabajo);
-                        int diaNumero = (int)(turno.DiaSemana);
+
+                        int diaNumero = Convert.ToInt32(turno.DiaSemana);
+
+                        
+                        
                         datosInsGuardia.SetearParametros("@DiaSemana", diaNumero);
                         datosInsGuardia.EjecutarAccion();
                     }

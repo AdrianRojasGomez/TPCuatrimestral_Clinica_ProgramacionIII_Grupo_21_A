@@ -250,23 +250,32 @@ namespace WebApplicationClinica
 
         /// <summary>
         /// Control FechaMuted.
-        /// Control FechaMuted.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton lnkFechaSeleccionada;
-
-        /// <summary>
-        /// FechaMuted control.
-      5fe5f2584896eddf9b792c3708b0e93af02e82ce
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl FechaMuted;
+        /*
+           /// <summary>
+           /// Control FechaMuted.
+           /// Control FechaMuted.
+           /// </summary>
+           /// <remarks>
+           /// Campo generado automáticamente.
+           /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+           /// </remarks>
+           protected global::System.Web.UI.WebControls.LinkButton lnkFechaSeleccionada;
+
+           /// <summary>
+           /// FechaMuted control.
+         5fe5f2584896eddf9b792c3708b0e93af02e82ce
+           /// </summary>
+           /// <remarks>
+           /// Campo generado automáticamente.
+           /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+           /// </remarks>
+           protected global::System.Web.UI.HtmlControls.HtmlGenericControl FechaMuted;*/
 
         /// <summary>
         /// Control ddlHorario.

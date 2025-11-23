@@ -1,7 +1,9 @@
 ﻿using Dominio;
 using Negocio;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -33,26 +35,47 @@ namespace WebApplicationClinica
             try
             {
                 PacienteNegocio negocio = new PacienteNegocio();
-                DataTable dt = negocio.Listar(filtro);
+                List<Paciente> lista = negocio.ListarPacientes(filtro);
 
-                if (dt.Rows.Count > 0)
+                
+                if (lista == null)
+                    lista = new List<Paciente>();
+
+                
+                if (!string.IsNullOrEmpty(this.SortExpression))
                 {
-                    DataView dv = dt.DefaultView;
+                    
+                    string dir = this.SortDirection.ToString().ToUpper();
 
-                    if (!string.IsNullOrEmpty(this.SortExpression))
+              
+                    var prop = typeof(Paciente).GetProperty(this.SortExpression);
+                    if (prop != null)
                     {
-                        dv.Sort = string.Format("{0} {1}", this.SortExpression, this.SortDirection);
+                        if (dir == "ASC")
+                        {
+                            lista = lista
+                                .OrderBy(p => prop.GetValue(p, null))
+                                .ToList();
+                        }
+                        else
+                        {
+                            lista = lista
+                                .OrderByDescending(p => prop.GetValue(p, null))
+                                .ToList();
+                        }
                     }
-                    else
-                    {
-                        dv.Sort = "Apellido ASC, Nombre ASC";
-                    }
-                    gvPacientes.DataSource = dv;
                 }
                 else
                 {
-                    gvPacientes.DataSource = dt;
+                   
+                    lista = lista
+                        .OrderBy(p => p.Apellido)
+                        .ThenBy(p => p.Nombre)
+                        .ToList();
                 }
+
+                
+                gvPacientes.DataSource = lista;
                 gvPacientes.DataBind();
             }
             catch (Exception ex)
@@ -99,8 +122,9 @@ namespace WebApplicationClinica
             try
             {
                 PacienteNegocio negocio = new PacienteNegocio();
-                negocio.EliminarLogico(id);
+                negocio.EliminarLogicoPaciente(id);
                 MostrarMensaje("Paciente eliminado correctamente.", "success");
+                ReiniciarBusquedaYRefrescar();
             }
             catch (Exception ex)
             {
@@ -113,13 +137,15 @@ namespace WebApplicationClinica
             try
             {
                 PacienteNegocio negocio = new PacienteNegocio();
-                negocio.ReactivarLogico(id);
+                negocio.ReactivarLogicoPaciente(id);
                 MostrarMensaje("Paciente reactivado correctamente.", "success");
+                CargarPacientes();
             }
             catch (Exception ex)
             {
                 MostrarMensaje(ex.Message, "danger");
             }
+            ReiniciarBusquedaYRefrescar();
         }
 
         #endregion
@@ -167,16 +193,16 @@ namespace WebApplicationClinica
                 PacienteNegocio negocio = new PacienteNegocio();
                 if (pac.IdPaciente == 0)
                 {
-                    negocio.GuardarNuevo(pac);
+                    negocio.GuardarPaciente(pac);
                 }
                 else
                 {
-                    negocio.Modificar(pac);
+                    negocio.ModificarPaciente(pac);
                 }
 
                 MostrarMensaje(pac.IdPaciente == 0 ? "Paciente creado exitosamente." : "Paciente actualizado exitosamente.", "success");
                 pnlFormulario.Visible = false;
-                CargarPacientes();
+               
             }
             catch (Exception ex)
             {
@@ -188,18 +214,19 @@ namespace WebApplicationClinica
         {
             CargarPacientes(txtBuscarPaciente.Text.Trim());
             divMensaje.Visible = false;
+          
         }
         // vista  admin
         protected void gvPacientes_RowDataBound(object sender, GridViewRowEventArgs e)
         {
 
-            if (e.Row.RowType == DataControlRowType.DataRow)
-            {
                 var tipoUsuario = Login.PuedeVerTurnos(Session);
                 bool esAdmin = (tipoUsuario == TipoUsuario.Admin);
 
                 LinkButton btnEliminar = (LinkButton)e.Row.FindControl("btnEliminar");
                 LinkButton btnReactivar = (LinkButton)e.Row.FindControl("btnReactivar");
+            if (e.Row.RowType == DataControlRowType.DataRow)
+            {
 
                 if (!esAdmin)
                 {
@@ -207,7 +234,18 @@ namespace WebApplicationClinica
                     if (btnReactivar != null) btnReactivar.Visible = false;
                 }
 
+
             }
+                bool activo = false;
+
+               
+                object valor = DataBinder.Eval(e.Row.DataItem, "Estado");
+                if (valor != null)
+                    bool.TryParse(valor.ToString(), out activo);
+
+                
+                if (btnEliminar != null) btnEliminar.Visible = activo;
+                if (btnReactivar != null) btnReactivar.Visible = !activo;
         }
         #endregion
 
@@ -355,6 +393,18 @@ namespace WebApplicationClinica
             lblMensaje.Text += "<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>";
         }
 
+       public  void ReiniciarBusquedaYRefrescar()
+       {
+            
+            txtBuscarPaciente.Text = "";
+
+            
+            CargarPacientes();
+
+           
+            txtBuscarPaciente.Focus();
+       }
         #endregion
+
     }
 }

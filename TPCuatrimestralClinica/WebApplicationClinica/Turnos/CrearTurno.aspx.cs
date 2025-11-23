@@ -285,7 +285,7 @@ namespace WebApplicationClinica
                 pac.Estado = true;
 
                 PacienteNegocio negocio = new PacienteNegocio();
-                negocio.GuardarNuevo(pac);
+                negocio.GuardarPaciente(pac);
 
                 Paciente guardado = negocio.BuscarPorDni(pac.Dni);
                 Session["IdPaciente"] = guardado.IdPaciente;
@@ -366,7 +366,7 @@ namespace WebApplicationClinica
                     "var myModal = new bootstrap.Modal(document.getElementById('modalConfirmacion')); myModal.show();", true);
             }
         }
-
+        #endregion
         protected void btnExito_Click(object sender, EventArgs e)
         {
             Response.Redirect("turnos/GestionTurnos.aspx");
@@ -376,6 +376,90 @@ namespace WebApplicationClinica
         {
             Response.Redirect("Default.aspx");
         }
+
+        #region Datepicker Metodos
+        private void DeshabilitarDatepicker()
+        {
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "DisableCalendarFlag",
+                "deshabilitarCalendario();",
+                true);
+        }
+
+        private void HabilitarDatepicker()
+        {
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "EnableCalendarFlag",
+                "habilitarCalendario();",
+                true);
+
+            ConfigurarMinimoHoy();
+        }
+
+        private void DeshabilitarDiasSemana(List<DayOfWeek> dias)
+        {
+
+            var indices = dias.Select(d => (int)d);
+            string jsArray = string.Join(",", indices);
+
+            string script = $@"
+        $('#calendarioTurnos').datepicker('setDaysOfWeekDisabled', [{jsArray}]);";
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "DisableDaysOfWeek",
+                script,
+                true);
+        }
+
+        private void ConfigurarMinimoHoy()
+        {
+            string script = "$('#calendarioTurnos').datepicker('setStartDate', new Date());";
+
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "SetStartDateToday",
+                script,
+                true
+            );
+        }
+
+
+        #endregion
+
+        #region Helpers
+        private void RevertirMuted()
+        {
+            EspecialidadMuted.InnerHtml = "1. Comience seleccionando una especialidad.";
+            EspecialidadMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
+            MedicoMuted.InnerHtml = "2. Seleccione una especialidad para ver los medicos disponibles.";
+            MedicoMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
+            FechaMuted.InnerHtml = "3. Seleccione un medico para ver las fechas disponibles.";
+            FechaMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
+            HorarioMuted.InnerHtml = "4. Seleccione una fecha para ver los horarios disponibles.";
+            HorarioMuted.Attributes["class"] = "text-muted d-block mt-2 mt-auto";
+        }
+
+        private List<string> ObtenerHorariosDesdeDdl()
+        {
+            List<string> horarios = new List<string>();
+
+            foreach (ListItem item in ddlHorario.Items)
+            {
+                horarios.Add(item.Text);
+            }
+
+            return horarios;
+        }
+
+      
+
 
         private void MostrarHorariosRecomendadosEnLabel()
         {

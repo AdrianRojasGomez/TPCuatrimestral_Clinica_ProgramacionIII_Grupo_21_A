@@ -16,8 +16,8 @@
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
          
     <div class="container mt-4">
-        <h2 class="mb-3"><%: Title %></h2>
-        <p class="lead">Administración de la información de los pacientes de la clínica.</p>
+        <h2 class="mb-3" style="color:#198754;"><%: Title %></h2>
+        <p class="lead" style="color:#2ecc71;">Administración de la información de los pacientes de la clínica.</p>
 
         <div class="card mb-4">
             <div class="card-body">
@@ -25,7 +25,7 @@
                     <div class="col-md-6 col-lg-8">
                         <div class="input-group">
                             <asp:TextBox ID="txtBuscarPaciente" runat="server" CssClass="form-control" Placeholder="Buscar paciente por nombre o DNI..."></asp:TextBox>
-                            <asp:Button ID="btnBuscar" runat="server" Text="Buscar" CssClass="btn btn-outline-secondary" OnClick="btnBuscar_Click" />
+                            <asp:Button ID="btnBuscar" runat="server" Text="Buscar"  CssClass="btn btn-outline-primary" OnClick="btnBuscar_Click" />
                         </div>
                     </div>
                     <div class="col-md-6 col-lg-4 text-end">
@@ -54,7 +54,7 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <asp:Label ID="Label1" runat="server" Text="Nombre:"></asp:Label>
+                        <asp:Label ID="Label1" runat="server" style="color:#e57373;" Text="Nombre:"></asp:Label>
 
                         <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control"></asp:TextBox>
 
@@ -66,7 +66,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <asp:Label ID="Label2" runat="server" Text="Apellido:"></asp:Label>
+                        <asp:Label ID="Label2" runat="server" style="color:#e57373;" Text="Apellido:"></asp:Label>
                         <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control"></asp:TextBox>
                     
                         <asp:RequiredFieldValidator ID="rfvApellido" runat="server"
@@ -79,7 +79,7 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <asp:Label ID="Label3" runat="server" Text="DNI:"></asp:Label>
+                        <asp:Label ID="Label3" runat="server" style="color:#e57373;" Text="DNI:"></asp:Label>
                         <asp:TextBox ID="txtDni" runat="server" CssClass="form-control"></asp:TextBox>
                              
                         <asp:RequiredFieldValidator ID="rfvDni" runat="server"
@@ -98,7 +98,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <asp:Label ID="Label4" runat="server" Text="Fecha de Nacimiento:"></asp:Label>
+                        <asp:Label ID="Label4" runat="server" style="color:#e57373;" Text="Fecha de Nacimiento:"></asp:Label>
                         <asp:TextBox ID="txtFechaNacimiento" runat="server" TextMode="Date" CssClass="form-control"></asp:TextBox>
 
                         <asp:CompareValidator ID="cvFecha" runat="server"
@@ -113,7 +113,7 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <asp:Label ID="Label5" runat="server" Text="Email:"></asp:Label>
+                        <asp:Label ID="Label5" runat="server" style="color:#e57373;" Text="Email:"></asp:Label>
                         <asp:TextBox ID="txtEmail" runat="server" TextMode="Email" CssClass="form-control"></asp:TextBox>
 
                         <%-- Validador para Email (Requerido) --%>
@@ -132,12 +132,12 @@
                         </asp:RegularExpressionValidator>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <asp:Label ID="Label6" runat="server" Text="Teléfono:"></asp:Label>
+                        <asp:Label ID="Label6" runat="server" style="color:#e57373;" Text="Teléfono:"></asp:Label>
                         <asp:TextBox ID="txtTelefono" runat="server" CssClass="form-control"></asp:TextBox>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <asp:Label ID="Label7" runat="server" Text="Dirección:"></asp:Label>
+                    <asp:Label ID="Label7" runat="server" style="color:#e57373;" Text="Dirección:"></asp:Label>
                     <asp:TextBox ID="txtDireccion" runat="server" TextMode="MultiLine" Rows="3" CssClass="form-control"></asp:TextBox>
                 </div>
 
@@ -148,8 +148,9 @@
             </div>
         </asp:Panel>
 
+
         <div class="card card-body">
-            <h3 class="mb-3">Lista de Pacientes</h3>
+            <h3 style="color:#198754;">Lista de Pacientes</h3>
             <div class="table-responsive">
                 <asp:GridView ID="gvPacientes" runat="server" AutoGenerateColumns="False" DataKeyNames="IdPaciente"
                     CssClass="table table-hover table-striped table-bordered" EmptyDataText="No hay pacientes registrados."

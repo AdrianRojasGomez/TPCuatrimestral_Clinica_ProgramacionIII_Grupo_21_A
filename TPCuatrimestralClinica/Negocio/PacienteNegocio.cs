@@ -1,5 +1,6 @@
 ﻿using Dominio;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -7,7 +8,7 @@ namespace Negocio
 {
     public class PacienteNegocio
     {
-        public DataTable Listar(string filtro = "")
+        public DataTable ListarPaciente(string filtro = "")
         {
             AccesoDatos datos = new AccesoDatos();
             try
@@ -46,6 +47,67 @@ namespace Negocio
                 datos.CerrarConexion();
             }
         }
+        public List<Paciente> ListarPacientes(string filtro = "")
+        {
+            AccesoDatos datos = new AccesoDatos();
+            List<Paciente> lista = new List<Paciente>();
+
+            try
+            {
+                string query = @"
+            SELECT 
+                IdPaciente, Dni, Apellido, Nombre, Email, Telefono, Direccion, FechaNacimiento, Estado
+            FROM Pacientes";
+
+                if (!string.IsNullOrEmpty(filtro))
+                {
+                    query += " WHERE (Estado = 1 AND (Dni LIKE @FiltroLike OR Apellido LIKE @FiltroLike OR Nombre LIKE @FiltroLike))" +
+                             "    OR (Estado = 0 AND Dni = @FiltroExacto)";
+
+                    datos.SetearParametros("@FiltroLike", "%" + filtro + "%");
+                    datos.SetearParametros("@FiltroExacto", filtro);
+                }
+                else
+                {
+                    query += " WHERE Estado = 1";
+                }
+
+                datos.SetearConsulta(query);
+                datos.EjecutarLectura();
+
+                while (datos.Lector.Read())
+                {
+                    Paciente pac = new Paciente();
+
+                    pac.IdPaciente = (int)datos.Lector["IdPaciente"];
+                    pac.Dni = (string)datos.Lector["Dni"];
+                    pac.Apellido = (string)datos.Lector["Apellido"];
+                    pac.Nombre = (string)datos.Lector["Nombre"];
+
+                    pac.Email = datos.Lector["Email"] is DBNull ? null : (string)datos.Lector["Email"];
+                    pac.Telefono = datos.Lector["Telefono"] is DBNull ? null : (string)datos.Lector["Telefono"];
+                    pac.Direccion = datos.Lector["Direccion"] is DBNull ? null : (string)datos.Lector["Direccion"];
+
+                    if (datos.Lector["FechaNacimiento"] != DBNull.Value)
+                        pac.FechaNacimiento = (DateTime)datos.Lector["FechaNacimiento"];
+
+                    pac.Estado = datos.Lector["Estado"] != DBNull.Value && Convert.ToBoolean(datos.Lector["Estado"]);
+
+                    lista.Add(pac);  
+                }
+
+                return lista;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al listar pacientes (List<Paciente>): " + ex.Message);
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
 
         public Paciente BuscarPorDni(string dni)
         {
@@ -124,7 +186,7 @@ namespace Negocio
             }
         }
 
-        public void GuardarNuevo(Paciente nuevo)
+        public void GuardarPaciente(Paciente nuevo)
         {
             CheckDni(nuevo.Dni, 0); 
 
@@ -152,7 +214,7 @@ namespace Negocio
             }
         }
 
-        public void Modificar(Paciente paciente)
+        public void ModificarPaciente(Paciente paciente)
         {
 
             CheckDni(paciente.Dni, paciente.IdPaciente);
@@ -184,7 +246,7 @@ namespace Negocio
             }
         }
 
-        public void EliminarLogico(int id)
+        public void EliminarLogicoPaciente(int id)
         {
             AccesoDatos datos = new AccesoDatos();
             try
@@ -199,7 +261,7 @@ namespace Negocio
             }
         }
 
-        public void ReactivarLogico(int id)
+        public void ReactivarLogicoPaciente(int id)
         {
             AccesoDatos datos = new AccesoDatos();
             try

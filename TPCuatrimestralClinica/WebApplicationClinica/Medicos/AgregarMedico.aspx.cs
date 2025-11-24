@@ -671,6 +671,7 @@ namespace WebApplicationClinica.Medicos
 
         protected void gvMedicos_RowDataBound(object sender, GridViewRowEventArgs e)
         {
+            
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
                 
@@ -719,13 +720,63 @@ namespace WebApplicationClinica.Medicos
                 else if (tipo == TipoUsuario.Medico)
                 {
 
-                    btnEditar.Enabled = true;
-                    btnCancelar.Enabled = true;
-                    btnEliminar.Enabled = false;
-                    btnModificar.Enabled = true;
-                    btnCrearUsuario.Enabled = false;
-                    btnActivarUsuarioDesdeMedico.Enabled = false;
+                    
+                    int idMedicoFila = Convert.ToInt32(gvMedicos.DataKeys[e.Row.RowIndex].Value);
 
+                   
+                    if (Session["idMedico"] == null)
+                    {
+                        btnEditar.Visible = false;
+                        btnModificar.Visible = false;
+                        btnCancelar.Visible = false;
+                        btnEliminar.Visible = false;
+                        btnCrearUsuario.Visible = false;
+                        btnActivarUsuarioDesdeMedico.Visible = false;
+                        return;
+                    }
+
+                    int idMedicoLogueado = Convert.ToInt32(Session["idMedico"]);
+
+                    bool esSuPropiaFila = (idMedicoFila == idMedicoLogueado);
+
+                    if (esSuPropiaFila)
+                    {
+                        
+                        btnEditar.Visible = true;
+                        btnEditar.Enabled = true;
+
+                        btnModificar.Visible = true;
+                        btnModificar.Enabled = true;
+
+                        btnCancelar.Visible = true;
+                        btnCancelar.Enabled = true;
+
+                     
+                        btnEliminar.Visible = false;
+                        btnEliminar.Enabled = false;
+
+                      
+                        btnCrearUsuario.Visible = false;
+                        btnCrearUsuario.Enabled = false;
+
+                        btnActivarUsuarioDesdeMedico.Visible = false;
+                        btnActivarUsuarioDesdeMedico.Enabled = false;
+                    }
+                    else
+                    {
+                    
+                        btnEditar.Visible = false;
+                        btnModificar.Visible = false;
+                        btnCancelar.Visible = false;
+                        btnEliminar.Visible = false;
+                        btnCrearUsuario.Visible = false;
+                        btnActivarUsuarioDesdeMedico.Visible = false;
+                    }
+
+                    lblRecepcionSubTitulo.Visible = false;
+                    lblAdminSubtitulo.Visible = false;
+
+                    return;
 
                 }
 

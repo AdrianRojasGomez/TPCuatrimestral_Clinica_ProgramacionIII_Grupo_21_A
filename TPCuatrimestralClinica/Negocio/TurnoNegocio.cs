@@ -253,7 +253,6 @@ namespace Negocio
                     datos.CerrarConexion();
                 }
             }
-
         public Turno BuscarPorId(int id)
             {
                 AccesoDatos datos = new AccesoDatos();
@@ -312,7 +311,7 @@ namespace Negocio
            AccesoDatos datos = new AccesoDatos();
             try
             {                
-                datos.SetearConsulta("UPDATE Turnos SET Estado = 2 WHERE IdTurno = @IdTurno"); 
+                datos.SetearConsulta("UPDATE Turnos SET Estado = 0 WHERE IdTurno = @IdTurno"); 
                 datos.SetearParametros("@IdTurno", id);
                 datos.EjecutarAccion();
             }
@@ -328,7 +327,7 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("UPDATE Turnos SET Estado = 0 WHERE IdTurno = @IdTurno");
+                datos.SetearConsulta("UPDATE Turnos SET Estado = 1 WHERE IdTurno = @IdTurno");
                 datos.SetearParametros("@IdTurno", id);
                 datos.EjecutarAccion();
             }

@@ -61,13 +61,8 @@ namespace WebApplicationClinica
 
             MedicoNegocio medicoNegocio = new MedicoNegocio();
             List<Medico> medicos = medicoNegocio.ListarPorEspecialidad(idEspecialidad);
-            var listaMedicosCompleta = medicos.Select(m => new
-            {
-                IdMedico = m.IdMedico,
-                NombreCompleto = m.Nombre + " " + m.Apellido
-            }).ToList();
 
-            ddlMedicoDisponible.DataSource = listaMedicosCompleta;
+            ddlMedicoDisponible.DataSource = medicos;
             ddlMedicoDisponible.DataTextField = "NombreCompleto";
             ddlMedicoDisponible.DataValueField = "IdMedico";
             ddlMedicoDisponible.DataBind();
@@ -128,7 +123,8 @@ namespace WebApplicationClinica
 
         protected void ddlFechaTurno_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(ddlFechaTurno.SelectedValue)) return;
+            if (string.IsNullOrEmpty(ddlFechaTurno.SelectedValue)) 
+                return;
 
             try
             {
@@ -143,8 +139,18 @@ namespace WebApplicationClinica
                 if (fechaSeleccionada.Date == DateTime.Today)
                 {
                     TimeSpan horaActual = DateTime.Now.TimeOfDay;
-                    
-                    horariosLibres = horariosLibres.Where(h => h > horaActual).ToList();
+
+                    var horariosFiltrados = new List<TimeSpan>();
+
+                    foreach (TimeSpan horario in horariosLibres)
+                    {
+                        if (horario > horaActual)
+                        {
+                            horariosFiltrados.Add(horario);
+                        }
+                    }
+
+                    horariosLibres = horariosFiltrados;
                 }
 
                 ddlHorario.Items.Clear();
@@ -358,7 +364,7 @@ namespace WebApplicationClinica
                 nuevoTurno.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
 
                 nuevoTurno.Motivo = txtMotivo.Text;
-                nuevoTurno.Estado = 0;
+                nuevoTurno.Estado = 1;
 
                 turnoNegocio.AgregarTurno(nuevoTurno);
 

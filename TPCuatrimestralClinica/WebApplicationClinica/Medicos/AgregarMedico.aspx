@@ -8,7 +8,7 @@
         .dias-semana input[type="checkbox"] {
             margin-right: 5px;
         }
-
+            
         .dias-semana label {
             margin-right: 20px;
             display: inline-block;

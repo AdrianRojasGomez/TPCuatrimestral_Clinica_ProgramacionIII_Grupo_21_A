@@ -739,44 +739,33 @@ namespace WebApplicationClinica.Medicos
 
                     bool esSuPropiaFila = (idMedicoFila == idMedicoLogueado);
 
-                    if (esSuPropiaFila)
+                    if (!esSuPropiaFila)
                     {
-                        
-                        btnEditar.Visible = true;
-                        btnEditar.Enabled = true;
-
-                        btnModificar.Visible = true;
-                        btnModificar.Enabled = true;
-
-                        btnCancelar.Visible = true;
-                        btnCancelar.Enabled = true;
-
-                     
-                        btnEliminar.Visible = false;
-                        btnEliminar.Enabled = false;
-
                       
-                        btnCrearUsuario.Visible = false;
-                        btnCrearUsuario.Enabled = false;
-
-                        btnActivarUsuarioDesdeMedico.Visible = false;
-                        btnActivarUsuarioDesdeMedico.Enabled = false;
-                    }
-                    else
-                    {
-                    
                         btnEditar.Visible = false;
                         btnModificar.Visible = false;
                         btnCancelar.Visible = false;
                         btnEliminar.Visible = false;
                         btnCrearUsuario.Visible = false;
                         btnActivarUsuarioDesdeMedico.Visible = false;
+                        return;  
                     }
+                
+                    btnEliminar.Visible = false;
+                    btnEliminar.Enabled = false;
+
+                    btnCrearUsuario.Visible = false;
+                    btnCrearUsuario.Enabled = false;
+
+                    btnActivarUsuarioDesdeMedico.Visible = false;
+                    btnActivarUsuarioDesdeMedico.Enabled = false;
 
                     lblRecepcionSubTitulo.Visible = false;
                     lblAdminSubtitulo.Visible = false;
 
-                    return;
+                    
+
+     
 
                 }
 

@@ -46,9 +46,6 @@ namespace Negocio
             }
         }
 
-
-
-
         public MedicoPorGuardia Obtener(int id)
 
         {

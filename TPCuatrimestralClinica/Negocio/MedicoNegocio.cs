@@ -510,9 +510,6 @@ namespace Negocio
             return medicos;
         }
 
-        // ----------------------------------------------------------------------
-        // FIX: Método corregido para obtener horarios correctos según el día
-        // ----------------------------------------------------------------------
         public List<TimeSpan> ObtenerHorariosDeTrabajoDelMedico(int idMedico, DateTime fecha)
         {
             List<TimeSpan> resultadoHorario = new List<TimeSpan>();
@@ -522,18 +519,14 @@ namespace Negocio
             // Validamos que el médico tenga turnos cargados
             if (medico.turnoTrabajos == null || medico.turnoTrabajos.Count == 0)
                 return resultadoHorario;
-
-            // 1. Determinar el día de la semana de la fecha solicitada
             DayOfWeek diaBuscado = fecha.DayOfWeek;
 
-            // 2. Buscar en la lista de turnos si trabaja ese día específico
+            // Buscar en la lista de turnos
             var guardiaDelDia = medico.turnoTrabajos.FirstOrDefault(t => t.DiaSemana == diaBuscado);
 
-            // Si no se encuentra guardia para ese día, devuelve lista vacía (no trabaja)
             if (guardiaDelDia == null)
                 return resultadoHorario;
 
-            // 3. Usar SOLAMENTE la hora inicio y fin de la guardia encontrada
             TimeSpan inicio = guardiaDelDia.HoraInicio;
             TimeSpan fin = guardiaDelDia.HoraFin;
 
@@ -548,10 +541,8 @@ namespace Negocio
             }
             else
             {
-                // Caso especial: Turno que cruza la medianoche (ej. 22:00 a 06:00)
-                // Nota: Para una implementación simple de un día, cortamos a las 24hs
                 var horaActual = inicio;
-                var finDia = TimeSpan.FromHours(24); // 24:00
+                var finDia = TimeSpan.FromHours(24);
 
                 while (horaActual < finDia)
                 {
@@ -570,7 +561,6 @@ namespace Negocio
             List<Turno> turnos = turnoNegocio.ObtenerTodosLosTurnos();
             Medico medico = medicoNegocio.BuscarMedicoPorIdSimple(idMedico);
 
-            // Ahora llamamos al método corregido
             var horariosTrabajo = ObtenerHorariosDeTrabajoDelMedico(medico.IdMedico, fecha);
 
             var horariosLibres = new List<TimeSpan>();
@@ -582,7 +572,7 @@ namespace Negocio
 
             foreach (var turno in turnos)
             {
-                if (turno.IdMedico == medico.IdMedico && turno.FechaInicio.Date == fecha.Date && turno.Estado != 0)
+                if (turno.IdMedico == medico.IdMedico && turno.FechaInicio.Date == fecha.Date && turno.Estado != 2)
                 {
                     horariosOcupados.Add(turno.HoraInicio);
                 }

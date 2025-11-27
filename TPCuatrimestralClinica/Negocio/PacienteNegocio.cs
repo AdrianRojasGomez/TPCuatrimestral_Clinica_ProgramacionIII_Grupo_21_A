@@ -108,7 +108,6 @@ namespace Negocio
             }
         }
 
-
         public Paciente BuscarPorDni(string dni)
         {
             AccesoDatos datos = new AccesoDatos();

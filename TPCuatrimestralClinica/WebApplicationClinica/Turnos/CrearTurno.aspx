@@ -1,7 +1,7 @@
 ﻿<%@ Page Title="Nuevo Turno" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="CrearTurno.aspx.cs" Inherits="WebApplicationClinica.CrearTurno" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-    <!-- Asegúrate de tener Bootstrap cargado en tu Master -->
+  
 </asp:Content>
 
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -14,7 +14,7 @@
                     </div>
                     <div class="card-body">
                         
-                        <!-- SECCIÓN 1: DATOS DEL PACIENTE (Primero, como pediste) -->
+                        <!-- DATOS DEL PACIENTE -->
                         <h5 class="text-secondary border-bottom pb-2 mb-3">1. Datos del Paciente</h5>
                         
                         <!-- Buscador -->
@@ -96,7 +96,7 @@
                             </div>
                         </asp:Panel>
 
-                        <!-- SECCIÓN 2: DATOS DEL TURNO (Segundo, selección de médico/fecha) -->
+                        <!-- DATOS DEL TURNO -->
                         <h5 class="text-secondary border-bottom pb-2 mb-3">2. Datos del Turno</h5>
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
@@ -117,7 +117,6 @@
 
                             <div class="col-md-6">
                                 <label class="form-label">Fechas Disponibles</label>
-                                <%-- Mantenemos el DropDownList para filtrar días válidos --%>
                                 <asp:DropDownList ID="ddlFechaTurno" runat="server" CssClass="form-select" 
                                     AutoPostBack="true" OnSelectedIndexChanged="ddlFechaTurno_SelectedIndexChanged" Enabled="false">
                                 </asp:DropDownList>
@@ -132,8 +131,6 @@
                                 <small id="HorarioMuted" runat="server" class="text-muted d-block mt-1">4. Seleccione hora.</small>
                             </div>
                         </div>
-
-                        <!-- SECCIÓN 3: DETALLES FINALES -->
                         <h5 class="text-secondary border-bottom pb-2 mb-3">3. Detalles Finales</h5>
                         <div class="mb-3">
                             <label class="form-label">Motivo de Consulta</label>
@@ -191,6 +188,4 @@
         </div>
     </div>
 
-    <!-- Script Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </asp:Content>

@@ -91,12 +91,12 @@ namespace WebApplicationClinica
                 }
 
                 LblCargar.Visible = true;
-                LblCargar.Text = "Usuario o contraseña incorrectos.";
+                Response.Redirect("~/Error.aspx");
+               /// LblCargar.Text = "Usuario o contraseña incorrectos.";
             }
             catch (Exception ex)
             {
                 throw ex;
-               // Response.Redirect("~/Error.aspx");
 
             }
         }

@@ -19,7 +19,7 @@ namespace WebApplicationClinica
             {
                 cargargrillaespecialidaddes();
 
-            
+
             }
 
         }
@@ -106,6 +106,8 @@ namespace WebApplicationClinica
             Session.Add("listaespecialidad", lista);
             gvEspecialidades.DataSource = lista;
             gvEspecialidades.DataBind();
+            gvEspecialidades.Columns[0].Visible = false;
+
 
 
 
@@ -136,49 +138,56 @@ namespace WebApplicationClinica
             }
 
 
-                Especialidad especialidad = new Especialidad();
-                EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
+            Especialidad especialidad = new Especialidad();
+            EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
+            if (especiladadNegocio.ExisteEspecialidad(texto))
+            {
+                lblMensajeEspecialidad.Visible = true;
+                lblMensajeEspecialidad.Text = "⚠️ Ya existe una especialidad con ese nombre.";
+                lblMensajeEspecialidad.CssClass = "alert alert-danger fw-semibold mt-2 text-start w-100";
+                return;
+            }
 
-                especialidad.Nombre = TxtNombreEspecialidad.Text.Trim();
+            especialidad.Nombre = TxtNombreEspecialidad.Text.Trim();
 
-                try
-                {
+            try
+            {
 
-                    especiladadNegocio.AgregarEspecialidad(especialidad);
-
-
-
-
-                    TxtNombreEspecialidad.Text = string.Empty;
-
-
-
-                    lblMensajeEspecialidad.Text = "✅ Especialidad guardada correctamente.";
-                    lblMensajeEspecialidad.CssClass = "alert alert-success fw-semibold mt-2 text-start w-100";
-                    lblMensajeEspecialidad.Visible = true;
-
-                    btnCancelar.Visible = false;
-                    btnLimpiar.Visible = true;
-                    btnGuardarEspecialidad.Visible = false;
-
-                    TxtNombreEspecialidad.Focus();
-                    cargargrillaespecialidaddes();
-                }
-                catch (Exception)
-                {
-                    lblMensajeEspecialidad.Visible = true;
-                    lblMensajeEspecialidad.Text = "❌ Ocurrió un error al guardar la especialidad. Intente nuevamente.";
-                    lblMensajeEspecialidad.CssClass = "alert alert-danger fw-semibold mt-2 text-start w-100";
-
-                    btnLimpiar.Visible = true;
-                    btnCancelar.Visible = false;
-                    btnGuardarEspecialidad.Visible = false;
+                especiladadNegocio.AgregarEspecialidad(especialidad);
 
 
-                }
 
 
-            
+                TxtNombreEspecialidad.Text = string.Empty;
+
+
+
+                lblMensajeEspecialidad.Text = "✅ Especialidad guardada correctamente.";
+                lblMensajeEspecialidad.CssClass = "alert alert-success fw-semibold mt-2 text-start w-100";
+                lblMensajeEspecialidad.Visible = true;
+
+                btnCancelar.Visible = false;
+                btnLimpiar.Visible = true;
+                btnGuardarEspecialidad.Visible = false;
+
+                TxtNombreEspecialidad.Focus();
+                cargargrillaespecialidaddes();
+            }
+            catch (Exception)
+            {
+                lblMensajeEspecialidad.Visible = true;
+                lblMensajeEspecialidad.Text = "❌ Ocurrió un error al guardar la especialidad. Intente nuevamente.";
+                lblMensajeEspecialidad.CssClass = "alert alert-danger fw-semibold mt-2 text-start w-100";
+
+                btnLimpiar.Visible = true;
+                btnCancelar.Visible = false;
+                btnGuardarEspecialidad.Visible = false;
+
+
+            }
+
+
+
         }
 
         protected void txtFiltroEspecialidad_TextChanged(object sender, EventArgs e)

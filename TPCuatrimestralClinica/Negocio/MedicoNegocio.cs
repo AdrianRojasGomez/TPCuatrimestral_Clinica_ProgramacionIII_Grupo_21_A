@@ -655,7 +655,7 @@ namespace Negocio
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al verificar si existe un médico con esa matrícula.", ex);
+                throw ex;
             }
             finally
             {

@@ -4,7 +4,9 @@
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
 
-    <h1>Te logueaste mal,Volve al login porfavor</h1>
+  <h1 style="color: #28a745; font-weight: bold; text-align:center;">
+    Acceso incorrecto – Ingresá nuevamente
+</h1>
 
     <div class="text-center">
         <img runat="server"

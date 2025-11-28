@@ -96,6 +96,34 @@ namespace Negocio
             finally { d.CerrarConexion(); }
         }
 
+        public bool ExisteEspecialidad(string nombre)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta(
+                    "SELECT COUNT(*) AS Cantidad " +
+                    "FROM Especialidades " +
+                    "WHERE LOWER(Nombre) = LOWER(@Nombre)"
+                );
+
+                datos.SetearParametros("@Nombre", nombre.Trim());
+                datos.EjecutarLectura();
+
+                if (datos.Lector.Read())
+                {
+                    int cantidad = (int)datos.Lector["Cantidad"];
+                    return cantidad > 0;   // true = ya existe
+                }
+
+                return false;
+            }
+            finally
+            {
+                datos.CerrarConexion();
+            }
+        }
+
 
     }
 }

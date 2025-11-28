@@ -81,6 +81,7 @@
     <Content Include="Error.aspx" />
     <Content Include="Login y Usuarios\CrearUsuario.aspx" />
     <Content Include="Medicos\Especialidades.aspx" />
+    <Content Include="Turnos\ModificarTurno.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clinica.Master.cs">
@@ -160,6 +161,13 @@
     </Compile>
     <Compile Include="Medicos\Especialidades.aspx.designer.cs">
       <DependentUpon>Especialidades.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Turnos\ModificarTurno.aspx.cs">
+      <DependentUpon>ModificarTurno.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Turnos\ModificarTurno.aspx.designer.cs">
+      <DependentUpon>ModificarTurno.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

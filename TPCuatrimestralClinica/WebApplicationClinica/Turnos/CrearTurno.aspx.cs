@@ -34,7 +34,7 @@ namespace WebApplicationClinica
         {
             try
             {
-                EspeciladadNegocio espNegocio = new EspeciladadNegocio();
+                EspecialidadNegocio espNegocio = new EspecialidadNegocio();
                 ddlEspecialidad.DataSource = espNegocio.Listar();
                 ddlEspecialidad.DataTextField = "Nombre";
                 ddlEspecialidad.DataValueField = "IdEspecialidad";
@@ -53,7 +53,8 @@ namespace WebApplicationClinica
 
         protected void ddlEspecialidad_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(ddlEspecialidad.SelectedValue)) return;
+            if (string.IsNullOrEmpty(ddlEspecialidad.SelectedValue))
+                return;
 
             ResetearSelectores(1);
 

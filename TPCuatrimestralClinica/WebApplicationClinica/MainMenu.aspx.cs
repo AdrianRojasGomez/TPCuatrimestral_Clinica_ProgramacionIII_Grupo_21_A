@@ -38,15 +38,14 @@ namespace WebApplicationClinica
                 CargarTurnosProximos();
             }
 
-            if (Login.PuedeVerTurnos(Session) == TipoUsuario.Recepcion)
-            {               
-               btnAgregarMedico.Visible = false;
-                btnModificarMedico.Visible= false;
-                btnListarMedico.Visible = true;
-                btnBajaMedico.Visible = false;   
-                
+            //if (Login.PuedeVerTurnos(Session) == TipoUsuario.Recepcion)
+            //{               
+            //    btnAgregarMedico.Visible = false;
+            //    btnModificarMedico.Visible= false;
+            //    btnListarMedico.Visible = true;
+            //    btnBajaMedico.Visible = false;   
 
-            }
+            //}
 
             else if (Login.PuedeVerTurnos(Session) == TipoUsuario.Medico)
             {

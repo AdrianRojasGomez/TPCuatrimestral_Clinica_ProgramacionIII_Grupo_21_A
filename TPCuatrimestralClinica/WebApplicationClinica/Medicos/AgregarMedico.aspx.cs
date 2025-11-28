@@ -61,7 +61,7 @@ namespace WebApplicationClinica.Medicos
                     txtHoraFin.Enabled=false;
 
                     MedicoPorGuardiaNegocio turnoTrabajo = new MedicoPorGuardiaNegocio();
-                    EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
+                    EspecialidadNegocio especiladadNegocio = new EspecialidadNegocio();
                     List<MedicoPorGuardia> listaturnotrabajo = turnoTrabajo.Listar();
                     List<Especialidad> listaespecialidad = especiladadNegocio.Listar();
 
@@ -832,7 +832,7 @@ namespace WebApplicationClinica.Medicos
                     CheckBoxList cblEspEdit = (CheckBoxList)e.Row.FindControl("cblEspEdit");
                     if (cblEspEdit != null)
                     {
-                        EspeciladadNegocio espNegocio = new EspeciladadNegocio();
+                        EspecialidadNegocio espNegocio = new EspecialidadNegocio();
                         var todas = espNegocio.Listar();
 
                         cblEspEdit.DataSource = todas;

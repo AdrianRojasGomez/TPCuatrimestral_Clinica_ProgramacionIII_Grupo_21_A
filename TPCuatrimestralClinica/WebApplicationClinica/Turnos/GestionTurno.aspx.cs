@@ -27,7 +27,7 @@ namespace WebApplicationClinica
                 TurnoNegocio negocio = new TurnoNegocio();
                 DataTable dt = negocio.Listar(filtro);
 
-                // Fecha límite: 5 días atrás desde hoy
+                // Fecha límite: N días atrás desde hoy
                 DateTime limite = DateTime.Today.AddDays(-3);
 
                 // Creamos una tabla con la misma estructura pero vacía
@@ -46,7 +46,7 @@ namespace WebApplicationClinica
                         fechaInicio = Convert.ToDateTime(fila["FechaInicio"]);
 
                     // Si el turno está COMPLETADO y tiene más de 10 días, NO lo mostramos
-                    if (estado == 1 && fechaInicio < limite)
+                    if (estado == 3 && fechaInicio < limite)
                         continue;
 
                     // En cualquier otro caso, lo copiamos a la nueva tabla
@@ -139,7 +139,8 @@ namespace WebApplicationClinica
             }
             else if (e.CommandName == "EditarFecha")
             {
-                Response.Redirect($"~/ModificarTurno.aspx?id={idTurno}");
+                Session["IdAModificar"] = idTurno;
+                Response.Redirect("~/Turnos/CrearTurno.aspx");
             }
             else if (e.CommandName == "ReactivarTurno") 
             {

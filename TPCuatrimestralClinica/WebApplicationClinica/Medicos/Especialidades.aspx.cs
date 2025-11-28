@@ -73,7 +73,7 @@ namespace WebApplicationClinica
             esp.IdEspecialidad = id;
             esp.Nombre = nombre;
 
-            EspeciladadNegocio neg = new EspeciladadNegocio();
+            EspecialidadNegocio neg = new EspecialidadNegocio();
             neg.ModificarEspecilidad(esp);
 
             gvEspecialidades.EditIndex = -1;
@@ -87,7 +87,7 @@ namespace WebApplicationClinica
         {
             int id = Convert.ToInt32(gvEspecialidades.DataKeys[e.RowIndex].Value);
 
-            EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
+            EspecialidadNegocio especiladadNegocio = new EspecialidadNegocio();
 
             especiladadNegocio.EliminarEspecilidad(id);
 
@@ -100,7 +100,7 @@ namespace WebApplicationClinica
 
 
 
-            EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
+            EspecialidadNegocio especiladadNegocio = new EspecialidadNegocio();
 
             List<Especialidad> lista = especiladadNegocio.Listar();
             Session.Add("listaespecialidad", lista);
@@ -139,7 +139,7 @@ namespace WebApplicationClinica
 
 
             Especialidad especialidad = new Especialidad();
-            EspeciladadNegocio especiladadNegocio = new EspeciladadNegocio();
+            EspecialidadNegocio especiladadNegocio = new EspecialidadNegocio();
             if (especiladadNegocio.ExisteEspecialidad(texto))
             {
                 lblMensajeEspecialidad.Visible = true;

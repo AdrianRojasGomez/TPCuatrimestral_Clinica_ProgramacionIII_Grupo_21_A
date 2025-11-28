@@ -46,7 +46,8 @@
                                         <asp:Button ID="BtnIngresar" cssclas="btn btn-primary" runat="server"
                                             Text="Ingresar" OnClick="BtnIngresar_Click" />
 
-                                        <asp:Label ID="LblCargar" runat="server" Text="" CssClass="alert alert-danger mt-3 text-center fw-semibold shadow-sm"></asp:Label>
+                                        <asp:Label ID="LblCargar" runat="server" Text="" CssClass="alert alert-info border border-2 text-center fw-semibold shadow-sm mt-3"
+></asp:Label>
 
                                     </div>
                                 </div>

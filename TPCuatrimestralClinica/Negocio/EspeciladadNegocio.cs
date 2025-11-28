@@ -40,9 +40,10 @@ namespace Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("SELECT IdEspecialidad, Nombre from Especialidades where IdEspecialidad=@id");
+                datos.SetearConsulta("SELECT E.* from Especialidades as E where IdEspecialidad = @id");
                 datos.SetearParametros("@id", id);
                 datos.EjecutarLectura();
+
                 if (datos.Lector.Read())
                 {
                     Especialidad especialidad = new Especialidad();

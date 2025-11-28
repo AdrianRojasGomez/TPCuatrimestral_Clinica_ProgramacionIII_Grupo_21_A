@@ -201,12 +201,14 @@ namespace WebApplicationClinica
 
         private void ResetearSelectores(int nivel)
         {
+            ///Al Cambiar especialidad
             if (nivel <= 1)
             {
                 ddlMedicoDisponible.Items.Clear();
                 ddlMedicoDisponible.Enabled = false;
                 MedicoMuted.Attributes["class"] = "text-muted d-block mt-1";
             }
+            ///Al Cambiar médico
             if (nivel <= 2)
             {
                 ddlFechaTurno.Items.Clear();

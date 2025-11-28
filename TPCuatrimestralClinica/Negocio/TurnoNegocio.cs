@@ -280,7 +280,7 @@ namespace Negocio
 
                         turno.IdPaciente = (int)datos.Lector["IdPaciente"];
                         turno.IdMedico = (int)datos.Lector["IdMedico"];
-
+                        turno.IdEspecialidad = (int)datos.Lector["IdEspecialidad"];
                         turno.Paciente = pacNegocio.BuscarPorId(turno.IdPaciente);
                         turno.Medico = medicoNegocio.BuscarMedicoPorIdSimple(turno.IdMedico); 
 

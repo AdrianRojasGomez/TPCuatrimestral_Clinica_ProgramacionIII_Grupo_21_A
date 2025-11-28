@@ -19,7 +19,7 @@ namespace WebApplicationClinica.Turnos
                 //{
                 //    Response.Redirect("GestionTurno.aspx");
                 //}
-                Session["IdAModificar"] = 2; // PARA PRUEBAS, QUITAR DESPUÉS
+                Session["IdAModificar"] = 77; // PARA PRUEBAS, QUITAR DESPUÉS
             }
 
             int idTurno = (int)Session["IdAModificar"];
@@ -34,7 +34,7 @@ namespace WebApplicationClinica.Turnos
             Paciente paciente = negocioPaciente.BuscarPorId(turno.IdPaciente);
             Medico medico = negocioMedico.BuscarMedicoPorIdSimple(turno.IdMedico);
             Especialidad especialidad = negocioEspecialidad.ObtenerEspecialidad(turno.IdEspecialidad);
-
+            txtDocumento.Text = especialidad.Nombre;
 
             //LLENAR CAMPOS
             LlenarDatosPaciente(paciente);
@@ -46,7 +46,7 @@ namespace WebApplicationClinica.Turnos
         #region Llenar Datos
         private void LlenarDatosPaciente(Paciente paciente)
         {
-            txtDocumento.Text = paciente.Dni;
+            //txtDocumento.Text = paciente.Dni;
             txtNombrePaciente.Text = paciente.Nombre;
             txtApellidoPaciente.Text = paciente.Apellido;
             txtTelefonoPaciente.Text = paciente.Telefono;
@@ -55,7 +55,12 @@ namespace WebApplicationClinica.Turnos
         }
         private void LlenarDatosTurno(Turno turno, Medico medico, Especialidad especialidad)
         {
-            
+            //ddlEspecialidad.DataSource = null;
+            //ddlEspecialidad.Items.Clear();
+            //ddlEspecialidad.Items.Add(
+            //    new ListItem(especialidad.Nombre, especialidad.IdEspecialidad.ToString())
+            //);
+            //ddlEspecialidad.Enabled = false;
 
 
 

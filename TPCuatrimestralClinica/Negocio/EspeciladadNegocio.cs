@@ -37,23 +37,26 @@ namespace Negocio
        
         public Especialidad ObtenerEspecialidad(int id)
         {
-            AccesoDatos d = new AccesoDatos();
+            AccesoDatos datos = new AccesoDatos();
             try
             {
-                d.SetearConsulta("SELECT IdEspecialidad, Nombre from Especialidades where IdEspecialidad=@id");
-                d.SetearParametros("@id", id);
-                d.EjecutarLectura();
-                if (d.Lector.Read())
+                datos.SetearConsulta("SELECT IdEspecialidad, Nombre from Especialidades where IdEspecialidad=@id");
+                datos.SetearParametros("@id", id);
+                datos.EjecutarLectura();
+                if (datos.Lector.Read())
                 {
-                    return new Especialidad
-                    {
-                        IdEspecialidad = (int)d.Lector["IdEspecialidad"],
-                        Nombre = (string)d.Lector["Nombre"]
-                    };
+                    Especialidad especialidad = new Especialidad();
+                    especialidad.IdEspecialidad = (int)datos.Lector["IdEspecialidad"];
+                    especialidad.Nombre = datos.Lector["Nombre"].ToString();
+                    return especialidad;
                 }
                 return null;
             }
-            finally { d.CerrarConexion(); }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar especialidad por ID: " + ex.Message);
+            }
+            finally { datos.CerrarConexion(); }
         }
 
      

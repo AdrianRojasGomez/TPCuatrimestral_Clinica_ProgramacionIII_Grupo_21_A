@@ -84,48 +84,50 @@
                         <asp:TemplateField HeaderText="Estado" SortExpression="Estado">
                             <ItemTemplate>
                                 <asp:Label runat="server"
-            
-                                    Text='<%# (int)Eval("Estado") == 0 ? "Pendiente" : 
-                                             (int)Eval("Estado") == 1 ? "Completado" : 
-                                             "Cancelado" %>'
-            
-                                    CssClass='<%# (int)Eval("Estado") == 0 ? "badge bg-warning text-dark" : 
-                                                 (int)Eval("Estado") == 1 ? "badge bg-success" : 
-                                                 "badge bg-danger" %>' />
+                                    Text='<%# (int)Eval("Estado") == 1 ? "Pendiente" :
+                       (int)Eval("Estado") == 2 ? "Atendiendo" :
+                       (int)Eval("Estado") == 3 ? "Completado" :
+                       (int)Eval("Estado") == 4 ? "No asistió" :
+                       "Cancelado" %>'
+                                    CssClass='<%# (int)Eval("Estado") == 1 ? "badge bg-warning text-dark" :     
+                          (int)Eval("Estado") == 2 ? "badge bg-primary" :               
+                          (int)Eval("Estado") == 3 ? "badge bg-success" :              
+                          (int)Eval("Estado") == 4 ? "badge bg-secondary" :            
+                          "badge bg-danger" %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
 
-                       <asp:TemplateField HeaderText="Acciones" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="220px">
+                        <asp:TemplateField HeaderText="Acciones" ItemStyle-HorizontalAlign="Center" ItemStyle-Width="220px">
                             <ItemTemplate>
-        
+
                                 <%-- Botón Editar: Aparece si está Pendiente (0) o Completado (1) --%>
                                 <asp:LinkButton ID="btnEditar" runat="server"
                                     CommandName="EditarFecha"
                                     CommandArgument='<%# Eval("IdTurno") %>'
                                     CssClass="btn btn-sm btn-info"
                                     ToolTip="Modificar Fecha/Hora"
-                                    Visible='<%# (int)Eval("Estado") == 0 || (int)Eval("Estado") == 1 %>'>
+                                    Visible='<%# (int)Eval("Estado") == 1 || (int)Eval("Estado") == 3 %>'>
                                     <i class="bi bi-pencil-fill"></i> Editar
                                 </asp:LinkButton>
-        
-                                <%-- Botón Cancelar: Aparece SOLO si está Pendiente (0) --%>
+
+                                <%-- Botón Cancelar: Aparece SOLO si está Pendiente (1) --%>
                                 <asp:LinkButton ID="btnCancelar" runat="server"
                                     CommandName="CancelarTurno"
                                     CommandArgument='<%# Eval("IdTurno") %>'
                                     CssClass="btn btn-sm btn-danger"
                                     ToolTip="Cancelar Turno"
                                     OnClientClick="return confirm('¿Está seguro de que desea cancelar este turno?');"
-                                    Visible='<%# (int)Eval("Estado") == 0 %>'>
+                                    Visible='<%# (int)Eval("Estado") == 1 %>'>
                                     <i class="bi bi-x-circle"></i> Cancelar
                                 </asp:LinkButton>
 
-                                <%-- Botón Reactivar: Aparece SOLO si está Cancelado (2) --%>
+                                <%-- Botón Reactivar: Aparece SOLO si está Cancelado (0) --%>
                                 <asp:LinkButton ID="btnReactivar" runat="server"
                                     CommandName="ReactivarTurno"
                                     CommandArgument='<%# Eval("IdTurno") %>'
                                     CssClass="btn btn-sm btn-success"
                                     ToolTip="Reactivar Turno"
-                                    Visible='<%# (int)Eval("Estado") == 2 %>'>
+                                    Visible='<%# (int)Eval("Estado") == 0 %>'>
                                     <i class="bi bi-arrow-clockwise"></i> Reactivar
                                 </asp:LinkButton>
 

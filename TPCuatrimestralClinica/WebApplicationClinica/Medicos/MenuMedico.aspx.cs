@@ -178,8 +178,6 @@ namespace WebApplicationClinica.Medicos
                     TurnoNegocio negocio = new TurnoNegocio();
                     negocio.ModificarDiagnostico(idTurno, diagnostico);
                     negocio.ModificarEstado(idTurno, (int)EstadoTurno.EstadoEnum.Completado);
-
-                    // simula que guardamos y mostramos el modal
                     MostrarMensaje("Turno Finalizado", "El turno ha sido finalizado correctamente.");
 
                     // Recargar lista para ver cambios 
@@ -210,14 +208,12 @@ namespace WebApplicationClinica.Medicos
 
                 try
                 {
-                    
                     string diagnostico = txtDiagnostico.Text;
                     TurnoNegocio negocio = new TurnoNegocio();
                     negocio.ModificarDiagnostico(idTurno, diagnostico);
                     negocio.ModificarEstado(idTurno, (int)EstadoTurno.EstadoEnum.Atendiendo);
                     // Habilitar diagnóstico
                     txtDiagnostico.Enabled = true;
-
 
                     // Recargar lista para ver cambios 
                     CargarTurnosDelDia((int)Session["idMedico"]);
@@ -290,7 +286,7 @@ namespace WebApplicationClinica.Medicos
                 case 1: return "Pendiente";
                 case 2: return "Atendiendo";
                 case 3: return "Completado";
-                case 4: return "NoAsistio";
+                case 4: return "No asistió";
                 default: return "Desconocido";
             }
         }

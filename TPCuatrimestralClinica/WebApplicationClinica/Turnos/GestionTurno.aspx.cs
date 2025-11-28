@@ -139,7 +139,8 @@ namespace WebApplicationClinica
             }
             else if (e.CommandName == "EditarFecha")
             {
-                Response.Redirect($"~/ModificarTurno.aspx?id={idTurno}");
+                Session["IdAModificar"] = idTurno;
+                Response.Redirect("~/Turnos/CrearTurno.aspx");
             }
             else if (e.CommandName == "ReactivarTurno") 
             {

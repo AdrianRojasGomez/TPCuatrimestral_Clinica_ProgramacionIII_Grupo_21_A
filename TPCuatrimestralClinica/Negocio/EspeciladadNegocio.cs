@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Negocio
 {
-    public class EspeciladadNegocio
+    public class EspecialidadNegocio
     {
         public List<Especialidad> Listar()
         {
@@ -40,7 +40,7 @@ namespace Negocio
             AccesoDatos d = new AccesoDatos();
             try
             {
-                d.SetearConsulta("SELECT IdEspecialidades, Nombre FROM Especialidad WHERE IdEspecialidad=@id");
+                d.SetearConsulta("SELECT IdEspecialidad, Nombre from Especialidades where IdEspecialidad=@id");
                 d.SetearParametros("@id", id);
                 d.EjecutarLectura();
                 if (d.Lector.Read())

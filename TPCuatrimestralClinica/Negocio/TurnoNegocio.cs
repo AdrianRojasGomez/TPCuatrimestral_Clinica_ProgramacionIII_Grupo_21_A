@@ -306,34 +306,36 @@ namespace Negocio
             throw new NotImplementedException();
         }
 
-        public void Cancelar(int id)
-        {
-           AccesoDatos datos = new AccesoDatos();
-            try
-            {                
-                datos.SetearConsulta("UPDATE Turnos SET Estado = 0 WHERE IdTurno = @IdTurno"); 
-                datos.SetearParametros("@IdTurno", id);
-                datos.EjecutarAccion();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al cancelar el turno: " + ex.Message);
-            }
-            
-        }
-
-        public void Reactivar(int id) 
+        public void ModificarEstado(int id, int nuevoEstado)
         {
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                datos.SetearConsulta("UPDATE Turnos SET Estado = 1 WHERE IdTurno = @IdTurno");
+                datos.SetearConsulta("UPDATE Turnos SET Estado = @Estado WHERE IdTurno = @IdTurno");
+                datos.SetearParametros("@Estado", nuevoEstado);
                 datos.SetearParametros("@IdTurno", id);
                 datos.EjecutarAccion();
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al reactivar el turno: " + ex.Message);
+                throw new Exception("Error al modificar el estado del turno: " + ex.Message);
+            }
+
+        }
+
+        public void ModificarDiagnostico(int id, string diagnostico)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.SetearConsulta("UPDATE Turnos SET ObservacionesDiagnostico = @Diagnostico WHERE IdTurno = @IdTurno");
+                datos.SetearParametros("@Diagnostico", diagnostico);
+                datos.SetearParametros("@IdTurno", id);
+                datos.EjecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al modificar el diagnóstico del turno: " + ex.Message);
             }
         }
     }

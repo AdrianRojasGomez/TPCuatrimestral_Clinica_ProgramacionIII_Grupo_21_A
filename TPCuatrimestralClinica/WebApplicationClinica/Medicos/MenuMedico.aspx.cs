@@ -151,15 +151,10 @@ namespace WebApplicationClinica.Medicos
                 try
                 {
                     int idTurno = int.Parse(hdnIdTurnoSeleccionado.Value);
-                    string nuevasObservaciones = txtObservaciones.Text;
-
-                    /* Crear ActualizarObservaciones'.
-                     TurnoNegocio negocio = new TurnoNegocio();
-                    Turno t = negocio.BuscarPorId(idTurno);
-                    t.ObservacionesDiagnostico = nuevasObservaciones;
-                    t.Estado = 1; // Finalizado
-                    negocio.Modificar(t);
-                    */
+                    string diagnostico = txtDiagnostico.Text;
+                    TurnoNegocio negocio = new TurnoNegocio();
+                    negocio.ModificarDiagnostico(idTurno, diagnostico);
+                    negocio.ModificarEstado(idTurno, (int)EstadoTurno.EstadoEnum.Completado);
 
                     // simula que guardamos y mostramos el modal
                     ScriptManager.RegisterStartupScript(this, GetType(), "ModalFin",

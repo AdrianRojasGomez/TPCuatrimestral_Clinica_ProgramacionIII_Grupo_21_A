@@ -79,32 +79,15 @@ namespace WebApplicationClinica
         }
         public void CancelarTurno(int id)
         {
-            AccesoDatos datos = new AccesoDatos();
-            try
-            {
-                datos.SetearConsulta("UPDATE Turnos SET Estado = 2 WHERE IdTurno = @IdTurno");
-                datos.SetearParametros("@IdTurno", id);
-                datos.EjecutarAccion();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al cancelar el turno: " + ex.Message);
-            }
-            
+
+            TurnoNegocio negocio = new TurnoNegocio();
+            negocio.ModificarEstado(id, (int)EstadoTurno.EstadoEnum.Cancelado);            
         }
 
         void ReactivarTurno(int idTurno)
         {
-            try
-            {
-                TurnoNegocio negocio = new TurnoNegocio();
-                negocio.Reactivar(idTurno);
-                MostrarMensaje("Turno reactivado correctamente.", "success");
-            }
-            catch (Exception ex)
-            {
-                MostrarMensaje(ex.Message, "danger");
-            }
+            TurnoNegocio negocio = new TurnoNegocio();
+            negocio.ModificarEstado(idTurno, (int)EstadoTurno.EstadoEnum.Pendiente);
         }
         #endregion
 

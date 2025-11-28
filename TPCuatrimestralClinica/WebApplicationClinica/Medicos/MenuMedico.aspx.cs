@@ -220,6 +220,31 @@ namespace WebApplicationClinica.Medicos
             }
         }
 
+        protected void btnNoAsistio_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(hdnIdTurnoSeleccionado.Value))
+            {
+                try
+                {
+                    int idTurno = int.Parse(hdnIdTurnoSeleccionado.Value);
+                    string diagnostico = txtDiagnostico.Text;
+                    TurnoNegocio negocio = new TurnoNegocio();
+                    negocio.ModificarDiagnostico(idTurno, diagnostico);
+                    negocio.ModificarEstado(idTurno, (int)EstadoTurno.EstadoEnum.NoAsistio);
+                    // Habilitar diagnóstico
+                    txtDiagnostico.Enabled = true;
+
+
+                    // Recargar lista para ver cambios 
+                    CargarTurnosDelDia((int)Session["idMedico"]);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                    // Manejar error
+                }
+            }
+        }
 
 
 
@@ -265,7 +290,7 @@ namespace WebApplicationClinica.Medicos
         #region Botones sin implementación 
 
 
-        protected void btnReprogramar_Click(object sender, EventArgs e) { /* reprogramación */ }
+
         protected void btnLLamarPaciente_Click(object sender, EventArgs e) { }
         protected void txtNombreDoctor_TextChanged(object sender, EventArgs e) { }
         protected void btnLlamarProxPaciente_Click(object sender, EventArgs e) { }

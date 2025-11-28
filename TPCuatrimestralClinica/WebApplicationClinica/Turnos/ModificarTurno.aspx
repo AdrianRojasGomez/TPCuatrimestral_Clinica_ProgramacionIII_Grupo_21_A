@@ -99,7 +99,11 @@
                         <h5 class="text-secondary border-bottom pb-2 mb-3">3. Detalles del Turno</h5>
                         <div class="mb-3">
                             <label class="form-label">Motivo de Consulta</label>
-                            <asp:TextBox ID="txtMotivo" runat="server" CssClass="form-control"
+                            <asp:TextBox 
+                                ID="txtMotivo"
+                                runat="server"
+                                CssClass="form-control"
+                                ReadOnly="true"
                                 placeholder="Ej: Dolor de cabeza recurrente..."></asp:TextBox>
                         </div>
                         <div class="mb-3">

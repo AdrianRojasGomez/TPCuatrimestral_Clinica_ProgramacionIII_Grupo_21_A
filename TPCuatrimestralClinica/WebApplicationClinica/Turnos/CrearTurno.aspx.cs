@@ -201,12 +201,14 @@ namespace WebApplicationClinica
 
         private void ResetearSelectores(int nivel)
         {
+            ///Al Cambiar especialidad
             if (nivel <= 1)
             {
                 ddlMedicoDisponible.Items.Clear();
                 ddlMedicoDisponible.Enabled = false;
                 MedicoMuted.Attributes["class"] = "text-muted d-block mt-1";
             }
+            ///Al Cambiar médico
             if (nivel <= 2)
             {
                 ddlFechaTurno.Items.Clear();
@@ -429,7 +431,7 @@ namespace WebApplicationClinica
 
         protected void btnExito_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/MainMenu.aspx");
+            Response.Redirect("~/Turnos/GestionTurno.aspx");
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)

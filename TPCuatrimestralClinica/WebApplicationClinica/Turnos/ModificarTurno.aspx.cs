@@ -15,11 +15,11 @@ namespace WebApplicationClinica.Turnos
         {
             if (!IsPostBack)
             {
-                //if (Session["IdAModificar"] == null)
-                //{
-                //    Response.Redirect("GestionTurno.aspx");
-                //}
-                Session["IdAModificar"] = 77; // PARA PRUEBAS, QUITAR DESPUÉS
+                if (Session["IdAModificar"] == null)
+                {
+                    Response.Redirect("~/Turnos/GestionTurno.aspx");
+                }
+                //Session["IdAModificar"] = 77; // PARA PRUEBAS, QUITAR DESPUÉS
             }
 
             int idTurno = (int)Session["IdAModificar"];
@@ -79,8 +79,6 @@ namespace WebApplicationClinica.Turnos
             txtObservaciones.Text = turno.ObservacionesSolicitud;
 
         }
-
-
 
         #endregion
 
@@ -214,7 +212,7 @@ namespace WebApplicationClinica.Turnos
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/GestionTurnos.aspx");
+            Response.Redirect("~/Turnos/GestionTurno.aspx");
         }
 
         protected void btnGuardarCambios_Click(object sender, EventArgs e)
@@ -232,7 +230,7 @@ namespace WebApplicationClinica.Turnos
         protected void btnExito_Click(object sender, EventArgs e)
         {
             // Después de confirmar, volver a la página de gestión
-            Response.Redirect("~/GestionTurnos.aspx");
+            Response.Redirect("~/Turnos/GestionTurno.aspx");
         }
     }
 }

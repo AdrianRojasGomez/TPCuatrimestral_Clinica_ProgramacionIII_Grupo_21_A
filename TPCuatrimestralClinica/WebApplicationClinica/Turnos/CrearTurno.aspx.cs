@@ -431,7 +431,7 @@ namespace WebApplicationClinica
 
         protected void btnExito_Click(object sender, EventArgs e)
         {
-            Response.Redirect("~/MainMenu.aspx");
+            Response.Redirect("~/Turnos/GestionTurno.aspx");
         }
 
         protected void btnCancelar_Click(object sender, EventArgs e)

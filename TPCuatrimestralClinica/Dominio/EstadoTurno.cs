@@ -11,7 +11,7 @@ namespace Dominio
         public enum EstadoEnum
         {
             Pendiente = 1,
-            Confirmado = 2,
+            Atendiendo = 2,
             Completado = 3,
             NoAsistio = 4,
             Cancelado = 0

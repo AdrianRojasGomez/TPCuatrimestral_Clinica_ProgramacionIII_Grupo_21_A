@@ -356,9 +356,8 @@ namespace WebApplicationClinica
                 nuevoTurno.HoraInicio = horaInicio;
                 nuevoTurno.HoraFin = horaInicio.Add(TimeSpan.FromHours(1));
 
-                nuevoTurno.ObservacionesSolicitud = txtMotivo.Text;
-                nuevoTurno.ObservacionesDiagnostico = txtObservaciones.Text;
-
+                nuevoTurno.ObservacionesSolicitud = txtObservaciones.Text;
+                nuevoTurno.ObservacionesDiagnostico = "";
                 nuevoTurno.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
                 nuevoTurno.IdPaciente = (int)Session["IdPaciente"];
                 nuevoTurno.IdEspecialidad = int.Parse(ddlEspecialidad.SelectedValue);
@@ -434,7 +433,7 @@ namespace WebApplicationClinica
 
         protected void btnCancelar_Click(object sender, EventArgs e)
         {
-            Response.Redirect("Default.aspx");
+            Response.Redirect("~/MainMenu.aspx");
         }
         #endregion
 

@@ -126,7 +126,7 @@ namespace WebApplicationClinica.Medicos
                     lblMotivoConsulta.Text = turno.Motivo;
 
                     // Cargamos observaciones existentes si las hay
-                    txtObservaciones.Text = turno.ObservacionesDiagnostico;
+                    txtObservaciones.Text = turno.ObservacionesSolicitud;
 
                     // Habilitamos el panel para editar
                     pnlDetalleTurno.Enabled = true;

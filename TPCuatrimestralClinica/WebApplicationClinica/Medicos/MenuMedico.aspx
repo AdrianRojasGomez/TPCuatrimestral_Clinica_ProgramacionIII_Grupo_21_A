@@ -1,11 +1,21 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Clinica.Master" AutoEventWireup="true" CodeBehind="MenuMedico.aspx.cs" Inherits="WebApplicationClinica.Medicos.WebForm1" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
-  
+
     <style>
-        .turno-item { cursor: pointer; transition: background-color 0.2s; }
-        .turno-item:hover { background-color: #f8f9fa; }
-        .turno-item.active { border-left: 5px solid #0d6efd; background-color: #e9f0ff; }
+        .turno-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+            .turno-item:hover {
+                background-color: #f8f9fa;
+            }
+
+            .turno-item.active {
+                border-left: 5px solid #0d6efd;
+                background-color: #e9f0ff;
+            }
     </style>
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
@@ -28,7 +38,7 @@
             <asp:Literal ID="litMensajeSeleccion" runat="server" />
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </asp:Panel>
-        
+
         <div class="row g-4">
             <!-- Columna Izquierda Detalle -->
             <div class="col-12 col-lg-6">
@@ -37,7 +47,7 @@
                         <span class="fw-semibold"><i class="fas fa-stethoscope me-2"></i>Turno en Consulta</span>
                         <asp:Label ID="lblturnoActual" runat="server" CssClass="badge text-bg-light text-primary" Text="Sin selección" />
                     </div>
-                    
+
                     <div class="card-body">
                         <asp:Panel ID="pnlDetalleTurno" runat="server" Enabled="false">
                             <div class="mb-3 border-bottom pb-2">
@@ -49,8 +59,22 @@
                                 <asp:Label ID="lblMotivoConsulta" runat="server" Text="--" />
                             </div>
                             <div class="mb-3">
-                                <div class="fw-semibold text-muted">Observaciones (Diagnóstico)</div>
-                                <asp:TextBox ID="txtObservaciones" runat="server" TextMode="MultiLine" Rows="6" CssClass="form-control" placeholder="Escriba el diagnóstico..." />
+                                <div class="fw-semibold text-muted">Observaciones (Recepción)</div>
+                                <asp:TextBox ID="txtObservaciones"
+                                    runat="server"
+                                    TextMode="MultiLine"
+                                    Rows="2"
+                                    CssClass="form-control"
+                                    ReadOnly="true" />
+                            </div>
+                            <div class="mb-3">
+                                <div class="fw-semibold text-muted">Diagnostico</div>
+                                <asp:TextBox ID="txtDiagnostico"
+                                    runat="server"
+                                    TextMode="MultiLine"
+                                    Rows="4"
+                                    CssClass="form-control"
+                                    placeholder ="Escriba el diagnostico del paciente... "/>
                             </div>
                             <asp:HiddenField ID="hdnIdTurnoSeleccionado" runat="server" />
                         </asp:Panel>
@@ -71,16 +95,16 @@
                         <span><i class="fas fa-list-ul me-2"></i>Turnos Pendientes</span>
                         <asp:Button ID="btnActualizar" runat="server" CssClass="btn btn-sm btn-outline-light" Text="Refrescar" OnClick="btnActualizar_Click" />
                     </div>
-                    
+
                     <div class="card-body p-0">
                         <div style="max-height: 70vh; overflow-y: auto;">
                             <asp:Repeater ID="rptColaTurnos" runat="server" OnItemCommand="rptColaTurnos_ItemCommand">
                                 <ItemTemplate>
-                                    <asp:LinkButton ID="lnkSeleccionarTurno" runat="server" 
+                                    <asp:LinkButton ID="lnkSeleccionarTurno" runat="server"
                                         CommandName="Seleccionar"
-                                        CommandArgument='<%# Eval("IdTurno") %>' 
+                                        CommandArgument='<%# Eval("IdTurno") %>'
                                         CssClass="d-none" />
-                                        
+
                                     <li class="list-group-item list-group-item-action d-flex justify-content-between align-items-center p-3 turno-item"
                                         onclick="document.getElementById('<%# ((LinkButton)Container.FindControl("lnkSeleccionarTurno")).ClientID %>').click();">
                                         <div>
@@ -89,10 +113,10 @@
                                             </div>
                                             <div class="small text-muted">
                                                 <!-- formato para TimeSpan: hh\:mm -->
-                                                <i class="far fa-clock me-1"></i> <%# Eval("HoraTurno") %> • 
-                                                <i class="fas fa-tag me-1"></i> <%# Eval("Motivo") %>
+                                                <i class="far fa-clock me-1"></i><%# Eval("HoraTurno") %> • 
+                                                <i class="fas fa-tag me-1"></i><%# Eval("Motivo") %>
                                             </div>
-                                        </div>                                       
+                                        </div>
                                         <span class="badge rounded-pill text-bg-<%# GetStatusBadgeClass(Eval("EstadoTurno")) %>">
                                             <%# GetNombreEstado(Eval("EstadoTurno")) %>
                                         </span>
@@ -125,5 +149,5 @@
         </div>
     </div>
 
-    
+
 </asp:Content>

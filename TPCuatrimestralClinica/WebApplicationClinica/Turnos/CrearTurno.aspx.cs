@@ -356,8 +356,7 @@ namespace WebApplicationClinica
                 nuevoTurno.HoraInicio = horaInicio;
                 nuevoTurno.HoraFin = horaInicio.Add(TimeSpan.FromHours(1));
 
-                nuevoTurno.ObservacionesSolicitud = txtMotivo.Text;
-                nuevoTurno.ObservacionesDiagnostico = txtObservaciones.Text;
+                nuevoTurno.ObservacionesSolicitud = txtObservaciones.Text;
 
                 nuevoTurno.IdMedico = int.Parse(ddlMedicoDisponible.SelectedValue);
                 nuevoTurno.IdPaciente = (int)Session["IdPaciente"];

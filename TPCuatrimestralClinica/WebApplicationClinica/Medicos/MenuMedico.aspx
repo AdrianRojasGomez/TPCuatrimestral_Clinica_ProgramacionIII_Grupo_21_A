@@ -83,7 +83,7 @@
                     <div class="card-footer bg-light d-flex flex-wrap gap-2 justify-content-end">
                         <asp:Button ID="btnAtender" runat="server" CssClass="btn btn-primary" Text="Atender" OnClick="btnAtender_Click" />
                         <asp:Button ID="btnFinalizar" runat="server" CssClass="btn btn-success" Text="Finalizar" OnClick="btnFinalizar_Click" />
-                        <asp:Button ID="btnReprogramar" runat="server" CssClass="btn btn-warning" Text="Reprogramar" OnClick="btnReprogramar_Click" />
+                        <asp:Button ID="btnNoAsistio" runat="server" CssClass="btn btn-danger" Text="No Asistio" OnClick="btnNoAsistio_Click" />
                     </div>
                 </div>
             </div>
@@ -131,23 +131,25 @@
         </div>
     </div>
 
-    <!-- Modal Finalizar -->
-    <div class="modal fade" id="modalFinalizar" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Consulta Finalizada</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Los datos se han guardado correctamente.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
-                </div>
-            </div>
-        </div>
+    <%--Modal --%>
+    <div class="modal fade" id="modalSistema" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header py-2">
+        <h5 class="modal-title">
+            <asp:Literal ID="litModalTitulo" runat="server" Text="Mensaje"></asp:Literal>
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body py-3">
+        <asp:Literal ID="litModalCuerpo" runat="server"></asp:Literal>
+      </div>
+      <div class="modal-footer py-2">
+        <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Aceptar</button>
+      </div>
     </div>
+  </div>
+</div>
 
 
 </asp:Content>

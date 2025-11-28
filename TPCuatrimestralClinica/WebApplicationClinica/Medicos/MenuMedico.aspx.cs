@@ -109,7 +109,6 @@ namespace WebApplicationClinica.Medicos
             }
         }
         
-
         private void CargarTurnoSeleccionado(int idTurno)
         {
             TurnoNegocio negocio = new TurnoNegocio();
@@ -152,10 +151,9 @@ namespace WebApplicationClinica.Medicos
             }
         }
 
-
-
         #endregion
 
+        #region Botones de acción 
         protected void btnActualizar_Click(object sender, EventArgs e)
         {
             if (Session["idMedico"] != null)
@@ -167,17 +165,22 @@ namespace WebApplicationClinica.Medicos
         {
             if (!string.IsNullOrEmpty(hdnIdTurnoSeleccionado.Value))
             {
+                int idTurno = int.Parse(hdnIdTurnoSeleccionado.Value);
+                if(ObtenerEstadoActual(idTurno).Estado != EstadoTurno.EstadoEnum.Atendiendo)
+                {
+                    MostrarMensaje("Error","El turno debe estar 'Atendido' para poder finalizarlo.");
+                    return;
+                }
+
                 try
                 {
-                    int idTurno = int.Parse(hdnIdTurnoSeleccionado.Value);
                     string diagnostico = txtDiagnostico.Text;
                     TurnoNegocio negocio = new TurnoNegocio();
                     negocio.ModificarDiagnostico(idTurno, diagnostico);
                     negocio.ModificarEstado(idTurno, (int)EstadoTurno.EstadoEnum.Completado);
 
                     // simula que guardamos y mostramos el modal
-                    ScriptManager.RegisterStartupScript(this, GetType(), "ModalFin",
-                        "var myModal = new bootstrap.Modal(document.getElementById('modalFinalizar')); myModal.show();", true);
+                    MostrarMensaje("Turno Finalizado", "El turno ha sido finalizado correctamente.");
 
                     // Recargar lista para ver cambios 
                     CargarTurnosDelDia((int)Session["idMedico"]);
@@ -198,9 +201,16 @@ namespace WebApplicationClinica.Medicos
         {
             if (!string.IsNullOrEmpty(hdnIdTurnoSeleccionado.Value))
             {
+                int idTurno = int.Parse(hdnIdTurnoSeleccionado.Value);
+                if (ObtenerEstadoActual(idTurno).Estado != EstadoTurno.EstadoEnum.Pendiente)
+                {
+                    MostrarMensaje("Error", "El turno debe estar 'Pendiente' para poder atenderlo. ");
+                    return;
+                }
+
                 try
                 {
-                    int idTurno = int.Parse(hdnIdTurnoSeleccionado.Value);
+                    
                     string diagnostico = txtDiagnostico.Text;
                     TurnoNegocio negocio = new TurnoNegocio();
                     negocio.ModificarDiagnostico(idTurno, diagnostico);
@@ -220,12 +230,40 @@ namespace WebApplicationClinica.Medicos
             }
         }
 
+        protected void btnNoAsistio_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(hdnIdTurnoSeleccionado.Value))
+            {
+                int idTurno = int.Parse(hdnIdTurnoSeleccionado.Value);
+                if (ObtenerEstadoActual(idTurno).Estado != EstadoTurno.EstadoEnum.Pendiente)
+                {
+                    MostrarMensaje("Error", "El turno debe estar 'Pendiente' para poder Cancelar por inasistencia.");
+                    return;
+                }
+                try
+                {
+                    string diagnostico = txtDiagnostico.Text;
+                    TurnoNegocio negocio = new TurnoNegocio();
+                    negocio.ModificarDiagnostico(idTurno, diagnostico);
+                    negocio.ModificarEstado(idTurno, (int)EstadoTurno.EstadoEnum.NoAsistio);
+                    // Habilitar diagnóstico
+                    txtDiagnostico.Enabled = true;
 
 
+                    // Recargar lista para ver cambios 
+                    CargarTurnosDelDia((int)Session["idMedico"]);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                    // Manejar error
+                }
+            }
+        }
 
+        #endregion
 
-
-        #region HELPERS VISUALES 
+        #region HELPERS 
         public string GetStatusBadgeClass(object estadoObj)
         {
             if (estadoObj == null) return "secondary";
@@ -257,21 +295,36 @@ namespace WebApplicationClinica.Medicos
             }
         }
 
+        protected void MostrarMensaje(string titulo, string mensaje)
+        {
+            litModalTitulo.Text = titulo;
+            litModalCuerpo.Text = mensaje;
 
+            ScriptManager.RegisterStartupScript(
+                this,
+                GetType(),
+                "modalSistema",
+                "var m = new bootstrap.Modal(document.getElementById('modalSistema')); m.show();",
+                true
+            );
+        }
 
+        private EstadoTurno ObtenerEstadoActual(int idTurno)
+        {
+            TurnoNegocio negocio = new TurnoNegocio();
+            Turno turno = negocio.BuscarPorId(idTurno);
+            if (turno != null)
+            {
+                EstadoTurno estadoTurno = new EstadoTurno
+                {
+                    Estado = (EstadoTurno.EstadoEnum)turno.Estado
+                };
+                return estadoTurno;
+            }
+            return null;
+        }
 
         #endregion
 
-        #region Botones sin implementación 
-
-
-        protected void btnReprogramar_Click(object sender, EventArgs e) { /* reprogramación */ }
-        protected void btnLLamarPaciente_Click(object sender, EventArgs e) { }
-        protected void txtNombreDoctor_TextChanged(object sender, EventArgs e) { }
-        protected void btnLlamarProxPaciente_Click(object sender, EventArgs e) { }
-        protected void txteBuscarPaciente_TextChanged(object sender, EventArgs e) { }
-        protected void btnSiguientePaciente_Click(object sender, EventArgs e) { }
-
-        #endregion
     }
 }
